@@ -4,25 +4,29 @@ import { IUser } from './user.model';
 import { IStore } from './store.model';
 
 export interface ITransaction extends Document {
-    ticket?: Types.ObjectId | ITicket;
-    user: Types.ObjectId | IUser;
-    tienda: Types.ObjectId | IStore;
-    purchaseDate: Date;
-    total?: number;
-    paymentMethod?: string;
-    transactionCategory?: string;
-    notes?: string;
+	_id: Types.ObjectId;
+	ticket?: Types.ObjectId | ITicket;
+	user: Types.ObjectId | IUser;
+	tienda: Types.ObjectId | IStore;
+	purchaseDate: Date;
+	total?: number;
+	paymentMethod?: string;
+	transactionCategory?: string;
+	notes?: string;
 }
 
 const transactionSchema = new Schema<ITransaction>({
-    ticket: { type: Schema.Types.ObjectId, ref: 'Ticket' },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    tienda: { type: Schema.Types.ObjectId, ref: 'Tienda', required: true },
-    purchaseDate: { type: Date, required: true },
-    total: { type: Number, default: 0 },
-    paymentMethod: { type: String },
-    transactionCategory: { type: String },
-    notes: { type: String }
+	ticket: { type: Schema.Types.ObjectId, ref: 'Ticket' },
+	user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+	tienda: { type: Schema.Types.ObjectId, ref: 'Tienda', required: true },
+	purchaseDate: { type: Date, required: true },
+	total: { type: Number, default: 0 },
+	paymentMethod: { type: String },
+	transactionCategory: { type: String },
+	notes: { type: String },
 });
 
-export const Transaction = model<ITransaction>('Transaction', transactionSchema);
+export const Transaction = model<ITransaction>(
+	'Transaction',
+	transactionSchema
+);

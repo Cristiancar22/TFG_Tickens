@@ -1,16 +1,17 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 export interface IProductCategory extends Document {
-    name: string;
-    description?: string;
+	_id: Types.ObjectId;
+	name: string;
+	description?: string;
 }
 
 const productCategorySchema = new Schema<IProductCategory>({
-    name: { type: String, required: true },
-    description: { type: String },
+	name: { type: String, required: true },
+	description: { type: String },
 });
 
 export const ProductCategory = model<IProductCategory>(
-    'ProductCategory',
-    productCategorySchema
+	'ProductCategory',
+	productCategorySchema
 );

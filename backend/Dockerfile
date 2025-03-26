@@ -1,20 +1,16 @@
-# Usa una imagen oficial de Node como base
-FROM node:18-alpine
+FROM node:20
 
-# Define el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copia el package.json y package-lock.json antes de instalar dependencias
-COPY package.json package-lock.json ./
+# Solo copiamos package.json para instalar dependencias
+COPY package*.json ./
 
-# Instala dependencias
 RUN npm install
 
-# Copia el resto de los archivos
+# Copiamos el resto del código
 COPY . .
 
-# Expone el puerto en el que corre el backend
-EXPOSE 3000
+# Instalamos nodemon globalmente por comodidad
+RUN npm install -g nodemon
 
-# Comando para ejecutar la aplicación
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

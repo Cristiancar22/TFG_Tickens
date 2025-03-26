@@ -1,13 +1,32 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 type AuthStore = {
-    isAuthenticated: boolean
-    login: () => void
-    logout: () => void
+	token: string | null
+	isAuthenticated: boolean
+	checking: boolean
+	login: (token: string) => void
+	logout: () => void
+	setChecking: (checking: boolean) => void
 }
 
 export const useAuth = create<AuthStore>((set) => ({
-    isAuthenticated: false,
-    login: () => set({ isAuthenticated: true }),
-    logout: () => set({ isAuthenticated: false }),
-}));
+	token: null,
+	isAuthenticated: false,
+	checking: true,
+
+	login: (token) =>
+		set({
+			token,
+			isAuthenticated: true,
+			checking: false,
+		}),
+
+	logout: () =>
+		set({
+			token: null,
+			isAuthenticated: false,
+			checking: false,
+		}),
+
+	setChecking: (checking) => set({ checking }),
+}))
