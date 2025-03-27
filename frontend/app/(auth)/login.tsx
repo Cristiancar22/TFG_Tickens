@@ -1,20 +1,21 @@
-import { View, Text, TextInput, Button, Alert } from 'react-native'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { loginSchema, LoginSchema } from '../../schemas/auth.schema'
-import { loginUser } from '../../services/authService'
-import { useAuth } from '../../store/useAuth'
+import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, LoginSchema } from '../../schemas/auth.schema';
+import { loginUser } from '../../services/authService';
+import { useAuth } from '../../store/useAuth';
+import { useRouter } from 'expo-router';
 
 export default function Login() {
 	const login = useAuth((s) => s.login)
+	const router = useRouter();
 
 	const {
-		register,
 		handleSubmit,
 		setValue,
 		formState: { errors },
 	} = useForm<LoginSchema>({
-	resolver: zodResolver(loginSchema),
+		resolver: zodResolver(loginSchema),
 	})
 
 	const onSubmit = async (data: LoginSchema) => {
@@ -46,6 +47,7 @@ export default function Login() {
 		{ errors.password && <Text className="text-red-500">{errors.password.message}</Text>}
 
 		<Button title="Iniciar sesión" onPress={handleSubmit(onSubmit)} />
+		<Text className="text-center my-2" onPress={ () => router.push('/register') }>¿No tienes cuenta? Regístrate</Text>
 	</View>
 	)
 }

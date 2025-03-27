@@ -9,11 +9,16 @@ type RegisterData = {
     password: string
 }
 
+type User = {
+	_id: string
+	name: string
+	surname: string
+	email: string
+}
+
 export const loginUser = async (data: LoginData) => {
     try {
         const response = await api.post('/auth/login', data)
-        console.log(response.data);
-        
         return response.data
     } catch (error: any) {
         console.log(error);
@@ -30,3 +35,12 @@ export const registerUser = async (data: RegisterData) => {
         throw new Error(error.response?.data?.message || 'Error al registrar usuario')
     }
 }
+
+export const getUserFromToken = async (): Promise<User> => {
+    try {
+        const response = await api.get('/auth/check-token');
+        return response.data;
+    } catch (error: any) {
+        throw new Error('Token inválido o expirado');
+    }
+};

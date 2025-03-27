@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { IUser, User } from '../models/user.model';
 import { generateToken } from '../utils/generateToken';
+import { AuthRequest } from '../middlewares/authenticateToken';
 
 export const register = async (req: Request, res: Response): Promise<any> => {
 	const { name, surname, email, password } = req.body;
@@ -60,5 +61,18 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 			message: 'Error al iniciar sesión',
 			error: err,
 		});
+	}
+};
+
+export const checkToken = async (req: AuthRequest, res: Response): Promise<any> => {
+	try {
+		const user = await User.findById(req.userId).select('-passwordHash');
+		if (!user) {
+			return res.status(404).json({ message: 'Usuario no encontrado' });
+		}
+
+		res.json(user);
+	} catch (error) {
+		res.status(500).json({ message: 'Error al verificar token', error });
 	}
 };
