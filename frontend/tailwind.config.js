@@ -1,3 +1,5 @@
+import { colors } from './constants/colors';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: ['./app/**/*.{js,jsx,ts,tsx}', './components/**/*.{js,jsx,ts,tsx}'],
@@ -5,9 +7,10 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				primary: '#225560',
-				background: '#DEE5E5',
-				foreground: '#171219',
+				primary: colors.primary,
+				secondary: colors.secondary,
+				background: colors.background,
+				foreground: colors.foreground,
 			}
 		},
 	},

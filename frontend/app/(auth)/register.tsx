@@ -5,6 +5,8 @@ import { registerSchema, RegisterSchema } from '@/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerUser } from '@/services';
 import { useRouter } from 'expo-router';
+import { InputField } from '@/components/ui/InputField';
+import { PrimaryButton } from '@/components/ui/PrimaryButton';
 
 export default function Register() {
 	const login = useAuth((s) => s.login);
@@ -28,44 +30,50 @@ export default function Register() {
 	}
 
 	return (
-		<View className="flex-1 justify-center px-4">
-			<Text>Nombre</Text>
-			<TextInput
-				className="border px-2 py-1 my-1 rounded"
-				onChangeText={(text) => setValue('name', text)}
-				autoCapitalize="none"
-				keyboardType="default"
-			/>
-			{ errors.name && <Text className="text-red-500">{errors.name.message}</Text>}
+		<View className="flex-1 justify-center px-4 bg-background">
+			<View className="bg-white p-6 rounded-2xl shadow-md">
+				<InputField
+					label="Nombre"
+					placeholder="Nombre"
+					keyboardType="default"
+					autoCapitalize="none"
+					onChangeText={(text) => setValue('name', text)}
+					error={errors.name?.message}
+				/>
 
-			<Text>Apellidos</Text>
-			<TextInput
-				className="border px-2 py-1 my-1 rounded"
-				onChangeText={(text) => setValue('surname', text)}
-				autoCapitalize="none"
-				keyboardType="default"
-			/>
-			{ errors.surname && <Text className="text-red-500">{errors.surname.message}</Text>}
+				<InputField
+					label="Apellidos"
+					placeholder="Apellidos"
+					keyboardType="default"
+					autoCapitalize="none"
+					onChangeText={(text) => setValue('surname', text)}
+					error={errors.surname?.message}
+				/>
 
-			<Text>Email</Text>
-			<TextInput
-				className="border px-2 py-1 my-1 rounded"
-				onChangeText={(text) => setValue('email', text)}
-				autoCapitalize="none"
-				keyboardType="email-address"
-			/>
-			{ errors.email && <Text className="text-red-500">{errors.email.message}</Text>}
+				<InputField
+					label="Email"
+					placeholder="email@ejemplo.com"
+					keyboardType="email-address"
+					autoCapitalize="none"
+					onChangeText={(text) => setValue('email', text)}
+					error={errors.email?.message}
+				/>
 
-			<Text>Contraseña</Text>
-			<TextInput
-				className="border px-2 py-1 my-1 rounded"
-				secureTextEntry
-				onChangeText={(text) => setValue('password', text)}
-			/>
-			{ errors.password && <Text className="text-red-500">{errors.password.message}</Text>}
+				<InputField
+					label="Contraseña"
+					placeholder="••••••••"
+					secure
+					onChangeText={(text) => setValue('password', text)}
+					error={errors.password?.message}
+				/>
 
-			<Button title="Registrarse" onPress={handleSubmit(onSubmit)} />
-			<Text className="text-center my-2" onPress={ () => router.push('/login') }>¿Ya tienes cuenta? Inicia sesión</Text>
+				
+				<PrimaryButton
+					title="Registrarse"
+					onPress={handleSubmit(onSubmit)}
+				/>
+				<Text className="text-center my-4 text-primary underline" onPress={ () => router.push('/login') }>¿Ya tienes cuenta? Inicia sesión</Text>
+			</View>
 		</View>
 	);
 }

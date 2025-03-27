@@ -30,35 +30,37 @@ export default function Login() {
 	};
 
 	return (
-		<View className="flex-1 justify-center px-4 bg-background dark:bg-foreground">
-			<InputField
-				label="Email"
-				placeholder="email@ejemplo.com"
-				keyboardType="email-address"
-				autoCapitalize="none"
-				onChangeText={(text) => setValue('email', text)}
-				error={errors.email?.message}
-			/>
+		<View className="flex-1 justify-center px-4 bg-background">
+			<View className="bg-white p-6 rounded-2xl shadow-md">
+				<InputField
+					label="Email"
+					placeholder="email@ejemplo.com"
+					keyboardType="email-address"
+					autoCapitalize="none"
+					onChangeText={(text) => setValue('email', text)}
+					error={errors.email?.message}
+				/>
 
-			<InputField
-				label="Contraseña"
-				placeholder="••••••••"
-				secure
-				onChangeText={(text) => setValue('password', text)}
-				error={errors.password?.message}
-			/>
+				<InputField
+					label="Contraseña"
+					placeholder="••••••••"
+					secure
+					onChangeText={(text) => setValue('password', text)}
+					error={errors.password?.message}
+				/>
 
-			<PrimaryButton
-				title="Iniciar sesión"
-				onPress={handleSubmit(onSubmit)}
-			/>
+				<PrimaryButton
+					title="Iniciar sesión"
+					onPress={handleSubmit(onSubmit)}
+				/>
 
-			<Text
-				className="text-center my-4 text-primary underline"
-				onPress={() => router.push('/register')}
-			>
-				¿No tienes cuenta? Regístrate
-			</Text>
+				<Text
+					className="text-center my-4 text-primary underline"
+					onPress={() => router.push('/register')}
+				>
+					¿No tienes cuenta? Regístrate
+				</Text>
+			</View>
 		</View>
 	);
 }
