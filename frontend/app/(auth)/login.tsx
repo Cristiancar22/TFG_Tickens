@@ -1,8 +1,8 @@
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, LoginSchema } from '../../schemas/auth.schema';
-import { loginUser } from '../../services/authService';
+import { loginUser } from '../../services/auth.service';
 import { useAuth } from '../../store/useAuth';
 import { useRouter } from 'expo-router';
 import { InputField } from '@/components/ui/InputField';
@@ -10,6 +10,7 @@ import { PrimaryButton } from '@/components/ui/PrimaryButton';
 
 export default function Login() {
 	const login = useAuth((s) => s.login);
+	const setUser = useAuth((s) => s.setUser);
 	const router = useRouter();
 
 	const {
@@ -22,8 +23,10 @@ export default function Login() {
 
 	const onSubmit = async (data: LoginSchema) => {
 		try {
-			const response = await loginUser(data);
-			login(response.token);
+			const { token, ...user } = await loginUser(data);
+
+			setUser(user);
+			login(token);
 		} catch (err: any) {
 			Alert.alert('Error', err.message);
 		}
@@ -39,12 +42,13 @@ export default function Login() {
 					autoCapitalize="none"
 					onChangeText={(text) => setValue('email', text)}
 					error={errors.email?.message}
-				/>
+					/>
 
 				<InputField
 					label="Contraseña"
 					placeholder="••••••••"
 					secure
+					autoCapitalize="none"
 					onChangeText={(text) => setValue('password', text)}
 					error={errors.password?.message}
 				/>

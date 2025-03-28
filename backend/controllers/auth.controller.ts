@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { IUser, User } from '../models/user.model';
 import { generateToken } from '../utils/generateToken';
-import { AuthRequest } from '../middlewares/authenticateToken';
+import { AuthRequest } from '../middlewares/auth.middleware';
 
 export const register = async (req: Request, res: Response): Promise<any> => {
 	const { name, surname, email, password } = req.body;
@@ -39,12 +39,13 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 	const { email, password } = req.body;
 
 	try {
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ email }).select('+passwordHash');
+
 		if (!user) {
 			return res.status(401).json({ message: 'Credenciales inválidas' });
 		}
 
-		const isMatch = await bcrypt.compare(password, user.passwordHash);
+		const isMatch = await user.comparePassword(password);
 
 		if (!isMatch) {
 			return res.status(401).json({ message: 'Credenciales inválidas' });
@@ -53,6 +54,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 		res.json({
 			_id: user._id,
 			name: user.name,
+			surname: user.surname,
 			email: user.email,
 			token: generateToken(user._id.toString()),
 		});
@@ -66,7 +68,8 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 
 export const checkToken = async (req: AuthRequest, res: Response): Promise<any> => {
 	try {
-		const user = await User.findById(req.userId).select('-passwordHash');
+		const user = req.user!;
+
 		if (!user) {
 			return res.status(404).json({ message: 'Usuario no encontrado' });
 		}

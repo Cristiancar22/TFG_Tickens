@@ -1,7 +1,8 @@
-import express, { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import { authRoutes, profileRoutes } from './routes';
 import { connectDB } from './config/db';
-import { authRoutes } from './routes';
+import dotenv from 'dotenv';
+import express from 'express';
+import path from 'path';
 
 dotenv.config();
 
@@ -13,11 +14,11 @@ connectDB();
 
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-	res.status(200).send('Hello World');
-});
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api/profile', profileRoutes);
 
 app.listen(PORT, () => {
 	console.log(`🚀 Server running at http://localhost:${PORT}`);

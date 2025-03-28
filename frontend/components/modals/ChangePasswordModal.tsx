@@ -6,26 +6,28 @@ import { InputField } from '../ui/InputField';
 
 interface Props {
 	isVisible: boolean;
+	loading?: boolean;
 	onClose: () => void;
-	onSubmit: (data: { currentPassword: string; newPassword: string }) => void;
+	onSubmit: (data: { currentPassword: string; newPassword: string }) => Promise<void>;
 }
 
 export const ChangePasswordModal: React.FC<Props> = ({
 	isVisible,
 	onClose,
 	onSubmit,
+	loading = false
 }) => {
 	const [currentPassword, setCurrentPassword] = useState('');
 	const [newPassword, setNewPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 
-	const handleSave = () => {
+	const handleSave = async() => {
 		if (newPassword !== confirmPassword) {
 			alert('Las contraseñas no coinciden');
 			return;
 		}
 
-		onSubmit({ currentPassword, newPassword });
+		await onSubmit({ currentPassword, newPassword });
 		setCurrentPassword('');
 		setNewPassword('');
 		setConfirmPassword('');
@@ -49,6 +51,7 @@ export const ChangePasswordModal: React.FC<Props> = ({
 					secure
 					value={currentPassword}
 					onChangeText={setCurrentPassword}
+					autoCapitalize="none"
 				/>
 				<InputField
 					label="Nueva contraseña"
@@ -56,6 +59,7 @@ export const ChangePasswordModal: React.FC<Props> = ({
 					secure
 					value={newPassword}
 					onChangeText={setNewPassword}
+					autoCapitalize="none"
 				/>
 				<InputField
 					label="Confirmar contraseña"
@@ -63,9 +67,14 @@ export const ChangePasswordModal: React.FC<Props> = ({
 					secure
 					value={confirmPassword}
 					onChangeText={setConfirmPassword}
+					autoCapitalize="none"
 				/>
 
-				<PrimaryButton title="Guardar cambios" onPress={handleSave} />
+				<PrimaryButton
+					title={ loading ? 'Guardando...' : 'Guardar cambios' }
+					disabled={ loading }
+					onPress={handleSave}
+				/>
 			</View>
 		</Modal>
 	);

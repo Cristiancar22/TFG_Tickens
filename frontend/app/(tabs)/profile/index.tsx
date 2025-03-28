@@ -1,5 +1,6 @@
 import { ChangePasswordModal } from '@/components/modals/ChangePasswordModal';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
+import { useUpdatePassword } from '@/hooks/profile/useUpdatePassword';
 import { useAuth } from '@/store/useAuth';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -8,19 +9,13 @@ import { View, Text } from 'react-native';
 
 export const ProfileScreen = () => {
 	const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
+	const { update, loading } = useUpdatePassword();
+
 	const router = useRouter();
 	const logout = useAuth((s) => s.logout);
 	const name = useAuth((s) => s.user?.name);
 	const surname = useAuth((s) => s.user?.surname);
 	const email = useAuth((s) => s.user?.email);
-
-	const handleChangePassword = (data: {
-		currentPassword: string;
-		newPassword: string;
-	}) => {
-		// Aquí podrías llamar a la API o dispatch de tu store
-		console.log('Cambiar contraseña:', data);
-	};
 
 	return (
 		<View className="flex-1 items-center flex-col">
@@ -51,7 +46,8 @@ export const ProfileScreen = () => {
 			<ChangePasswordModal
 				isVisible={isPasswordModalVisible}
 				onClose={() => setPasswordModalVisible(false)}
-				onSubmit={handleChangePassword}
+				onSubmit={ update }
+				loading={loading}
 			/>
 		</View>
 	);
