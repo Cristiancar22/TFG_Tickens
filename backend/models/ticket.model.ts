@@ -5,7 +5,7 @@ export interface ITicket extends Document {
 	_id: Types.ObjectId;
 	user: Types.ObjectId | IUser;
 	scanDate?: Date;
-	ticketImage?: string;
+	rawData?: string;
 	processingStatus?: string;
 	totalScanned?: number;
 	ocrMetadata?: any;
@@ -14,7 +14,7 @@ export interface ITicket extends Document {
 const ticketSchema = new Schema<ITicket>({
 	user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 	scanDate: { type: Date },
-	ticketImage: { type: String },
+	rawData: { type: String },
 	processingStatus: { type: String, default: 'pending' },
 	totalScanned: { type: Number },
 	ocrMetadata: { type: Schema.Types.Mixed },

@@ -56,6 +56,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 			name: user.name,
 			surname: user.surname,
 			email: user.email,
+			avatarUrl: user.avatarUrl,
 			token: generateToken(user._id.toString()),
 		});
 	} catch (err) {

@@ -3,8 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 
 export const api = axios.create({
-    baseURL: process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.223:5000/api',
-})
+    baseURL: `${process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.223:5000'}/api`,
+});
 
 api.interceptors.request.use(async( config ) => {
     const { token } = useAuth.getState()

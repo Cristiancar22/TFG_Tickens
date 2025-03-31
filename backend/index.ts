@@ -1,4 +1,4 @@
-import { authRoutes, profileRoutes } from './routes';
+import { authRoutes, profileRoutes, ticketRoutes } from './routes';
 import { connectDB } from './config/db';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -19,6 +19,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 
 app.use('/api/profile', profileRoutes);
+
+app.use('/api/ocr', ticketRoutes);
 
 app.listen(PORT, () => {
 	console.log(`🚀 Server running at http://localhost:${PORT}`);

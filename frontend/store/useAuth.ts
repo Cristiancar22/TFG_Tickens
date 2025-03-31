@@ -6,6 +6,7 @@ type User = {
 	name: string
 	surname: string
 	email: string
+	avatarUrl: string
 }
 
 type AuthStore = {
@@ -15,7 +16,7 @@ type AuthStore = {
 	user: User | null
 	login: (token: string) => void
 	logout: () => void
-	setUser: (user: User) => void
+	setUser: (user: User | ((prev: User | null) => User)) => void;
 	setChecking: (checking: boolean) => void
 }
 
@@ -42,7 +43,11 @@ export const useAuth = create<AuthStore>((set) => ({
 			checking: false,
 		})
 	},
- 
-	setUser: (user) => set({ user }),
+
+	setUser: (input) =>
+		set(({ user }) => ({
+			user: typeof input === 'function' ? input(user) : input,
+		})),
+
 	setChecking: (checking) => set({ checking }),
 }));

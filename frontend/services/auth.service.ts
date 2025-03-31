@@ -14,6 +14,7 @@ type User = {
 	name: string
 	surname: string
 	email: string
+    avatarUrl: string
 }
 
 export const loginUser = async (data: LoginData) => {
@@ -21,8 +22,6 @@ export const loginUser = async (data: LoginData) => {
         const response = await api.post('/auth/login', data)
         return response.data
     } catch (error: any) {
-        console.log(error);
-        
         throw new Error(error.response?.data?.message || 'Error al iniciar sesión')
     }
 }

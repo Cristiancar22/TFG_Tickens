@@ -1,26 +1,38 @@
 import { ChangePasswordModal } from '@/components/modals/ChangePasswordModal';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
+import { useUpdateAvatar } from '@/hooks/profile/useUpdateAvatar';
 import { useUpdatePassword } from '@/hooks/profile/useUpdatePassword';
 import { useAuth } from '@/store/useAuth';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable, Image } from 'react-native';
 
 export const ProfileScreen = () => {
 	const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
 	const { update, loading } = useUpdatePassword();
+	const { updateAvatar } = useUpdateAvatar();
 
 	const router = useRouter();
 	const logout = useAuth((s) => s.logout);
 	const name = useAuth((s) => s.user?.name);
 	const surname = useAuth((s) => s.user?.surname);
 	const email = useAuth((s) => s.user?.email);
+	const avatarUrl = useAuth((s) => s.user?.avatarUrl);
 
 	return (
 		<View className="flex-1 items-center flex-col">
 			<View className="items-center mt-10">
-				<Ionicons name="person-circle-outline" size={100} color="#999" />
+				<Pressable onPress={updateAvatar} className="mt-10">
+					{avatarUrl ? (
+						<Image
+							source={{ uri: `${process.env.EXPO_PUBLIC_API_URL}${avatarUrl}` }}
+							className="w-24 h-24 rounded-full"
+						/>
+					) : (
+						<Ionicons name="person-circle-outline" size={100} color="#999" />
+					)}
+				</Pressable>
 				<Text className="text-xl font-semibold mt-1">{`${ name } ${ surname }`}</Text>
 				<Text className="text-gray-500">{email}</Text>
 			</View>
