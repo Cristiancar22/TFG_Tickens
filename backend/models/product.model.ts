@@ -21,9 +21,9 @@ const productSchema = new Schema<IProduct>({
 	category: {
 		type: Schema.Types.ObjectId,
 		ref: 'CategoriaProduct',
-		required: true,
+		required: false,
 	},
-	group: { type: Schema.Types.ObjectId, ref: 'GrupoProduct', required: true },
+	group: { type: Schema.Types.ObjectId, ref: 'GrupoProduct', required: false },
 	barcode: { type: String },
 	measurementUnit: { type: String },
 	referenceImage: { type: String },

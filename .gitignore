@@ -2,3 +2,6 @@ node_modules
 .env
 backend/.env
 frontend_aux
+microservices/ocrService/debug_images
+microservices/z_nlpService/
+microservices/z_ocrService_/

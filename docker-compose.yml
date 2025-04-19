@@ -37,6 +37,26 @@ services:
       - backend_node_modules:/app/node_modules
     command: ["npx", "nodemon", "index.ts"]
 
+  ocr_service:
+    build: ./microservices/ocrService
+    container_name: ocr_service
+    ports:
+      - "5010:5000"
+    volumes:
+      - ./microservices/ocrService:/app
+    restart: always
+
+  ticket-parser:
+    build: ./microservices/llmService
+    container_name: ticket_parser
+    ports:
+      - "5020:5020"
+    volumes:
+      - ./microservices/llmService:/app
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: always
+
 volumes:
   mongo_data:
   backend_node_modules:

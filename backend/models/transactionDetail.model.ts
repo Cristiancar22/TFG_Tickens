@@ -17,7 +17,7 @@ const transactionDetailSchema = new Schema<ITransactionDetail>({
 		ref: 'Transaccion',
 		required: true,
 	},
-	producto: { type: Schema.Types.ObjectId, ref: 'Producto', required: true },
+	producto: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
 	quantity: { type: Number, default: 1 },
 	unitPrice: { type: Number, default: 0 },
 	subtotal: { type: Number, default: 0 },

@@ -1,0 +1,3 @@
+€   { euro }
+kg  { kilogram }
+KG  { kilogram }

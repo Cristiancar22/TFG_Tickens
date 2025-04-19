@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
 import { IUser, User } from '../models/user.model';
 import { generateToken } from '../utils/generateToken';
 import { AuthRequest } from '../middlewares/auth.middleware';
@@ -15,13 +14,14 @@ export const register = async (req: Request, res: Response): Promise<any> => {
 				.json({ message: 'El correo ya está registrado.' });
 		}
 
-		const passwordHash = await bcrypt.hash(password, 10);
+		console.log(password);
+
 
 		const newUser = (await User.create({
 			name,
 			surname,
 			email,
-			passwordHash,
+			passwordHash: password,
 		})) as IUser;
 
 		res.status(201).json({
@@ -37,7 +37,8 @@ export const register = async (req: Request, res: Response): Promise<any> => {
 
 export const login = async (req: Request, res: Response): Promise<any> => {
 	const { email, password } = req.body;
-
+	console.log(email, password);
+	
 	try {
 		const user = await User.findOne({ email }).select('+passwordHash');
 

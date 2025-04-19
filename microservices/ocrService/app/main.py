@@ -1,7 +1,8 @@
+
 from flask import Flask, request, jsonify
-import pytesseract
-from PIL import Image
-import os
+from PIL import Image, ImageOps
+import io
+import ocr_engine as ocr_engine
 
 app = Flask(__name__)
 
@@ -11,13 +12,14 @@ def ocr_image():
         return jsonify({'error': 'No image provided'}), 400
 
     image_file = request.files['image']
-    image = Image.open(image_file.stream)
+    pil_img = Image.open(image_file.stream)
+    pil_img = ImageOps.exif_transpose(pil_img).convert('RGB')
 
-    try:
-        text = pytesseract.image_to_string(image)
-        return jsonify({'text': text})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    text, total_ok = ocr_engine.process_image(pil_img,
+                                              save_debug=app.debug)
+
+    return jsonify({'text': text, 'total_consistent': total_ok}), 200
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

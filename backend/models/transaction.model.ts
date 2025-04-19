@@ -18,7 +18,7 @@ export interface ITransaction extends Document {
 const transactionSchema = new Schema<ITransaction>({
 	ticket: { type: Schema.Types.ObjectId, ref: 'Ticket' },
 	user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-	tienda: { type: Schema.Types.ObjectId, ref: 'Tienda', required: true },
+	tienda: { type: Schema.Types.ObjectId, ref: 'Store', required: true },
 	purchaseDate: { type: Date, required: true },
 	total: { type: Number, default: 0 },
 	paymentMethod: { type: String },
