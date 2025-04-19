@@ -9,62 +9,62 @@ import { InputField } from '@/components/ui/InputField';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 
 export default function Login() {
-	const login = useAuth((s) => s.login);
-	const setUser = useAuth((s) => s.setUser);
-	const router = useRouter();
+    const login = useAuth((s) => s.login);
+    const setUser = useAuth((s) => s.setUser);
+    const router = useRouter();
 
-	const {
-		handleSubmit,
-		setValue,
-		formState: { errors },
-	} = useForm<LoginSchema>({
-		resolver: zodResolver(loginSchema),
-	});
+    const {
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm<LoginSchema>({
+        resolver: zodResolver(loginSchema),
+    });
 
-	const onSubmit = async (data: LoginSchema) => {
-		try {
-			const { token, ...user } = await loginUser(data);
+    const onSubmit = async (data: LoginSchema) => {
+        try {
+            const { token, ...user } = await loginUser(data);
 
-			setUser(user);
-			login(token);
-		} catch (err: any) {
-			Alert.alert('Error', err.message);
-		}
-	};
+            setUser(user);
+            login(token);
+        } catch (err: any) {
+            Alert.alert('Error', err.message);
+        }
+    };
 
-	return (
-		<View className="flex-1 justify-center px-4 bg-background">
-			<View className="bg-white p-6 rounded-2xl shadow-md">
-				<InputField
-					label="Email"
-					placeholder="email@ejemplo.com"
-					keyboardType="email-address"
-					autoCapitalize="none"
-					onChangeText={(text) => setValue('email', text)}
-					error={errors.email?.message}
-					/>
+    return (
+        <View className="flex-1 justify-center px-4 bg-background">
+            <View className="bg-white p-6 rounded-2xl shadow-md">
+                <InputField
+                    label="Email"
+                    placeholder="email@ejemplo.com"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    onChangeText={(text) => setValue('email', text)}
+                    error={errors.email?.message}
+                />
 
-				<InputField
-					label="Contraseña"
-					placeholder="••••••••"
-					secure
-					autoCapitalize="none"
-					onChangeText={(text) => setValue('password', text)}
-					error={errors.password?.message}
-				/>
+                <InputField
+                    label="Contraseña"
+                    placeholder="••••••••"
+                    secure
+                    autoCapitalize="none"
+                    onChangeText={(text) => setValue('password', text)}
+                    error={errors.password?.message}
+                />
 
-				<PrimaryButton
-					title="Iniciar sesión"
-					onPress={handleSubmit(onSubmit)}
-				/>
+                <PrimaryButton
+                    title="Iniciar sesión"
+                    onPress={handleSubmit(onSubmit)}
+                />
 
-				<Text
-					className="text-center my-4 text-primary underline"
-					onPress={() => router.push('/register')}
-				>
-					¿No tienes cuenta? Regístrate
-				</Text>
-			</View>
-		</View>
-	);
+                <Text
+                    className="text-center my-4 text-primary underline"
+                    onPress={() => router.push('/register')}
+                >
+                    ¿No tienes cuenta? Regístrate
+                </Text>
+            </View>
+        </View>
+    );
 }

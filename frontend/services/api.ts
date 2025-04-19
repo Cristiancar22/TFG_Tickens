@@ -6,26 +6,26 @@ export const api = axios.create({
     baseURL: `${process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.223:5000'}/api`,
 });
 
-api.interceptors.request.use(async( config ) => {
-    const { token } = useAuth.getState()
+api.interceptors.request.use(async (config) => {
+    const { token } = useAuth.getState();
 
-    if ( token ) {
-        config.headers.Authorization = `Bearer ${ token }`
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     } else {
         const storedToken = await SecureStore.getItemAsync('token');
-        if ( storedToken ) {
-            config.headers.Authorization = `Bearer ${ storedToken }`
+        if (storedToken) {
+            config.headers.Authorization = `Bearer ${storedToken}`;
         }
     }
-    return config
-})
+    return config;
+});
 
 api.interceptors.response.use(
-    ( response ) => response,
-    ( error ) => {
+    (response) => response,
+    (error) => {
         if (error.response?.status === 401) {
-            useAuth.getState().logout()
+            useAuth.getState().logout();
         }
-        return Promise.reject(error)
-    }
-)
+        return Promise.reject(error);
+    },
+);

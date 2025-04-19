@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { authenticateToken, uploadAvatar } from '../middlewares';
 import {
-	updatePassword,
-	updateAvatar,
-	updateProfile,
+    updatePassword,
+    updateAvatar,
+    updateProfile,
 } from '../controllers/profile.controller';
 
 const router = Router();

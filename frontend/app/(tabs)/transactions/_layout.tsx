@@ -9,9 +9,7 @@ export default function TransactionsStackLayout() {
                     headerShown: false,
                 }}
             />
-            <Stack.Screen
-                name="[id]"
-            />
+            <Stack.Screen name="[id]" />
         </Stack>
     );
 }

@@ -5,7 +5,7 @@ import { Alert } from 'react-native';
 type UpdatePasswordData = {
     currentPassword: string;
     newPassword: string;
-}
+};
 
 export const useUpdatePassword = () => {
     const [loading, setLoading] = useState(false);
@@ -19,9 +19,12 @@ export const useUpdatePassword = () => {
             await changePassword(data);
 
             Alert.alert('Perfil actualizado');
-        } catch (err: any) {
-            setError(err.message || 'Error inesperado');
-            Alert.alert('Error', err.message || 'Error al actualizar el perfil');
+        } catch (err: unknown) {
+            const errorMessage =
+                err instanceof Error ? err.message : 'Error inesperado';
+
+            setError(errorMessage);
+            Alert.alert('Error', errorMessage);
         } finally {
             setLoading(false);
         }

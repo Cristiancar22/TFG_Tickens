@@ -6,31 +6,34 @@ import { useAuth } from '@/store/useAuth';
 import { useRouter } from 'expo-router';
 
 export const useUpdateProfile = () => {
-	const router = useRouter();
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const setUser = useAuth((s) => s.setUser);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const setUser = useAuth((s) => s.setUser);
 
-	const handleUpdate = async (data: EditProfileSchema) => {
-		try {
-			setLoading(true);
-			setError(null);
+    const handleUpdate = async (data: EditProfileSchema) => {
+        try {
+            setLoading(true);
+            setError(null);
 
-			const updatedUser = await updateProfile(data);
-			setUser(updatedUser);
-			router.back();
-			Alert.alert('Perfil actualizado');
-		} catch (err: any) {
-			setError(err.message || 'Error inesperado');
-			Alert.alert('Error', err.message || 'Error al actualizar el perfil');
-		} finally {
-			setLoading(false);
-		}
-	};
+            const updatedUser = await updateProfile(data);
+            setUser(updatedUser);
+            router.back();
+            Alert.alert('Perfil actualizado');
+        } catch (err: unknown) {
+            const errorMessage =
+                err instanceof Error ? err.message : 'Error inesperado';
 
-	return {
-		update: handleUpdate,
-		loading,
-		error,
-	};
+            setError(errorMessage);
+            Alert.alert('Error', errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return {
+        update: handleUpdate,
+        loading,
+        error,
+    };
 };

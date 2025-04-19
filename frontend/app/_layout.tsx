@@ -7,45 +7,46 @@ import * as SecureStore from 'expo-secure-store';
 import { getUserFromToken } from '@/services';
 
 export default function RootLayout() {
-	const { isAuthenticated, checking, login, logout, setUser, setChecking } = useAuth();
-	const segments = useSegments();
-	const router = useRouter();
+    const { isAuthenticated, checking, login, logout, setUser, setChecking } =
+        useAuth();
+    const segments = useSegments();
+    const router = useRouter();
 
-	useEffect(() => {
-		const initializeAuth = async () => {
-			try {
-				const storedToken = await SecureStore.getItemAsync('token');
+    useEffect(() => {
+        const initializeAuth = async () => {
+            try {
+                const storedToken = await SecureStore.getItemAsync('token');
 
-				if ( storedToken ) {
-					login(storedToken);
+                if (storedToken) {
+                    login(storedToken);
 
-					const user = await getUserFromToken();
-					setUser(user);
-				} else {
-					setChecking(false); 
-				}
-			} catch ( error ) {
-				console.error('Error al verificar token:', error);
-				logout();
-			}
-		};
+                    const user = await getUserFromToken();
+                    setUser(user);
+                } else {
+                    setChecking(false);
+                }
+            } catch (error) {
+                console.error('Error al verificar token:', error);
+                logout();
+            }
+        };
 
-		initializeAuth();
-	}, []);
+        initializeAuth();
+    }, []);
 
-	useEffect(() => {
-		if (checking) return;
+    useEffect(() => {
+        if (checking) return;
 
-		const inAuthGroup = segments[0] === '(auth)';
+        const inAuthGroup = segments[0] === '(auth)';
 
-		if (!isAuthenticated && !inAuthGroup) {
-			router.replace('/login');
-		}
+        if (!isAuthenticated && !inAuthGroup) {
+            router.replace('/login');
+        }
 
-		if (isAuthenticated && inAuthGroup) {
-			router.replace('/');
-		}
-	}, [isAuthenticated, segments]);
+        if (isAuthenticated && inAuthGroup) {
+            router.replace('/');
+        }
+    }, [isAuthenticated, segments]);
 
-	return <Slot />;
+    return <Slot />;
 }

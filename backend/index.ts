@@ -1,8 +1,14 @@
-import { authRoutes, profileRoutes, ticketRoutes, transactionRoutes } from './routes';
+import {
+    authRoutes,
+    profileRoutes,
+    ticketRoutes,
+    transactionRoutes,
+} from './routes';
 import { connectDB } from './config/db';
 import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
+import { logger } from './utils/logger';
 
 dotenv.config();
 
@@ -22,11 +28,11 @@ app.use('/api/profile', profileRoutes);
 
 app.use('/api/ocr', ticketRoutes);
 
-app.use("/api/transactions", transactionRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 app.listen(PORT, () => {
-	console.log(`🚀 Server running at http://localhost:${PORT}`);
+    logger.info(`Server running at http://localhost:${PORT}`);
 }).on('error', (error: NodeJS.ErrnoException) => {
-	console.error('❌ Server failed to start:', error.message);
-	process.exit(1);
+    logger.error('Server failed to start:', error.message);
+    process.exit(1);
 });
