@@ -38,16 +38,28 @@ def try_find_document(bgr):
             return four_point_transform(bgr, approx.reshape(4, 2) * ratio)
     return None
 
-def preprocess(bgr: np.ndarray) -> np.ndarray:
+def preprocess(bgr: np.ndarray, save_debug: bool=False, prefix: str = None) -> np.ndarray:
+    if save_debug:
+        dbg_dir = ROOT / 'debug'
+        dbg_dir.mkdir(exist_ok=True)
+        ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        prefix = prefix or ts
+        cv2.imwrite(str(dbg_dir / f'{prefix}_0_original.jpg'), bgr)
+
     # ---------- 1. asegurar resolución mínima ----------
     if bgr.shape[0] < 1200:
         scale = 1200 / bgr.shape[0]
         bgr = cv2.resize(bgr, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
 
+    if save_debug:
+        cv2.imwrite(str(dbg_dir / f'{prefix}_1_resized.jpg'), bgr)
+
     # ---------- 2. intentar enderezar ----------
-    deskew = try_find_document(bgr)
-    if deskew is not None:
-        bgr = deskew
+    deskewed = try_find_document(bgr)
+    if deskewed is not None:
+        bgr = deskewed
+        if save_debug:
+            cv2.imwrite(str(dbg_dir / f'{prefix}_2_deskewed.jpg'), bgr)
 
     # ---------- 3. normalización de iluminación ----------
     gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
@@ -55,15 +67,24 @@ def preprocess(bgr: np.ndarray) -> np.ndarray:
     blur = cv2.GaussianBlur(den, (41, 41), 0)
     norm = cv2.divide(den, blur, scale=255)
 
+    if save_debug:
+        cv2.imwrite(str(dbg_dir / f'{prefix}_3_normalized.jpg'), norm)
+
     # ---------- 4. binarización adaptativa ----------
     binar = cv2.adaptiveThreshold(
         norm, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY, 31, 10
     )
 
+    if save_debug:
+        cv2.imwrite(str(dbg_dir / f'{prefix}_4_binarized.jpg'), binar)
+
     # ---------- 5. limpieza de ruido ----------
     kernel = np.ones((2, 2), np.uint8)
     clean = cv2.morphologyEx(binar, cv2.MORPH_OPEN, kernel, 1)
+
+    if save_debug:
+        cv2.imwrite(str(dbg_dir / f'{prefix}_5_cleaned.jpg'), clean)
 
     return clean
 
@@ -103,19 +124,12 @@ def clean_ocr(raw: str) -> str:
 
 def process_image(pil_img: Image.Image, save_debug: bool=False):
     bgr = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
-    processed = preprocess(bgr)
-
-    if save_debug:
-        dbg_dir = ROOT / 'debug'
-        dbg_dir.mkdir(exist_ok=True)
-        ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-        cv2.imwrite(str(dbg_dir / f'{ts}_processed.jpg'), processed)
+    ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    processed = preprocess(bgr, save_debug=save_debug, prefix=ts)
 
     pil_bin = Image.fromarray(processed)
 
-    # ✨ nuevo método conservando espacios entre palabras
     raw_text = ocr_keep_spaces(processed)
-
     text = clean_ocr(raw_text)
     total_ok = check_total(text)
 

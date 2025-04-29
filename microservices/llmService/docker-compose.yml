@@ -1,5 +1,5 @@
 services:
-    ticket-parser:
+    llm_service:
         build: .
         ports:
             - '5020:5020'

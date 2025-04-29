@@ -1,8 +1,3 @@
-"""
-Flask microservice to transform OCR text from retail receipts into structured JSON
-using OpenAI's `gpt-4o-mini-2024-07-18`. Dockerized and listens on port 5020.
-"""
-
 import json
 import os
 from typing import List, Optional
@@ -15,8 +10,9 @@ import backoff
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-openai.api_key = os.getenv("OPENAI_API_KEY", "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")  # Replace "X" with your real key in .env or compose
+openai.api_key = os.getenv("OPENAI_API_KEY", "")
 MODEL = "gpt-4o-mini-2024-07-18"
+
 # ---------------------------------------------------------------------------
 # Data schema
 # ---------------------------------------------------------------------------

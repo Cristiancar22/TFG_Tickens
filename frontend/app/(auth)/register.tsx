@@ -10,6 +10,7 @@ import { PrimaryButton } from '@/components/ui/PrimaryButton';
 
 export default function Register() {
     const login = useAuth((s) => s.login);
+    const setUser = useAuth((s) => s.setUser);
     const router = useRouter();
 
     const {
@@ -22,8 +23,10 @@ export default function Register() {
 
     const onSubmit = async (data: RegisterSchema) => {
         try {
-            const response = await registerUser(data);
-            login(response.token);
+            const { token, ...user }  = await registerUser(data);
+
+            setUser(user);
+            login(token);
         } catch (err: any) {
             Alert.alert('Error', err.message);
         }

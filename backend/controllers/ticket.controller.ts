@@ -73,7 +73,7 @@ export const processTicket = async (
 
         // Paso 3: Enviar texto al servicio LLM
         const llmResponse = await axios.post<LlmResponse>(
-            'http://ticket-parser:5020/parse',
+            'http://llm_service:5020/parse',
             { text },
         );
         const parsed = llmResponse.data;
@@ -141,5 +141,36 @@ export const processTicket = async (
     } catch (error) {
         logger.error('❌ Error al procesar el ticket:', error);
         res.status(500).json({ message: 'Error al procesar el ticket' });
+    }
+};
+
+export const processTicketPdf = async (
+    req: AuthRequest,
+    res: Response,
+): Promise<void> => {
+    try {
+        if (!req.file || req.file.mimetype !== 'application/pdf') {
+            res.status(400).json({ message: 'Se requiere un archivo PDF válido' });
+            return;
+        }
+
+        const userId = req.user?._id;
+        const pdfBuffer = req.file.buffer;
+        const pdfBase64 = pdfBuffer.toString('base64');
+
+        const ticket = await Ticket.create({
+            user: userId,
+            scanDate: new Date(),
+            rawData: pdfBase64,
+            processingStatus: 'pdf_subido',
+        });
+
+        res.status(201).json({
+            message: 'PDF recibido y almacenado correctamente',
+            ticketId: ticket._id,
+        });
+    } catch (error) {
+        logger.error('Error al procesar el PDF:', error);
+        res.status(500).json({ message: 'Error al procesar el archivo PDF' });
     }
 };
