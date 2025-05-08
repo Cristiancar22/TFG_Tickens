@@ -23,7 +23,7 @@ export default function Register() {
 
     const onSubmit = async (data: RegisterSchema) => {
         try {
-            const { token, ...user }  = await registerUser(data);
+            const { token, ...user } = await registerUser(data);
 
             setUser(user);
             login(token);

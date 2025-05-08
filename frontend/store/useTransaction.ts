@@ -1,12 +1,6 @@
 import { getRecentTransactions } from '@/services/transaction.service';
+import { Transaction } from '@/types';
 import { create } from 'zustand';
-
-type Transaction = {
-    _id: string;
-    total: number;
-    purchaseDate: string;
-    tienda: { name: string }; // ajusta según tu backend
-};
 
 type TransactionStore = {
     transactions: Transaction[];

@@ -28,9 +28,7 @@ const productSchema = new Schema<IProduct>({
         ref: 'GrupoProduct',
         required: false,
     },
-    barcode: { type: String },
     measurementUnit: { type: String },
-    referenceImage: { type: String },
 });
 
 export const Product = model<IProduct>('Product', productSchema);

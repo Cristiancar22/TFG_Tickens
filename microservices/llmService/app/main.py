@@ -1,5 +1,7 @@
 import json
 import os
+import re
+from datetime import datetime
 from typing import List, Optional
 
 from flask import Flask, jsonify, request
@@ -38,7 +40,7 @@ Eres un asistente que extrae información estructurada de tickets de compra escr
 Devuelve exclusivamente un JSON que cumpla exactamente con este esquema:
 {
   "supermercado": string|null,
-  "fecha": string|null,
+  "fecha": string|null,             # Formato obligatorio: dd/mm/yyyy (ej. 29/04/2025)
   "direccion": string|null,
   "items": [
       {"cantidad": number|null,
@@ -49,9 +51,34 @@ Devuelve exclusivamente un JSON que cumpla exactamente con este esquema:
   ],
   "total_ticket": number|null
 }
-No incluyas ningún otro texto ni comentarios.
-Corrige errores de OCR y usa punto como separador decimal.
+Restricciones:
+- El campo "fecha" debe estar en formato dd/mm/yyyy y cumplir el patrón: /^\d{2}\/\d{2}\/\d{4}$/.
+- No incluyas ningún otro texto ni comentarios.
+- Corrige errores de OCR y usa punto como separador decimal.
 """
+
+# ---------------------------------------------------------------------------
+# Date normalization
+# ---------------------------------------------------------------------------
+def normalize_date_format(date_str: Optional[str]) -> Optional[str]:
+    if not date_str:
+        return None
+
+    # Intenta primero validar si ya cumple el formato correcto
+    if re.match(r"^\d{2}/\d{2}/\d{4}$", date_str):
+        return date_str
+
+    # Intenta parsear con otros formatos comunes
+    possible_formats = ["%d-%m-%Y", "%d.%m.%Y", "%Y-%m-%d", "%Y/%m/%d", "%Y-%m-%dT%H:%M:%S"]
+    for fmt in possible_formats:
+        try:
+            dt = datetime.strptime(date_str, fmt)
+            return dt.strftime("%d/%m/%Y")
+        except ValueError:
+            continue
+
+    # Si no se puede arreglar, devuelve None
+    return None
 
 # ---------------------------------------------------------------------------
 # LLM call
@@ -71,6 +98,8 @@ def ask_llm(raw_text: str) -> dict:
 
 def parse_ticket(raw_text: str) -> Ticket:
     data = ask_llm(raw_text)
+    # Normalizar la fecha aquí
+    data["fecha"] = normalize_date_format(data.get("fecha"))
     return Ticket.model_validate(data)
 
 # ---------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import { Schema, model, Document, Types } from 'mongoose';
 import { IUser } from './user.model';
+import { OcrResponse } from '../types';
 
 export interface ITicket extends Document {
     _id: Types.ObjectId;
@@ -8,7 +9,7 @@ export interface ITicket extends Document {
     rawData?: string;
     processingStatus?: string;
     totalScanned?: number;
-    ocrMetadata?: any;
+    ocrMetadata?: OcrResponse;
 }
 
 const ticketSchema = new Schema<ITicket>({

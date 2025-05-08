@@ -24,7 +24,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expone el puerto
-EXPOSE 5000
+EXPOSE 5010
 
 # Comando de inicio
 CMD ["python", "app/main.py"]

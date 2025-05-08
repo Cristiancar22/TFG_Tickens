@@ -8,22 +8,7 @@ import { Product } from '../models/product.model';
 import { Transaction } from '../models/transaction.model';
 import { TransactionDetail } from '../models/transactionDetail.model';
 import { logger } from '../utils/logger';
-
-type LlmItem = {
-    cantidad: number | null;
-    descripcion: string;
-    precio_unitario: number | null;
-    importe: number | null;
-    peso_kg: number | null;
-};
-
-type LlmResponse = {
-    supermercado: string | null;
-    fecha: string | null;
-    direccion: string | null;
-    items: LlmItem[];
-    total_ticket: number | null;
-};
+import { LlmResponse, OcrResponse } from '../types';
 
 export const processTicket = async (
     req: AuthRequest,
@@ -56,15 +41,23 @@ export const processTicket = async (
             contentType: req.file.mimetype,
         });
 
-        const ocrResponse = await axios.post(
-            'http://ocr_service:5000/ocr',
+        const ocrResponse = await axios.post<OcrResponse>(
+            'http://ocr_service:5010/ocr',
             form,
             {
                 headers: form.getHeaders(),
             },
         );
 
-        const { text } = ocrResponse.data as any;
+        const { text } = ocrResponse.data;
+
+        if (!text?.trim()) {
+            res.status(400).json({
+                message:
+                    'No se ha podido extraer texto de la imagen proporcionada',
+            });
+            return;
+        }
 
         // Actualizar ticket con el resultado del OCR
         ticket.processingStatus = 'pendienteLLM';
@@ -81,18 +74,20 @@ export const processTicket = async (
         // Paso 4: Obtener o crear el supermercado
         const storeName = parsed.supermercado?.trim();
         let store = null;
-        if (storeName) {
-            store = await Store.findOne({ name: storeName });
-            if (!store) {
-                store = await Store.create({
-                    name: storeName || 'Desconocido',
-                    address: parsed.direccion,
-                    createdBy: userId,
-                });
-            }
+        const nameToUse = storeName || 'Desconocido';
+
+        // Busca o crea el supermercado, siempre
+        store = await Store.findOne({ name: nameToUse });
+        if (!store) {
+            store = await Store.create({
+                name: nameToUse,
+                address: parsed.direccion,
+                createdBy: userId,
+            });
         }
 
         let parsedDate = new Date();
+
         if (parsed.fecha && /^\d{2}\/\d{2}\/\d{4}$/.test(parsed.fecha)) {
             const [day, month, year] = parsed.fecha.split('/');
             parsedDate = new Date(`${year}-${month}-${day}`);
@@ -102,7 +97,7 @@ export const processTicket = async (
         const transaction = await Transaction.create({
             ticket: ticket._id,
             user: userId,
-            tienda: store ? store._id : null,
+            store: store ? store._id : null,
             purchaseDate: parsedDate,
             total: parsed.total_ticket ?? 0,
         });
@@ -122,8 +117,8 @@ export const processTicket = async (
             }
 
             await TransactionDetail.create({
-                transaccion: transaction._id,
-                producto: product._id,
+                transaction: transaction._id,
+                product: product._id,
                 quantity: item.cantidad ?? 1,
                 unitPrice: item.precio_unitario ?? 0,
                 subtotal: item.importe ?? 0,
@@ -150,7 +145,9 @@ export const processTicketPdf = async (
 ): Promise<void> => {
     try {
         if (!req.file || req.file.mimetype !== 'application/pdf') {
-            res.status(400).json({ message: 'Se requiere un archivo PDF válido' });
+            res.status(400).json({
+                message: 'Se requiere un archivo PDF válido',
+            });
             return;
         }
 

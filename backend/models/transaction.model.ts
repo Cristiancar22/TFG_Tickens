@@ -7,7 +7,7 @@ export interface ITransaction extends Document {
     _id: Types.ObjectId;
     ticket?: Types.ObjectId | ITicket;
     user: Types.ObjectId | IUser;
-    tienda: Types.ObjectId | IStore;
+    store: Types.ObjectId | IStore;
     purchaseDate: Date;
     total?: number;
     paymentMethod?: string;
@@ -18,7 +18,7 @@ export interface ITransaction extends Document {
 const transactionSchema = new Schema<ITransaction>({
     ticket: { type: Schema.Types.ObjectId, ref: 'Ticket' },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    tienda: { type: Schema.Types.ObjectId, ref: 'Store', required: true },
+    store: { type: Schema.Types.ObjectId, ref: 'Store', required: false },
     purchaseDate: { type: Date, required: true },
     total: { type: Number, default: 0 },
     paymentMethod: { type: String },

@@ -4,20 +4,20 @@ import { IProduct } from './product.model';
 
 export interface ITransactionDetail extends Document {
     _id: Types.ObjectId;
-    transaccion: Types.ObjectId | ITransaction;
-    producto: Types.ObjectId | IProduct;
+    transaction: Types.ObjectId | ITransaction;
+    product: Types.ObjectId | IProduct;
     quantity: number;
     unitPrice: number;
     subtotal: number;
 }
 
 const transactionDetailSchema = new Schema<ITransactionDetail>({
-    transaccion: {
+    transaction: {
         type: Schema.Types.ObjectId,
-        ref: 'Transaccion',
+        ref: 'Transaction',
         required: true,
     },
-    producto: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    product: { type: Schema.Types.ObjectId, ref: 'Product', required: false },
     quantity: { type: Number, default: 1 },
     unitPrice: { type: Number, default: 0 },
     subtotal: { type: Number, default: 0 },
