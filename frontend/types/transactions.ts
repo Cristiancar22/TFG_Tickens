@@ -1,3 +1,5 @@
+import { Product } from './product';
+
 export type Transaction = {
     _id: string;
     total: number;
@@ -11,8 +13,4 @@ export type TransactionDetail = {
     quantity: number;
     unitPrice: number;
     subtotal: number;
-};
-
-export type Product = {
-    name: string;
 };

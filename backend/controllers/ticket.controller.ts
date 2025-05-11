@@ -107,12 +107,13 @@ export const processTicket = async (
             const descripcion = item.descripcion?.trim();
             if (!descripcion) continue;
 
-            let product = await Product.findOne({ name: descripcion });
+            let product = await Product.findOne({ name: descripcion, createdBy: userId });
             if (!product) {
                 product = await Product.create({
                     name: descripcion,
                     category: null,
                     group: null,
+                    createdBy: userId,
                 });
             }
 

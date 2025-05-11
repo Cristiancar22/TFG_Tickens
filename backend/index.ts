@@ -1,6 +1,8 @@
 import {
     authRoutes,
+    productRoutes,
     profileRoutes,
+    storeRoutes,
     ticketRoutes,
     transactionRoutes,
 } from './routes';
@@ -29,6 +31,10 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/ticket', ticketRoutes);
 
 app.use('/api/transactions', transactionRoutes);
+
+app.use('/api/product', productRoutes);
+
+app.use('/api/store', storeRoutes);
 
 app.listen(PORT, () => {
     logger.info(`Server running at http://localhost:${PORT}`);

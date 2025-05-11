@@ -57,7 +57,15 @@ export default function Login() {
                     title="Iniciar sesión"
                     onPress={handleSubmit(onSubmit)}
                 />
-
+                <PrimaryButton
+                    title="Login rápido (Juan)"
+                    onPress={() =>
+                        onSubmit({
+                            email: 'juan.perez@example.com',
+                            password: 'MiPassword123',
+                        })
+                    }
+                />
                 <Text
                     className="text-center my-4 text-primary underline"
                     onPress={() => router.push('/register')}

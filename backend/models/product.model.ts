@@ -1,6 +1,7 @@
 import { Schema, model, Document, Types } from 'mongoose';
 import { IProductCategory } from './productCategory.model';
 import { IProductGroup } from './productGroup.model';
+import { IUser } from './user.model';
 
 export interface IProduct extends Document {
     _id: Types.ObjectId;
@@ -12,6 +13,7 @@ export interface IProduct extends Document {
     barcode?: string;
     measurementUnit?: string;
     referenceImage?: string;
+    createdBy: Types.ObjectId | IUser;
 }
 
 const productSchema = new Schema<IProduct>({
@@ -20,15 +22,20 @@ const productSchema = new Schema<IProduct>({
     brand: { type: String },
     category: {
         type: Schema.Types.ObjectId,
-        ref: 'CategoriaProduct',
+        ref: 'ProductCategory',
         required: false,
     },
     group: {
         type: Schema.Types.ObjectId,
-        ref: 'GrupoProduct',
+        ref: 'ProductGroup',
         required: false,
     },
     measurementUnit: { type: String },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 });
 
 export const Product = model<IProduct>('Product', productSchema);
