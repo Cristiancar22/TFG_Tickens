@@ -4,30 +4,52 @@ import { Ionicons } from '@expo/vector-icons';
 import { useStores } from '@/store/useStore';
 import { AddStoreModal } from '@/components/modals/AddStoreModal';
 import { StoreList } from '@/components/manageStore';
+import { Store } from '../../../types/store';
 
 export const ManageStoreScreen = () => {
     const [isModalVisible, setModalVisible] = useState(false);
+    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+
     const createStore = useStores((s) => s.createStore);
+    const updateStore = useStores((s) => s.updateStore);
+
+    const handleOpenCreate = () => {
+        setSelectedStore(null);
+        setModalVisible(true);
+    };
+
+    const handleOpenEdit = (store: Store) => {
+        setSelectedStore(store);
+        setModalVisible(true);
+    };
+
+    const handleSubmit = async (data: Omit<Store, 'id'> ) => {
+        if (selectedStore) {
+            await updateStore(selectedStore.id, data);
+        } else {
+            await createStore(data);
+        }
+    };
+
 
     return (
         <View className="flex-1 bg-white">
             <Text className="text-xl font-bold p-4">Tus tiendas</Text>
 
-            <StoreList />
+            <StoreList onEditStore={handleOpenEdit} />
 
-            {/* Botón flotante */}
             <Pressable
                 className="absolute bottom-6 right-6 bg-primary rounded-full p-4 shadow-lg"
-                onPress={() => setModalVisible(true)}
+                onPress={handleOpenCreate}
             >
                 <Ionicons name="add" size={28} color="#fff" />
             </Pressable>
 
-            {/* Modal de añadir tienda */}
             <AddStoreModal
                 isVisible={isModalVisible}
                 onClose={() => setModalVisible(false)}
-                onSubmit={createStore}
+                onSubmit={handleSubmit}
+                store={selectedStore}
             />
         </View>
     );

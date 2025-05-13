@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
@@ -8,19 +8,29 @@ interface Props {
     isVisible: boolean;
     onClose: () => void;
     onSubmit: (data: { name: string; address?: string }) => Promise<void>;
+    store?: { name: string; address?: string } | null;
     loading?: boolean;
-    defaultValues?: { name: string; address?: string };
 }
 
 export const AddStoreModal: React.FC<Props> = ({
     isVisible,
     onClose,
     onSubmit,
+    store,
     loading = false,
-    defaultValues,
 }) => {
-    const [name, setName] = useState(defaultValues?.name || '');
-    const [address, setAddress] = useState(defaultValues?.address || '');
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState('');
+
+    useEffect(() => {
+        if (store) {
+            setName(store.name);
+            setAddress(store.address || '');
+        } else {
+            setName('');
+            setAddress('');
+        }
+    }, [store]);
 
     const handleSave = async () => {
         if (!name.trim()) return alert('El nombre es obligatorio');

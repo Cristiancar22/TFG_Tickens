@@ -62,3 +62,26 @@ export const updateStore = async (
         });
     }
 };
+
+export const deleteStore = async (
+    req: AuthRequest,
+    res: Response,
+): Promise<void> => {
+    const { id } = req.params;
+
+    try {
+        const deleted = await Store.findByIdAndDelete(id);
+
+        if (!deleted) {
+            res.status(404).json({ message: 'Tienda no encontrada' });
+            return;
+        }
+
+        res.json({ message: 'Tienda eliminada correctamente' });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error al eliminar la tienda',
+            error,
+        });
+    }
+};

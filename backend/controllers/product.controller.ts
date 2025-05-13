@@ -64,3 +64,26 @@ export const updateProduct = async (
         });
     }
 };
+
+export const deleteProduct = async (
+    req: AuthRequest,
+    res: Response,
+): Promise<void> => {
+    const { id } = req.params;
+
+    try {
+        const deleted = await Product.findByIdAndDelete(id);
+
+        if (!deleted) {
+            res.status(404).json({ message: 'Producto no encontrado' });
+            return;
+        }
+
+        res.json({ message: 'Producto eliminado correctamente' });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error al eliminar el producto',
+            error,
+        });
+    }
+};

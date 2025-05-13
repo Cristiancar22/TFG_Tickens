@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { InputField } from '@/components/ui/InputField';
+import { Product } from '@/types';
 
 interface Props {
     isVisible: boolean;
     onClose: () => void;
     onSubmit: (data: { name: string; description?: string }) => Promise<void>;
+    product?: Product | null;
     loading?: boolean;
 }
 
@@ -15,16 +17,25 @@ export const AddProductModal: React.FC<Props> = ({
     isVisible,
     onClose,
     onSubmit,
+    product,
     loading = false,
 }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
 
+    useEffect(() => {
+        if (product) {
+            setName(product.name);
+            setDescription(product.description || '');
+        } else {
+            setName('');
+            setDescription('');
+        }
+    }, [product]);
+
     const handleSave = async () => {
         if (!name.trim()) return alert('El nombre es obligatorio');
         await onSubmit({ name, description });
-        setName('');
-        setDescription('');
         onClose();
     };
 
@@ -38,7 +49,7 @@ export const AddProductModal: React.FC<Props> = ({
         >
             <View className="bg-white p-6 rounded-2xl w-full max-w-md">
                 <Text className="text-lg font-semibold mb-4">
-                    Añadir producto
+                    {product ? 'Editar producto' : 'Añadir producto'}
                 </Text>
 
                 <InputField
@@ -56,7 +67,7 @@ export const AddProductModal: React.FC<Props> = ({
                 />
 
                 <PrimaryButton
-                    title={loading ? 'Creando...' : 'Crear producto'}
+                    title={loading ? 'Guardando...' : product ? 'Guardar cambios' : 'Crear producto'}
                     disabled={loading}
                     onPress={handleSave}
                 />
