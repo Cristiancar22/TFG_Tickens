@@ -1,3 +1,4 @@
+import { useStores } from '@/store/useStore';
 import { Transaction } from '@/types';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -9,6 +10,8 @@ type Props = {
 
 export const TransactionItem = ({ item }: Props) => {
     const router = useRouter();
+    const { getStoreById } = useStores();
+    const store = getStoreById(item.store);
 
     return (
         <TouchableOpacity
@@ -20,7 +23,7 @@ export const TransactionItem = ({ item }: Props) => {
                 })
             }
         >
-            <Text className="text-lg font-bold">{item.store?.name}</Text>
+            <Text className="text-lg font-bold">{store?.name || 'Tienda sin asignar'}</Text>
             <Text>Total: {item.total.toFixed(2)} €</Text>
             <Text>
                 Fecha: {new Date(item.purchaseDate).toLocaleDateString()}

@@ -17,6 +17,7 @@ type ProductsState = {
         data: Partial<Omit<Product, 'id'>>,
     ) => Promise<void>;
     deleteProduct: (id: string) => Promise<void>;
+    getProductById: (id: string) => Product | undefined;
 };
 
 export const useProducts = create<ProductsState>((set, get) => ({
@@ -67,5 +68,9 @@ export const useProducts = create<ProductsState>((set, get) => ({
             console.error('Error al eliminar producto:', err);
             throw err;
         }
+    },
+
+    getProductById: (id) => {
+        return get().products.find((product) => product.id === id);
     },
 }));

@@ -15,6 +15,8 @@ import {
 import { colors } from '@/constants/colors';
 import { Transaction } from '@/types';
 import { useTransactionEdit } from '@/hooks/transactions/useTransactionEdit';
+import { useStores } from '@/store/useStore';
+import { useProducts } from '@/store/useProduct';
 
 export default function TransactionDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -29,6 +31,10 @@ export default function TransactionDetailScreen() {
         saveTransaction,
         isSaving,
     } = useTransactionEdit(transaction as Transaction);
+    const { getStoreById } = useStores();
+    const { getProductById } = useProducts();
+
+    const store = transaction?.store ? getStoreById(transaction.store) : null;
 
     useEffect(() => {
         if (id) {
@@ -75,7 +81,7 @@ export default function TransactionDetailScreen() {
         <>
             <ScrollView className="flex-1 p-4 bg-white">
                 <Text className="text-xl font-bold mb-2">
-                    Tienda: {transaction.store?.name}
+                    Tienda: {store?.name ?? 'Tienda desconocida'}
                 </Text>
                 <Text>Total: {transaction.total.toFixed(2)} €</Text>
                 <Text>
@@ -84,14 +90,19 @@ export default function TransactionDetailScreen() {
                 </Text>
 
                 <Text className="mt-4 font-bold">Productos:</Text>
-                {editTransaction.details?.map((detail, idx) =>
-                    editMode ? (
+                {editTransaction.details?.map((detail, idx) => {
+                    const product = detail?.product
+                        ? getProductById(detail.product)
+                        : null;
+
+                    return editMode ? (
                         <View
                             key={idx}
                             className="border-b border-gray-300 pb-2 mb-2"
                         >
                             <Text className="font-semibold">
-                                Producto: {detail.product?.name}
+                                Producto:{' '}
+                                {product?.name ?? 'Producto desconocido'}
                             </Text>
                             <TextInput
                                 value={String(detail.quantity)}
@@ -122,9 +133,15 @@ export default function TransactionDetailScreen() {
                             </Text>
                         </View>
                     ) : (
-                        <TransactionDetailItem key={idx} detail={detail} />
-                    ),
-                )}
+                        <TransactionDetailItem
+                            key={idx}
+                            detail={detail}
+                            productName={
+                                product?.name ?? 'Producto desconocido'
+                            }
+                        />
+                    );
+                })}
             </ScrollView>
 
             <TouchableOpacity

@@ -15,7 +15,6 @@ export const getRecentTransactions = async (
         const transactions = await Transaction.find({ user: userId })
             .sort({ purchaseDate: -1 })
             .limit(limit)
-            .populate('store', 'name')
             .lean();
 
         res.status(200).json(transactions);
@@ -36,9 +35,7 @@ export const getTransactionById = async (
         const transaction = await Transaction.findOne({
             _id: transactionId,
             user: userId,
-        })
-            .populate('store', 'name')
-            .lean();
+        }).lean();
 
         if (!transaction) {
             res.status(404).json({ message: 'Transacción no encontrada' });
@@ -47,9 +44,7 @@ export const getTransactionById = async (
 
         const details = await TransactionDetail.find({
             transaction: transaction._id,
-        })
-            .populate('product', 'name')
-            .lean();
+        }).lean();
 
         res.json({ ...transaction, details });
     } catch (err) {

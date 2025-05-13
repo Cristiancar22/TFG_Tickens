@@ -17,6 +17,7 @@ type StoresState = {
         data: Partial<Omit<Store, 'id'>>,
     ) => Promise<void>;
     deleteStore: (id: string) => Promise<void>;
+    getStoreById: (id: string) => Store | undefined;
 };
 
 export const useStores = create<StoresState>((set, get) => ({
@@ -68,4 +69,9 @@ export const useStores = create<StoresState>((set, get) => ({
             throw err;
         }
     },
+
+    getStoreById: (id) => {
+        return get().stores.find((store) => store.id === id);
+    },
+
 }));

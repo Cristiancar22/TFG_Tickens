@@ -5,6 +5,7 @@ import {
     storeRoutes,
     ticketRoutes,
     transactionRoutes,
+    userStatsRoutes,
 } from './routes';
 import { connectDB } from './config/db';
 import dotenv from 'dotenv';
@@ -35,6 +36,8 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/product', productRoutes);
 
 app.use('/api/store', storeRoutes);
+
+app.use('/api/user-stats', userStatsRoutes);
 
 app.listen(PORT, () => {
     logger.info(`Server running at http://localhost:${PORT}`);
