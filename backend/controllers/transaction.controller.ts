@@ -3,6 +3,7 @@ import { Transaction } from '../models/transaction.model';
 import { TransactionDetail } from '../models/transactionDetail.model';
 import { AuthRequest } from '../middlewares';
 import { logger } from '../utils/logger';
+import { Types } from 'mongoose';
 
 export const getRecentTransactions = async (
     req: AuthRequest,
@@ -44,7 +45,7 @@ export const getTransactionById = async (
 
         const details = await TransactionDetail.find({
             transaction: transaction._id,
-        }).lean();
+        }).select('product quantity unitPrice subtotal').lean();
 
         res.json({ ...transaction, details });
     } catch (err) {
@@ -57,22 +58,103 @@ export const updateTransaction = async (
     req: AuthRequest,
     res: Response,
 ): Promise<void> => {
-    const allDetails = (await TransactionDetail.find().lean()) as any[];
-    logger.info('Detalles de transacción:', allDetails);
-    // Transformar los datos al nuevo formato (cambiar producto → product)
-    const updatedDetails = allDetails.map(({ producto, ...rest }) => ({
-        ...rest,
-        product: producto, // renombrar campo aquí
-    }));
-    logger.info('Detalles de transacción transformados:', updatedDetails);
+    try {
+        const transactionId = req.body._id;
+        const userId = req.user!._id;
 
-    await TransactionDetail.collection.drop();
+        const existingTransaction = await Transaction.findOne({
+            _id: transactionId,
+            user: userId,
+        });
 
-    logger.info('Detalles de transacción eliminados');
+        if (!existingTransaction) {
+            res.status(404).json({ message: 'Transacción no encontrada' });
+            return;
+        }
 
-    await TransactionDetail.insertMany(updatedDetails);
+        const {
+            store,
+            purchaseDate,
+            total,
+            ticket,
+            paymentMethod,
+            transactionCategory,
+            notes,
+        } = req.body;
 
-    logger.info('Detalles de transacción insertados');
+        existingTransaction.store = store;
+        existingTransaction.purchaseDate = new Date(purchaseDate);
+        existingTransaction.total = total;
+        existingTransaction.ticket = ticket;
+        existingTransaction.paymentMethod = paymentMethod;
+        existingTransaction.transactionCategory = transactionCategory;
+        existingTransaction.notes = notes;
 
-    res.json({ success: true });
+        await existingTransaction.save();
+
+        await TransactionDetail.deleteMany({ transaction: transactionId });
+
+        const newDetails = req.body.details.map((detail: any) => ({
+            transaction: transactionId,
+            product: detail.product ? new Types.ObjectId(String(detail.product)) : undefined,
+            quantity: detail.quantity,
+            unitPrice: detail.unitPrice,
+            subtotal: detail.subtotal,
+        }));
+
+        await TransactionDetail.insertMany(newDetails);
+
+        res.json({ success: true });
+    } catch (err) {
+        logger.error('Error al actualizar transacción:', err);
+        res.status(500).json({ message: 'Error al actualizar transacción' });
+    }
+};
+
+export const createTransaction = async (
+    req: AuthRequest,
+    res: Response,
+): Promise<void> => {
+    try {
+        const userId = req.user!._id;
+
+        const {
+            store,
+            purchaseDate,
+            total,
+            ticket,
+            paymentMethod,
+            transactionCategory,
+            notes,
+            details,
+        } = req.body;
+
+        const transaction = new Transaction({
+            user: userId,
+            store,
+            purchaseDate: new Date(purchaseDate),
+            total,
+            ticket,
+            paymentMethod,
+            transactionCategory,
+            notes,
+        });
+
+        await transaction.save();
+
+        const detailDocs = (details || []).map((detail: any) => ({
+            transaction: transaction._id,
+            product: detail.product ? new Types.ObjectId(String(detail.product)) : undefined,
+            quantity: detail.quantity,
+            unitPrice: detail.unitPrice,
+            subtotal: detail.subtotal,
+        }));
+
+        await TransactionDetail.insertMany(detailDocs);
+
+        res.status(201).json({ success: true, transactionId: transaction._id });
+    } catch (err) {
+        logger.error('Error al crear transacción:', err);
+        res.status(500).json({ message: 'Error al crear la transacción' });
+    }
 };

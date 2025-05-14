@@ -9,7 +9,8 @@ export default function TransactionsStackLayout() {
                     headerShown: false,
                 }}
             />
-            <Stack.Screen name="[id]" />
+            <Stack.Screen name="[id]" options={{ title: 'Cargando...' }} />
+            <Stack.Screen name="newTransaction" options={{ title: 'Nueva transacción' }} />
         </Stack>
     );
 }

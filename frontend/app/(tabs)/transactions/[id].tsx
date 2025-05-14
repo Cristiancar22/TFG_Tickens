@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { getTransactionById } from '@/services/transaction.service';
-import { TransactionDetailItem } from '@/components/transactions';
 import { Ionicons } from '@expo/vector-icons';
 import {
     Text,
@@ -10,31 +9,36 @@ import {
     ScrollView,
     TouchableOpacity,
     StyleSheet,
-    TextInput,
 } from 'react-native';
 import { colors } from '@/constants/colors';
-import { Transaction } from '@/types';
+import { Transaction, TransactionDetail } from '@/types';
 import { useTransactionEdit } from '@/hooks/transactions/useTransactionEdit';
 import { useStores } from '@/store/useStore';
 import { useProducts } from '@/store/useProduct';
-
+import { TransactionDetailEditItem } from '@/components/transactions/TransactionDetailEditItem';
+import { TransactionDetailItem } from '@/components/transactions';
+import { TransactionHeader } from '@/components/transactions/TransactionHeader';
 export default function TransactionDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const navigation = useNavigation();
     const [loading, setLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const [transaction, setTransaction] = useState<Transaction | null>(null);
+
     const {
         editTransaction,
         updateDetail,
         setEditTransaction,
         saveTransaction,
         isSaving,
+        updateHeader,
+        addDetail,
+        removeDetail,
     } = useTransactionEdit(transaction as Transaction);
-    const { getStoreById } = useStores();
-    const { getProductById } = useProducts();
 
-    const store = transaction?.store ? getStoreById(transaction.store) : null;
+    const { stores, getStoreById } = useStores();
+    const { products, getProductById } = useProducts();
 
     useEffect(() => {
         if (id) {
@@ -58,7 +62,19 @@ export default function TransactionDetailScreen() {
 
     const handleSave = async () => {
         const success = await saveTransaction();
-        if (success) setEditMode(false);
+        if (success) {
+            const purifiedTransaction = {
+                ...editTransaction,
+                details: editTransaction.details
+                    ?.filter((detail) => detail.product || detail.unitPrice > 0)
+                    .map((detail) => ({
+                        ...detail,
+                        subtotal: detail.quantity * detail.unitPrice,
+                    })),
+            };
+            setTransaction(purifiedTransaction);
+            setEditMode(false);
+        }
     };
 
     if (loading || isSaving) {
@@ -79,69 +95,82 @@ export default function TransactionDetailScreen() {
 
     return (
         <>
-            <ScrollView className="flex-1 p-4 bg-white">
-                <Text className="text-xl font-bold mb-2">
-                    Tienda: {store?.name ?? 'Tienda desconocida'}
-                </Text>
-                <Text>Total: {transaction.total.toFixed(2)} €</Text>
-                <Text>
-                    Fecha:{' '}
-                    {new Date(transaction.purchaseDate).toLocaleDateString()}
-                </Text>
+            <TransactionHeader
+                editMode={editMode}
+                storeId={editTransaction.store}
+                stores={stores}
+                getStoreById={getStoreById}
+                purchaseDate={editTransaction.purchaseDate}
+                onStoreChange={(id) => updateHeader({ store: id })}
+                onDateChange={(date) => updateHeader({ purchaseDate: date })}
+                showDatePicker={showDatePicker}
+                setShowDatePicker={setShowDatePicker}
+                total={transaction.total}
+            />
 
+            <ScrollView
+                className="flex-1 p-4 bg-white"
+                contentContainerStyle={{ paddingBottom: 90 }}
+            >
                 <Text className="mt-4 font-bold">Productos:</Text>
-                {editTransaction.details?.map((detail, idx) => {
+                {(editMode
+                    ? editTransaction.details
+                    : transaction.details
+                )?.map((detail, idx) => {
                     const product = detail?.product
                         ? getProductById(detail.product)
                         : null;
 
                     return editMode ? (
-                        <View
+                        <TransactionDetailEditItem
                             key={idx}
-                            className="border-b border-gray-300 pb-2 mb-2"
-                        >
-                            <Text className="font-semibold">
-                                Producto:{' '}
-                                {product?.name ?? 'Producto desconocido'}
-                            </Text>
-                            <TextInput
-                                value={String(detail.quantity)}
-                                keyboardType="numeric"
-                                onChangeText={(text) =>
-                                    updateDetail(idx, {
-                                        quantity: Number(text),
-                                    })
-                                }
-                                className="border rounded p-2 my-1"
-                            />
-                            <TextInput
-                                value={detail.unitPrice.toString()}
-                                keyboardType="decimal-pad"
-                                onChangeText={(text) =>
-                                    updateDetail(idx, {
-                                        unitPrice: parseFloat(text),
-                                    })
-                                }
-                                className="border rounded p-2 my-1"
-                            />
-                            <Text>
-                                Subtotal:{' '}
-                                {(detail.quantity * detail.unitPrice).toFixed(
-                                    2,
-                                )}{' '}
-                                €
-                            </Text>
-                        </View>
+                            productId={detail.product || null}
+                            quantity={detail.quantity}
+                            unitPrice={detail.unitPrice}
+                            onUpdate={(updated) =>
+                                updateDetail(idx, {
+                                    ...(updated.productId && {
+                                        product: updated.productId,
+                                    }),
+                                    ...(updated.quantity !== undefined && {
+                                        quantity: updated.quantity,
+                                    }),
+                                    ...(updated.unitPrice !== undefined && {
+                                        unitPrice: updated.unitPrice,
+                                    }),
+                                })
+                            }
+                            onRemove={() => removeDetail(idx)}
+                            products={products}
+                            getProductById={getProductById}
+                        />
                     ) : (
                         <TransactionDetailItem
                             key={idx}
                             detail={detail}
-                            productName={
-                                product?.name ?? 'Producto desconocido'
-                            }
+                            product={product ?? undefined}
                         />
                     );
                 })}
+
+                {editMode && (
+                    <TouchableOpacity
+                        onPress={() =>
+                            addDetail({
+                                product: '',
+                                quantity: 1,
+                                unitPrice: 0,
+                                subtotal: 0,
+                            } as TransactionDetail)
+                        }
+                        className="mt-4 py-3 rounded-xl"
+                        style={{ backgroundColor: colors.accent }}
+                    >
+                        <Text className="text-white text-center text-base font-semibold">
+                            Añadir producto
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </ScrollView>
 
             <TouchableOpacity

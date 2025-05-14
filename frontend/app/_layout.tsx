@@ -7,6 +7,7 @@ import * as SecureStore from 'expo-secure-store';
 import { getUserFromToken } from '@/services';
 import { useProducts } from '@/store/useProduct';
 import { useStores } from '@/store/useStore';
+import { useCategories } from '@/store/useCategories';
 
 export default function RootLayout() {
     const { isAuthenticated, checking, login, logout, setUser, setChecking } =
@@ -16,6 +17,7 @@ export default function RootLayout() {
 
     const fetchProducts = useProducts((s) => s.fetchProducts);
     const fetchStores = useStores((s) => s.fetchStores);
+    const fetchCategories = useCategories((s) => s.fetchCategories);
 
     useEffect(() => {
         const initializeAuth = async () => {
@@ -55,6 +57,7 @@ export default function RootLayout() {
         if (isAuthenticated) {
             fetchProducts();
             fetchStores();
+            fetchCategories();
         }
     }, [isAuthenticated, segments]);
 

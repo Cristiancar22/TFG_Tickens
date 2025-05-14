@@ -13,8 +13,8 @@ import { useTransactionStore } from '@/store/useTransaction';
 import { TransactionList } from '@/components/transactions/TransactionList';
 import { TransactionFilter } from '@/components/transactions/TransactionFilter';
 import { colors } from '@/constants/colors';
+import { useRouter } from 'expo-router';
 
-// Habilitar animaciones en Android
 if (
     Platform.OS === 'android' &&
     UIManager.setLayoutAnimationEnabledExperimental
@@ -23,6 +23,7 @@ if (
 }
 
 export const TransactionDetailsScreen = () => {
+    const router = useRouter();
     const { transactions, isLoading, fetchTransactions } =
         useTransactionStore();
 
@@ -89,7 +90,7 @@ export const TransactionDetailsScreen = () => {
                     </Text>
                     <TouchableOpacity
                         onPress={toggleFilters}
-                        style={styles.editButton}
+                        style={styles.filterButton}
                     >
                         <Ionicons
                             name={
@@ -141,6 +142,16 @@ export const TransactionDetailsScreen = () => {
                 isLoading={isLoading}
                 onRefresh={fetchTransactions}
             />
+            <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={() =>
+                    router.push({
+                        pathname: '/transactions/newTransaction',
+                    })
+                }
+            >
+                <Ionicons name="add" size={28} color="#fff" />
+            </TouchableOpacity>
         </View>
     );
 };
@@ -148,7 +159,16 @@ export const TransactionDetailsScreen = () => {
 export default TransactionDetailsScreen;
 
 const styles = StyleSheet.create({
-    editButton: {
+    filterButton: {
+        backgroundColor: colors.primary,
+        borderRadius: 15,
+        padding: 8,
+        elevation: 5,
+    },
+    floatingButton: {
+        position: 'absolute',
+        bottom: 30,
+        right: 30,
         backgroundColor: colors.primary,
         borderRadius: 15,
         padding: 8,

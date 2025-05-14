@@ -18,3 +18,8 @@ export const updateTransaction = async (
     const res = await api.put(`/transactions/${id}`, data);
     return res.data;
 };
+
+export const createTransaction = async (data: Partial<Transaction>) => {
+    const res = await api.post('/transactions/', data);
+    return res.data;
+};

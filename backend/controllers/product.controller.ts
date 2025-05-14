@@ -10,7 +10,6 @@ export const getProducts = async (
         const userId = req.user?._id;
 
         const products = await Product.find({ createdBy: userId })
-            .populate('category')
             .populate('group');
 
         res.json(products);

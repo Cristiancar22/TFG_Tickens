@@ -36,7 +36,6 @@ services:
         restart: always
         volumes:
             - ./backend:/app
-            - backend_node_modules:/app/node_modules
         command: ['npx', 'nodemon', 'index.ts']
 
     ocr_service:

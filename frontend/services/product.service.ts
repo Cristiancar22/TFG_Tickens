@@ -27,6 +27,8 @@ export const updateProduct = async (
     try {
         const response = await api.patch(`/product/${id}`, data);
         const product = response.data;
+        console.log('product', product);
+        
         return {
             ...product,
             id: product._id,

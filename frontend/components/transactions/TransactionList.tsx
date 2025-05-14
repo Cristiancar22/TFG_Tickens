@@ -9,7 +9,7 @@ type Props = {
 };
 
 type Section = {
-    title: string; // fecha
+    title: string;
     data: Transaction[];
 };
 
@@ -18,7 +18,6 @@ export const TransactionList = ({
     isLoading,
     onRefresh,
 }: Props) => {
-    // Agrupar transacciones por fecha
     const groupedTransactions: Section[] = transactions.reduce(
         (groups, transaction) => {
             const date = new Date(

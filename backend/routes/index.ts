@@ -1,15 +1,17 @@
 import authRoutes_ from './auth.routes';
+import CategoryRoutes_ from './category.routes';
+import productRoutes_ from './product.routes';
 import profileRoutes_ from './profile.routes';
+import storeRoutes_ from './store.routes';
 import ticketRoutes_ from './ticket.routes';
 import transactionRoutes_ from './transaction.routes';
-import productRoutes_ from './product.routes';
-import storeRoutes_ from './store.routes';
 import userStatsRoutes_ from './userStats.routes';
 
 export const authRoutes = authRoutes_;
+export const categoryRoutes = CategoryRoutes_;
+export const productRoutes = productRoutes_;
 export const profileRoutes = profileRoutes_;
+export const storeRoutes = storeRoutes_;
 export const ticketRoutes = ticketRoutes_;
 export const transactionRoutes = transactionRoutes_;
-export const productRoutes = productRoutes_;
-export const storeRoutes = storeRoutes_;
 export const userStatsRoutes = userStatsRoutes_;
