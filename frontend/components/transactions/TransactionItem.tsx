@@ -1,5 +1,6 @@
 import { useStores } from '@/store/useStore';
 import { Transaction } from '@/types';
+import { formatDate } from '@/utils';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
@@ -26,7 +27,7 @@ export const TransactionItem = ({ item }: Props) => {
             <Text className="text-lg font-bold">{store?.name || 'Tienda sin asignar'}</Text>
             <Text>Total: {item.total.toFixed(2)} €</Text>
             <Text>
-                Fecha: {new Date(item.purchaseDate).toLocaleDateString()}
+                {formatDate(new Date(item.purchaseDate).toISOString())}
             </Text>
         </TouchableOpacity>
     );

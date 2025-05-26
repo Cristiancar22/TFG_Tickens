@@ -6,14 +6,22 @@ import { Product } from '@/types';
 
 interface Props {
     onEditProduct: (product: Product) => void;
+    isGroupingMode?: boolean;
+    selectedIds?: string[];
+    onToggleSelect?: (id: string) => void;
 }
 
-export const ProductList = ({ onEditProduct }: Props) => {
+export const ProductList = ({
+    onEditProduct,
+    isGroupingMode,
+    selectedIds,
+    onToggleSelect,
+}: Props) => {
     const products = useProducts((s) => s.products);
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredProducts = products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     return (
@@ -35,7 +43,13 @@ export const ProductList = ({ onEditProduct }: Props) => {
                 data={filteredProducts}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <ProductItem product={item} onEdit={onEditProduct} />
+                    <ProductItem
+                        product={item}
+                        onEdit={onEditProduct}
+                        isGroupingMode={isGroupingMode}
+                        isSelected={selectedIds?.includes(item.id)}
+                        onToggleSelect={onToggleSelect}
+                    />
                 )}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
@@ -44,4 +58,3 @@ export const ProductList = ({ onEditProduct }: Props) => {
         </View>
     );
 };
-

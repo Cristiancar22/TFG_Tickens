@@ -6,9 +6,17 @@ import { Store } from '@/types';
 
 interface Props {
     onEditStore: (store: Store) => void;
+    isGroupingMode?: boolean;
+    selectedIds?: string[];
+    onToggleSelect?: (id: string) => void;
 }
 
-export const StoreList = ({ onEditStore }: Props) => {
+export const StoreList = ({
+    onEditStore,
+    isGroupingMode,
+    selectedIds,
+    onToggleSelect,
+}: Props) => {
     const stores = useStores((s) => s.stores);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -33,7 +41,15 @@ export const StoreList = ({ onEditStore }: Props) => {
             <FlatList
                 data={filteredStores}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <StoreItem store={item} onEdit={onEditStore} />}
+                renderItem={({ item }) => (
+                    <StoreItem
+                        store={item}
+                        onEdit={onEditStore}
+                        isGroupingMode={isGroupingMode}
+                        isSelected={selectedIds?.includes(item.id)}
+                        onToggleSelect={onToggleSelect}
+                    />
+                )}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 windowSize={5}

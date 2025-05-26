@@ -5,6 +5,7 @@ import {
     createProduct as createProductService,
     updateProduct as updateProductService,
     deleteProduct as deleteProductService,
+    groupProducts as groupProductsService,
 } from '@/services/product.service';
 
 type ProductsState = {
@@ -18,6 +19,7 @@ type ProductsState = {
     ) => Promise<void>;
     deleteProduct: (id: string) => Promise<void>;
     getProductById: (id: string) => Product | undefined;
+    groupProducts: (mainId: string, groupedIds: string[]) => Promise<void>;
 };
 
 export const useProducts = create<ProductsState>((set, get) => ({
@@ -72,5 +74,20 @@ export const useProducts = create<ProductsState>((set, get) => ({
 
     getProductById: (id) => {
         return get().products.find((product) => product.id === id);
+    },
+
+    groupProducts: async (mainId, groupedIds) => {
+        try {
+            await groupProductsService({ mainId, groupedIds });
+
+            const updatedProducts = get().products.filter(
+                (p) => !groupedIds.includes(p.id) || p.id === mainId,
+            );
+
+            set({ products: updatedProducts });
+        } catch (error) {
+            console.error('Error al agrupar productos:', error);
+            throw error;
+        }
     },
 }));

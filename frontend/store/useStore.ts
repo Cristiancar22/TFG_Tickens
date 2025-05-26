@@ -5,6 +5,7 @@ import {
     createStore as createStoreService,
     updateStore as updateStoreService,
     deleteStore as deleteStoreService,
+    groupStores as groupStoresService,
 } from '@/services/store.service';
 
 type StoresState = {
@@ -18,6 +19,7 @@ type StoresState = {
     ) => Promise<void>;
     deleteStore: (id: string) => Promise<void>;
     getStoreById: (id: string) => Store | undefined;
+    groupStores: (mainId: string, groupedIds: string[]) => Promise<void>;
 };
 
 export const useStores = create<StoresState>((set, get) => ({
@@ -74,4 +76,19 @@ export const useStores = create<StoresState>((set, get) => ({
         return get().stores.find((store) => store.id === id);
     },
 
+    groupStores: async (mainId, groupedIds) => {
+        try {
+            await groupStoresService({ mainId, groupedIds });
+
+            const toRemove = groupedIds.filter((id) => id !== mainId);
+            set({
+                stores: get().stores.filter(
+                    (store) => !toRemove.includes(store.id),
+                ),
+            });
+        } catch (error) {
+            console.error('Error al agrupar tiendas:', error);
+            throw error;
+        }
+    },
 }));

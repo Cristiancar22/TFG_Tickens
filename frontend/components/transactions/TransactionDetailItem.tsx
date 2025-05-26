@@ -20,8 +20,6 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
     const secondaryColor = category?.secondaryColor || '#E0E0E0';
     const icon = category?.icon || null;
 
-    console.log(product);
-
     return (
         <View
             style={[

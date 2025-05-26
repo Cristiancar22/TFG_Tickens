@@ -1,6 +1,7 @@
 import { Transaction } from '@/types';
 import { SectionList, ActivityIndicator, Text, View } from 'react-native';
 import { TransactionItem } from './TransactionItem';
+import { formatDate } from '@/utils';
 
 type Props = {
     transactions: Transaction[];
@@ -20,9 +21,8 @@ export const TransactionList = ({
 }: Props) => {
     const groupedTransactions: Section[] = transactions.reduce(
         (groups, transaction) => {
-            const date = new Date(
-                transaction.purchaseDate,
-            ).toLocaleDateString();
+            const date = formatDate(new Date(transaction.purchaseDate).toISOString());
+
             const group = groups.find((g) => g.title === date);
             if (group) {
                 group.data.push(transaction);

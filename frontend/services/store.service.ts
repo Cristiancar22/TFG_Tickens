@@ -4,6 +4,11 @@ import { Store } from '@/types';
 
 type UpdateStoreData = Partial<Omit<Store, 'id'>>;
 
+type GroupStoresPayload = {
+    mainId: string;
+    groupedIds: string[];
+};
+
 export const getStores = async (): Promise<Store[]> => {
     try {
         const response = await api.get('/store');
@@ -70,5 +75,18 @@ export const deleteStore = async (
         }
 
         throw new Error('Error al eliminar la tienda');
+    }
+};
+
+
+export const groupStores = async (data: GroupStoresPayload): Promise<void> => {
+    try {
+        await api.post('/store/group', data);
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
+            throw new Error(error.response.data.error.message);
+        }
+
+        throw new Error('Error al agrupar las tiendas');
     }
 };

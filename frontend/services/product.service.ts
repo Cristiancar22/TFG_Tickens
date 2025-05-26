@@ -4,6 +4,11 @@ import { Product } from '@/types';
 
 type UpdateProductData = Partial<Omit<Product, 'id'>>;
 
+type GroupProductsPayload = {
+    mainId: string;
+    groupedIds: string[];
+};
+
 export const getProducts = async (): Promise<Product[]> => {
     try {
         const response = await api.get('/product');
@@ -27,8 +32,7 @@ export const updateProduct = async (
     try {
         const response = await api.patch(`/product/${id}`, data);
         const product = response.data;
-        console.log('product', product);
-        
+
         return {
             ...product,
             id: product._id,
@@ -72,5 +76,19 @@ export const deleteProduct = async (
         }
 
         throw new Error('Error al eliminar el producto');
+    }
+};
+
+export const groupProducts = async (
+    data: GroupProductsPayload
+): Promise<void> => {
+    try {
+        await api.post('/product/group', data);
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
+            throw new Error(error.response.data.error.message);
+        }
+
+        throw new Error('Error al agrupar productos');
     }
 };

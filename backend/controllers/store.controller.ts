@@ -1,6 +1,8 @@
 import { Response } from 'express';
 import { Store } from '../models/store.model';
 import { AuthRequest } from '../middlewares/auth.middleware';
+import { Transaction } from '../models/transaction.model';
+import { logger } from '../utils/logger';
 
 export const getStores = async (
     req: AuthRequest,
@@ -85,3 +87,61 @@ export const deleteStore = async (
         });
     }
 };
+
+export const groupStores = async (
+    req: AuthRequest,
+    res: Response,
+): Promise<void> => {
+    try {
+        const userId = req.user?._id;
+        const { mainId, groupedIds } = req.body;
+
+        if (!mainId || !Array.isArray(groupedIds) || groupedIds.length < 1) {
+            res.status(400).json({ message: 'Datos de agrupación inválidos' });
+            return;
+        }
+
+        const targetIds = groupedIds.filter((id: string) => id !== mainId);
+
+        if (targetIds.length === 0) {
+            res.status(400).json({ message: 'No se puede agrupar solo la tienda principal' });
+            return;
+        }
+
+        // 1. Validar que el usuario es dueño de todas las tiendas
+        const allStores = await Store.find({
+            _id: { $in: [mainId, ...targetIds] },
+            createdBy: userId,
+        });
+
+        if (allStores.length !== groupedIds.length) {
+            res.status(403).json({
+                message: 'No tienes permiso para agrupar una o más tiendas',
+            });
+            return;
+        }
+
+        // 2. Actualizar transacciones con stores agrupadas
+        await Transaction.updateMany(
+            {
+                user: userId,
+                store: { $in: targetIds },
+            },
+            {
+                $set: { store: mainId },
+            }
+        );
+
+        // 3. Eliminar las tiendas agrupadas
+        await Store.deleteMany({ _id: { $in: targetIds } });
+
+        res.json({ message: 'Tiendas agrupadas correctamente' });
+    } catch (error) {
+        logger.error('Error al agrupar tiendas:', error);
+        res.status(500).json({
+            message: 'Error al agrupar tiendas',
+            error,
+        });
+    }
+};
+

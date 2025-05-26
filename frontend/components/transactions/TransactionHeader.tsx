@@ -3,6 +3,7 @@ import { colors } from '@/constants/colors';
 import { CustomSelect } from '@/components/ui/CustomSelect';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Store } from '@/types';
+import { formatDate } from '@/utils';
 
 type Props = {
     editMode: boolean;
@@ -31,6 +32,11 @@ export const TransactionHeader = ({
 }: Props) => {
     const store = storeId ? getStoreById(storeId) : null;
 
+    const isValidDate = (d: Date) => !isNaN(d.getTime());
+
+    const parsedDate = new Date(purchaseDate ?? '');
+    const dateToShow = isValidDate(parsedDate) ? parsedDate : new Date();
+
     if (editMode) {
         return (
             <View style={styles.headerContainer}>
@@ -47,14 +53,14 @@ export const TransactionHeader = ({
                     onPress={() => setShowDatePicker(true)}
                     style={styles.dateButton}
                 >
-                    <Text>{new Date(purchaseDate).toLocaleDateString()}</Text>
+                    <Text>{formatDate(dateToShow.toISOString())}</Text>
                 </TouchableOpacity>
 
                 {showDatePicker && (
                     <DateTimePicker
-                        value={new Date(purchaseDate)}
+                        value={new Date(dateToShow)}
                         mode="date"
-                        display="default"
+                        display="spinner"
                         onChange={(_, date) => {
                             if (date) {
                                 onDateChange(date.toISOString());
@@ -79,7 +85,7 @@ export const TransactionHeader = ({
 
             <Text style={styles.label}>Fecha de compra</Text>
             <Text style={styles.value}>
-                {new Date(purchaseDate).toLocaleDateString()}
+                {formatDate(new Date(purchaseDate).toISOString())}
             </Text>
         </View>
     );
