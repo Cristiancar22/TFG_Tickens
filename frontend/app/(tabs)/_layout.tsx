@@ -57,12 +57,12 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="reports"
+                name="stats"
                 options={{
                     title: 'Informes',
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons
-                            name="document-text-outline"
+                            name="stats-chart-outline"
                             size={size}
                             color={color}
                         />

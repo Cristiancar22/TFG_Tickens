@@ -23,3 +23,4 @@ export const createTransaction = async (data: Partial<Transaction>) => {
     const res = await api.post('/transactions/', data);
     return res.data;
 };
+

@@ -3,6 +3,7 @@ import {
     categoryRoutes,
     productRoutes,
     profileRoutes,
+    statsRoutes,
     storeRoutes,
     ticketRoutes,
     transactionRoutes,
@@ -41,6 +42,8 @@ app.use('/api/store', storeRoutes);
 app.use('/api/user-stats', userStatsRoutes);
 
 app.use('/api/categories', categoryRoutes);
+
+app.use('/api/stats', statsRoutes);
 
 app.listen(PORT, () => {
     logger.info(`Server running at http://localhost:${PORT}`);
