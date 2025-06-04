@@ -87,10 +87,10 @@ export const TransactionFilter = ({
             <Text className="font-bold mt-4 mb-2">
                 Filtrar por rango de importe (€):
             </Text>
-            <View className="mb-2">
+            <View className="mb-2 items-center">
                 <Text>
-                    De {minPrice?.toFixed(2) ?? absoluteMinPrice}€ a{' '}
-                    {maxPrice?.toFixed(2) ?? absoluteMaxPrice}€
+                    De {minPrice?.toFixed(2) ?? absoluteMinPrice.toFixed(2)}€ a{' '}
+                    {maxPrice?.toFixed(2) ?? absoluteMaxPrice.toFixed(2)}€
                 </Text>
                 <MultiSlider
                     values={[
@@ -105,6 +105,10 @@ export const TransactionFilter = ({
                     onValuesChange={(values) => {
                         setMinPrice(values[0]);
                         setMaxPrice(values[1]);
+                    }}
+                    selectedStyle={{
+                        backgroundColor: colors.primary,
+                        width: '100%',
                     }}
                 />
             </View>
