@@ -1,5 +1,6 @@
 import {
     authRoutes,
+    budgetRoutes,
     categoryRoutes,
     productRoutes,
     profileRoutes,
@@ -27,23 +28,25 @@ app.use(express.json());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use('/api/auth', authRoutes);
+app.use('/api/v1/auth', authRoutes);
 
-app.use('/api/profile', profileRoutes);
+app.use('/api/v1/profile', profileRoutes);
 
-app.use('/api/ticket', ticketRoutes);
+app.use('/api/v1/ticket', ticketRoutes);
 
-app.use('/api/transactions', transactionRoutes);
+app.use('/api/v1/transactions', transactionRoutes);
 
-app.use('/api/product', productRoutes);
+app.use('/api/v1/product', productRoutes);
 
-app.use('/api/store', storeRoutes);
+app.use('/api/v1/store', storeRoutes);
 
-app.use('/api/user-stats', userStatsRoutes);
+app.use('/api/v1/user-stats', userStatsRoutes);
 
-app.use('/api/categories', categoryRoutes);
+app.use('/api/v1/categories', categoryRoutes);
 
-app.use('/api/stats', statsRoutes);
+app.use('/api/v1/stats', statsRoutes);
+
+app.use('/api/v1/budgets', budgetRoutes);
 
 app.listen(PORT, () => {
     logger.info(`Server running at http://localhost:${PORT}`);

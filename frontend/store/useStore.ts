@@ -20,6 +20,7 @@ type StoresState = {
     deleteStore: (id: string) => Promise<void>;
     getStoreById: (id: string) => Store | undefined;
     groupStores: (mainId: string, groupedIds: string[]) => Promise<void>;
+    clear: () => void;
 };
 
 export const useStores = create<StoresState>((set, get) => ({
@@ -91,4 +92,6 @@ export const useStores = create<StoresState>((set, get) => ({
             throw error;
         }
     },
+
+    clear: () => set({ stores: [] }),
 }));

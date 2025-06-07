@@ -1,5 +1,10 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
+import { useTransactionStore } from './useTransaction';
+import { useCategories } from './useCategories';
+import { useStores } from './useStore';
+import { useProducts } from './useProduct';
+import { useUserStats } from './useUserStats';
 
 type User = {
     _id: string;
@@ -42,6 +47,12 @@ export const useAuth = create<AuthStore>((set) => ({
             isAuthenticated: false,
             checking: false,
         });
+
+        useTransactionStore.getState().clear();
+        useCategories.getState().clear();
+        useStores.getState().clear();
+        useProducts.getState().clear();
+        useUserStats.getState().clear();
     },
 
     setUser: (input) =>

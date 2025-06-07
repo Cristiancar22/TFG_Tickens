@@ -1,11 +1,12 @@
 import { create } from 'zustand';
-import { Category } from '@/types'; // Asegúrate de tener el tipo definido
+import { Category } from '@/types';
 import { getCategories } from '@/services/category.service';
 
 type CategoryState = {
     categories: Category[];
     getCategoryById: (id: string) => Category | undefined;
     fetchCategories: () => Promise<void>;
+    clear: () => void;
 };
 
 export const useCategories = create<CategoryState>((set, get) => ({
@@ -22,4 +23,6 @@ export const useCategories = create<CategoryState>((set, get) => ({
             console.error('Error cargando categorías:', error);
         }
     },
+
+    clear: () => set({ categories: [] }),
 }));

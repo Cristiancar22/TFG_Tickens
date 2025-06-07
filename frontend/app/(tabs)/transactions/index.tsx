@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -80,6 +80,10 @@ export const TransactionDetailsScreen = () => {
             const dateB = new Date(b.purchaseDate).getTime();
             return filters.sortOrderAsc ? dateA - dateB : dateB - dateA;
         });
+
+    useEffect(() => {
+        fetchTransactions();
+    }, []);
 
     return (
         <View className="flex-1 bg-white">

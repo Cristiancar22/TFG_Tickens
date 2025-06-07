@@ -20,6 +20,7 @@ type ProductsState = {
     deleteProduct: (id: string) => Promise<void>;
     getProductById: (id: string) => Product | undefined;
     groupProducts: (mainId: string, groupedIds: string[]) => Promise<void>;
+    clear: () => void;
 };
 
 export const useProducts = create<ProductsState>((set, get) => ({
@@ -90,4 +91,6 @@ export const useProducts = create<ProductsState>((set, get) => ({
             throw error;
         }
     },
+
+    clear: () => set({ products: [] }),
 }));

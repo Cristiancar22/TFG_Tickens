@@ -9,6 +9,13 @@ type GroupProductsPayload = {
     groupedIds: string[];
 };
 
+export type ProductPriceComparison = {
+    storeId: string;
+    storeName: string;
+    lastPrice: number;
+    lastPurchaseDate: string;
+};
+
 export const getProducts = async (): Promise<Product[]> => {
     try {
         const response = await api.get('/product');
@@ -90,5 +97,20 @@ export const groupProducts = async (
         }
 
         throw new Error('Error al agrupar productos');
+    }
+};
+
+export const getProductPriceComparison = async (
+    productId: string
+): Promise<ProductPriceComparison[]> => {
+    try {
+        const response = await api.get(`/product/${productId}/store-price-comparison`);
+        return response.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
+            throw new Error(error.response.data.error.message);
+        }
+
+        throw new Error('Error al obtener la comparación de precios');
     }
 };

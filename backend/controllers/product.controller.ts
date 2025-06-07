@@ -3,6 +3,7 @@ import { Product } from '../models/product.model';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import { TransactionDetail } from '../models/transactionDetail.model';
 import { logger } from '../utils/logger';
+import { Types } from 'mongoose';
 
 export const getProducts = async (
     req: AuthRequest,
@@ -143,3 +144,85 @@ export const groupProducts = async (
         });
     }
 };
+
+export const getProductPriceComparison = async (
+    req: AuthRequest,
+    res: Response,
+): Promise<void> => {
+    try {
+        const userId = req.user?._id;
+        const { productId } = req.params;
+
+        if (!productId) {
+            res.status(400).json({ message: 'Falta el productId' });
+            return;
+        }
+
+        const results = await TransactionDetail.aggregate([
+            {
+                $match: {
+                    product: new Types.ObjectId(productId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'transactions',
+                    localField: 'transaction',
+                    foreignField: '_id',
+                    as: 'transaction',
+                },
+            },
+            { $unwind: '$transaction' },
+            {
+                $match: {
+                    'transaction.user': new Types.ObjectId(userId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'stores',
+                    localField: 'transaction.store',
+                    foreignField: '_id',
+                    as: 'store',
+                },
+            },
+            { $unwind: '$store' },
+            {
+                $sort: {
+                    'transaction.purchaseDate': -1,
+                },
+            },
+            {
+                $group: {
+                    _id: '$store._id',
+                    storeName: { $first: '$store.name' },
+                    lastPrice: { $first: '$unitPrice' },
+                    lastPurchaseDate: { $first: '$transaction.purchaseDate' },
+                },
+            },
+            {
+                $project: {
+                    storeId: '$_id',
+                    storeName: 1,
+                    lastPrice: 1,
+                    lastPurchaseDate: 1,
+                    _id: 0,
+                },
+            },
+            {
+                $sort: {
+                    storeName: 1,
+                },
+            },
+        ]);
+
+        res.json(results);
+    } catch (error) {
+        console.error('Error en getProductPriceComparison:', error);
+        res.status(500).json({
+            message: 'Error al obtener el comparador de precios',
+            error,
+        });
+    }
+};
+

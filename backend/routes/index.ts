@@ -7,6 +7,7 @@ import ticketRoutes_ from './ticket.routes';
 import transactionRoutes_ from './transaction.routes';
 import userStatsRoutes_ from './userStats.routes';
 import statsRoutes_ from './stats.routes';
+import budgetRoutes_ from './budget.routes';
 
 export const authRoutes = authRoutes_;
 export const categoryRoutes = CategoryRoutes_;
@@ -17,3 +18,4 @@ export const ticketRoutes = ticketRoutes_;
 export const transactionRoutes = transactionRoutes_;
 export const userStatsRoutes = userStatsRoutes_;
 export const statsRoutes = statsRoutes_;
+export const budgetRoutes = budgetRoutes_;

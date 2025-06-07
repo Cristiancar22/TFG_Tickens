@@ -11,6 +11,7 @@ interface UserStatsState {
     loading: boolean;
     error: string | null;
     fetchStats: () => Promise<void>;
+    clear: () => void;
 }
 
 export const useUserStats = create<UserStatsState>((set) => ({
@@ -30,4 +31,6 @@ export const useUserStats = create<UserStatsState>((set) => ({
             });
         }
     },
+
+    clear: () => set({ stats: null, loading: false, error: null }),
 }));

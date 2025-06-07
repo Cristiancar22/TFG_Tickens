@@ -42,6 +42,7 @@ export default function RootLayout() {
     }, []);
 
     useEffect(() => {
+
         if (checking) return;
 
         const inAuthGroup = segments[0] === '(auth)';
@@ -51,7 +52,7 @@ export default function RootLayout() {
         }
 
         if (isAuthenticated && inAuthGroup) {
-            router.replace('/index');
+            router.replace('/');
         }
 
         if (isAuthenticated) {

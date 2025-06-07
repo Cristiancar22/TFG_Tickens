@@ -8,6 +8,7 @@ type TransactionStore = {
     error: boolean;
     errorMessage: string;
     fetchTransactions: () => Promise<void>;
+    clear: () => void;
 };
 
 export const useTransactionStore = create<TransactionStore>((set) => ({
@@ -29,4 +30,6 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
             });
         }
     },
+
+    clear: () => set({ transactions: [], isLoading: false, error: false, errorMessage: '' }),
 }));

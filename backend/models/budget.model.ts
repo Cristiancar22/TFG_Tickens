@@ -7,22 +7,24 @@ export interface IBudget extends Document {
     user: Types.ObjectId | IUser;
     category?: Types.ObjectId | IProductCategory;
     limitAmount: number;
-    startDate: Date;
-    endDate?: Date;
-    name?: string;
-    notificationsEnabled?: boolean;
-    isActive?: boolean;
+    spentAmount: number;
+    month: number;
+    year: number;
+    notificationsEnabled: boolean;
+    isActive: boolean;
+    isRecurring: boolean;
 }
 
 const budgetSchema = new Schema<IBudget>({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    category: { type: Schema.Types.ObjectId, ref: 'CategoriaProducto' },
+    category: { type: Schema.Types.ObjectId, ref: 'ProductCategory' },
     limitAmount: { type: Number, required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date },
-    name: { type: String },
+    spentAmount: { type: Number, default: 0 },
+    month: { type: Number, required: true },
+    year: { type: Number, required: true },
     notificationsEnabled: { type: Boolean, default: true },
     isActive: { type: Boolean, default: true },
+    isRecurring: { type: Boolean, default: false },
 });
 
 export const Budget = model<IBudget>('Budget', budgetSchema);
