@@ -1,28 +1,30 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { Budget } from '@/types';
 
 type Props = {
     budget: Budget;
-    onEdit: (budget: Budget) => void;
+    onEdit?: (budget: Budget) => void; // ✅ ahora es opcional
 };
 
 export const BudgetItem: React.FC<Props> = ({ budget, onEdit }) => {
-    const primaryColor = budget.category?.primaryColor || colors.accent;
-    const secondaryColor = budget.category?.secondaryColor || colors.foreground;
+    const primaryColor = budget.category?.primaryColor || colors.primary;
+    const secondaryColor = budget.category?.secondaryColor || '#FEFEFE';
     const iconName = budget.category?.icon || 'wallet-outline';
 
     const percentage = Math.min(
         (budget.spentAmount / budget.limitAmount) * 100,
         100,
     );
-    const progressColor = percentage >= 100 ? colors.danger : primaryColor;
+    const progressColor = percentage >= 100 ? colors.danger : secondaryColor;
+
+    const Container = onEdit ? TouchableOpacity : View;
 
     return (
-        <Pressable
-            onPress={() => onEdit(budget)}
+        <Container
+            onPress={onEdit ? () => onEdit(budget) : undefined}
             style={{
                 backgroundColor: '#fff',
                 marginHorizontal: 16,
@@ -90,10 +92,13 @@ export const BudgetItem: React.FC<Props> = ({ budget, onEdit }) => {
                     style={{
                         width: `${percentage}%`,
                         height: '100%',
-                        backgroundColor: progressColor,
+                        backgroundColor:
+                            progressColor === '#FEFEFE'
+                                ? primaryColor
+                                : progressColor,
                     }}
                 />
             </View>
-        </Pressable>
+        </Container>
     );
 };

@@ -20,3 +20,19 @@ export const getStatsData = async ({
     });
     return response.data;
 };
+
+export const getStatsPrediction = async ({
+    year,
+    month,
+}: {
+    year: number;
+    month: number;
+}) => {
+    const response = await api.get('/stats/prediction', {
+        params: {
+            year,
+            month,
+        },
+    });
+    return response.data;
+};

@@ -21,6 +21,18 @@ export default function ProfileStackLayout() {
                     title: 'Modificando Tiendas',
                 }}
             />
+            <Stack.Screen
+                name="manageSavings"
+                options={{
+                    title: 'Gestión de Ahorro',
+                }}
+            />
+            <Stack.Screen
+                name="manageBudgets"
+                options={{
+                    title: 'Gestión de Presupuestos',
+                }}
+            />
         </Stack>
     );
 }

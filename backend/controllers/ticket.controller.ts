@@ -9,6 +9,7 @@ import { Transaction } from '../models/transaction.model';
 import { TransactionDetail } from '../models/transactionDetail.model';
 import { logger } from '../utils/logger';
 import { LlmResponse, OcrResponse } from '../types';
+import { LLM_PORT, OCR_PORT } from '../config/env';
 
 export const processTicket = async (
     req: AuthRequest,
@@ -42,7 +43,7 @@ export const processTicket = async (
         });
 
         const ocrResponse = await axios.post<OcrResponse>(
-            'http://ocr_service:5010/ocr',
+            `http://ocr_service:${ OCR_PORT }/ocr`,
             form,
             {
                 headers: form.getHeaders(),
@@ -66,7 +67,7 @@ export const processTicket = async (
 
         // Paso 3: Enviar texto al servicio LLM
         const llmResponse = await axios.post<LlmResponse>(
-            'http://llm_service:5020/parse',
+            `http://llm_service:${ LLM_PORT }/parse`,
             { text },
         );
         const parsed = llmResponse.data;

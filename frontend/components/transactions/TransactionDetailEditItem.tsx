@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
-import { View, TextInput, Text, Pressable } from 'react-native';
+import {
+    View,
+    TextInput,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+} from 'react-native';
 import { Product } from '@/types';
 import { CustomSelect } from '../ui/CustomSelect';
 import { colors } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
 
 type Props = {
     productId: string | null;
@@ -30,7 +37,6 @@ export const TransactionDetailEditItem = ({
     const [quantityInput, setQuantityInput] = useState(String(quantity));
     const [unitPriceInput, setUnitPriceInput] = useState(String(unitPrice));
 
-    // Mantener sincronizado con cambios externos
     useEffect(() => {
         setQuantityInput(String(quantity));
     }, [quantity]);
@@ -40,14 +46,7 @@ export const TransactionDetailEditItem = ({
     }, [unitPrice]);
 
     return (
-        <View
-            className="rounded-xl p-4 mb-4"
-            style={{
-                backgroundColor: '#F9F9F9',
-                borderColor: '#E0E0E0',
-                borderWidth: 1,
-            }}
-        >
+        <View style={styles.container}>
             <CustomSelect
                 label="Producto"
                 items={products}
@@ -56,47 +55,95 @@ export const TransactionDetailEditItem = ({
                 onChange={(id) => onUpdate({ productId: id })}
             />
 
-            <Text className="font-semibold">Cantidad</Text>
-            <TextInput
-                value={quantityInput}
-                keyboardType="numeric"
-                onChangeText={setQuantityInput}
-                onEndEditing={() =>
-                    onUpdate({
-                        quantity:
-                            quantityInput.trim() === ''
-                                ? undefined
-                                : Number(quantityInput),
-                    })
-                }
-                className="border rounded p-2 my-1"
-            />
+            <View style={styles.row}>
+                <View style={styles.inputWrapper}>
+                    <Text style={styles.label}>Cantidad</Text>
+                    <TextInput
+                        value={quantityInput}
+                        keyboardType="numeric"
+                        onChangeText={setQuantityInput}
+                        onEndEditing={() =>
+                            onUpdate({
+                                quantity:
+                                    quantityInput.trim() === ''
+                                        ? undefined
+                                        : Number(quantityInput),
+                            })
+                        }
+                        style={styles.inputField}
+                    />
+                </View>
 
-            <Text className="font-semibold">Precio unitario</Text>
-            <TextInput
-                value={unitPriceInput}
-                keyboardType="decimal-pad"
-                onChangeText={setUnitPriceInput}
-                onEndEditing={() =>
-                    onUpdate({
-                        unitPrice:
-                            unitPriceInput.trim() === ''
-                                ? undefined
-                                : parseFloat(unitPriceInput),
-                    })
-                }
-                className="border rounded p-2 my-1"
-            />
+                <View style={styles.inputWrapper}>
+                    <Text style={styles.label}>Precio unitario</Text>
+                    <TextInput
+                        value={unitPriceInput}
+                        keyboardType="decimal-pad"
+                        onChangeText={setUnitPriceInput}
+                        onEndEditing={() =>
+                            onUpdate({
+                                unitPrice:
+                                    unitPriceInput.trim() === ''
+                                        ? undefined
+                                        : parseFloat(unitPriceInput),
+                            })
+                        }
+                        style={styles.inputField}
+                    />
+                </View>
+            </View>
 
-            <Pressable
-                onPress={onRemove}
-                className="mt-2"
-                style={{ alignSelf: 'flex-end' }}
-            >
-                <Text style={{ color: colors.danger, fontWeight: '500' }}>
-                    Eliminar
-                </Text>
-            </Pressable>
+            <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
+                <Ionicons
+                    name="trash-outline"
+                    size={20}
+                    color={colors.danger}
+                />
+                <Text style={styles.deleteText}>Eliminar</Text>
+            </TouchableOpacity>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#F9F9F9',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 12,
+        borderColor: '#E0E0E0',
+        borderWidth: 1,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 12,
+    },
+    inputWrapper: {
+        flex: 1,
+    },
+    label: {
+        fontSize: 13,
+        color: colors.foreground,
+        marginBottom: 4,
+    },
+    inputField: {
+        borderWidth: 1,
+        borderColor: colors.primary,
+        borderRadius: 8,
+        padding: 12,
+        backgroundColor: '#fff',
+        marginBottom: 12,
+    },
+    deleteButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        marginTop: 4,
+    },
+    deleteText: {
+        color: colors.danger,
+        fontWeight: '500',
+        marginLeft: 6,
+    },
+});

@@ -52,8 +52,6 @@ export const ManageBudgetsScreen = () => {
 
     return (
         <View className="flex-1 bg-white">
-            <Text className="text-xl font-bold p-4">Presupuestos del mes</Text>
-
             <BudgetList onEditBudget={handleOpenEdit} />
 
             <Pressable style={styles.floatingButton} onPress={handleOpenCreate}>
@@ -76,7 +74,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 30,
         right: 30,
-        backgroundColor: colors.accent,
+        backgroundColor: colors.primary,
         borderRadius: 15,
         padding: 8,
         elevation: 5,

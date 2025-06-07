@@ -14,7 +14,7 @@ export const BudgetProgressItem: React.FC<Props> = ({ budget }) => {
         100,
     );
 
-    const primaryColor = budget.category?.primaryColor || colors.accent;
+    const primaryColor = budget.category?.secondaryColor || colors.accent;
 
     return (
         <View
@@ -42,13 +42,13 @@ export const BudgetProgressItem: React.FC<Props> = ({ budget }) => {
                 innerRadius={20}
                 labelRadius={45}
                 radius={40}
-                padAngle={2}
+                padAngle={percentage != 0 ? 5 : 0}
                 animate={{
                     duration: 500,
                     easing: 'quadInOut',
 
                 }}
-                theme={VictoryTheme.clean}
+                theme={VictoryTheme.material}
 
                 labels={({ datum }) =>
                     datum.x === 'gastado' ? `${percentage.toFixed(0)}%` : ''

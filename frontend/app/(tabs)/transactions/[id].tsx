@@ -164,7 +164,7 @@ export default function TransactionDetailScreen() {
                             } as TransactionDetail)
                         }
                         className="mt-4 py-3 rounded-xl"
-                        style={{ backgroundColor: colors.accent }}
+                        style={{ backgroundColor: colors.primary }}
                     >
                         <Text className="text-white text-center text-base font-semibold">
                             Añadir producto

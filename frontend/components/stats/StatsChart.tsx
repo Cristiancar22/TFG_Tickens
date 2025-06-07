@@ -6,7 +6,7 @@ import {
     VictoryTheme,
     VictoryAxis,
 } from 'victory-native';
-import { getStatsData } from '@/services/stats.service';
+import { getStatsData, getStatsPrediction } from '@/services/stats.service';
 import { colors as appColors } from '@/constants/colors';
 
 interface Props {
@@ -31,15 +31,31 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth() + 1;
 
-                const raw = await getStatsData({
-                    viewType,
-                    year,
-                    ...(viewType === 'monthly' ? { month } : {}),
-                });
+                // Determinar si es futuro (solo aplica en monthly)
+                const today = new Date();
+                const isFuture =
+                    viewType === 'monthly' &&
+                    (year > today.getFullYear() ||
+                        (year === today.getFullYear() &&
+                            month > today.getMonth() + 1));
+
+                let raw;
+
+                if (isFuture) {
+                    // 👉 Usar predicción
+                    raw = await getStatsPrediction({ year, month });
+                } else {
+                    // 👉 Usar datos reales
+                    raw = await getStatsData({
+                        viewType,
+                        year,
+                        ...(viewType === 'monthly' ? { month } : {}),
+                    });
+                }
 
                 const parsed: ChartDatum[] = raw.map((item: any) => ({
                     x: item.label,
-                    y: item.value,
+                    y: Number(item.value) || 0,
                     color:
                         viewType === 'monthly'
                             ? item.color || appColors.primary
@@ -77,7 +93,13 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
     }
 
     return (
-        <View style={{ paddingHorizontal: 16, display: 'flex', alignItems: 'center' }}>
+        <View
+            style={{
+                paddingHorizontal: 16,
+                display: 'flex',
+                alignItems: 'center',
+            }}
+        >
             <VictoryChart
                 width={Dimensions.get('window').width - 32}
                 height={240}
@@ -88,8 +110,8 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     style={{
                         tickLabels: {
                             fontSize: 10,
-                            angle: data.length > 4 ? 20 : 0,
-                            padding: 5,
+                            angle: data.length < 4 ? 0 : data.length < 6 ? 10 : 15,
+                            padding: 8,
                         },
                     }}
                 />
@@ -110,8 +132,7 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     }}
                     barRatio={0.7}
                     labels={({ datum }) => `${datum.y.toFixed(2)}€`}
-                    animate={{ duration: 500 }}
-
+                    animate={{ duration: 500, onLoad: { duration: 200 }, }}
                 />
             </VictoryChart>
         </View>

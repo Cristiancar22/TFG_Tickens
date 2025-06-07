@@ -45,7 +45,9 @@ export const getTransactionById = async (
 
         const details = await TransactionDetail.find({
             transaction: transaction._id,
-        }).select('product quantity unitPrice subtotal').lean();
+        })
+            .select('product quantity unitPrice subtotal')
+            .lean();
 
         res.json({ ...transaction, details });
     } catch (err) {
@@ -75,16 +77,22 @@ export const updateTransaction = async (
         const {
             store,
             purchaseDate,
-            total,
             ticket,
             paymentMethod,
             transactionCategory,
             notes,
+            details,
         } = req.body;
+
+        const recalculatedTotal = details.reduce(
+            (sum: number, detail: any) =>
+                sum + (detail.quantity ?? 0) * (detail.unitPrice ?? 0),
+            0,
+        );
 
         existingTransaction.store = store;
         existingTransaction.purchaseDate = new Date(purchaseDate);
-        existingTransaction.total = total;
+        existingTransaction.total = recalculatedTotal;
         existingTransaction.ticket = ticket;
         existingTransaction.paymentMethod = paymentMethod;
         existingTransaction.transactionCategory = transactionCategory;
@@ -94,13 +102,20 @@ export const updateTransaction = async (
 
         await TransactionDetail.deleteMany({ transaction: transactionId });
 
-        const newDetails = req.body.details.map((detail: any) => ({
-            transaction: transactionId,
-            product: detail.product ? new Types.ObjectId(String(detail.product)) : undefined,
-            quantity: detail.quantity,
-            unitPrice: detail.unitPrice,
-            subtotal: detail.subtotal,
-        }));
+        const newDetails = details.map((detail: any) => {
+            const quantity = detail.quantity ?? 0;
+            const unitPrice = detail.unitPrice ?? 0;
+
+            return {
+                transaction: transactionId,
+                product: detail.product
+                    ? new Types.ObjectId(String(detail.product))
+                    : undefined,
+                quantity,
+                unitPrice,
+                subtotal: quantity * unitPrice, 
+            };
+        });
 
         await TransactionDetail.insertMany(newDetails);
 
@@ -144,7 +159,9 @@ export const createTransaction = async (
 
         const detailDocs = (details || []).map((detail: any) => ({
             transaction: transaction._id,
-            product: detail.product ? new Types.ObjectId(String(detail.product)) : undefined,
+            product: detail.product
+                ? new Types.ObjectId(String(detail.product))
+                : undefined,
             quantity: detail.quantity,
             unitPrice: detail.unitPrice,
             subtotal: detail.subtotal,

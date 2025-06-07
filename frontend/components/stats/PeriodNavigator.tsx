@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/constants/colors'; // Ajusta esta ruta según tu proyecto
+import { colors } from '@/constants/colors';
 
 interface Props {
     viewType: 'monthly' | 'annual';
@@ -18,18 +18,36 @@ const formatLabel = (viewType: 'monthly' | 'annual', date: Date) => {
     return date.getFullYear().toString();
 };
 
-export const PeriodNavigator = ({ viewType, currentDate, setCurrentDate }: Props) => {
+export const PeriodNavigator = ({
+    viewType,
+    currentDate,
+    setCurrentDate,
+}: Props) => {
     const updateDate = (direction: 'prev' | 'next') => {
         const newDate = new Date(currentDate);
+        const today = new Date();
+
         if (viewType === 'monthly') {
             newDate.setMonth(
                 currentDate.getMonth() + (direction === 'next' ? 1 : -1),
             );
+
+            const maxFuture = new Date(today);
+            maxFuture.setMonth(today.getMonth() + 6);
+
+            if (newDate > maxFuture) {
+                return;
+            }
         } else {
             newDate.setFullYear(
                 currentDate.getFullYear() + (direction === 'next' ? 1 : -1),
             );
+
+            if (newDate.getFullYear() > today.getFullYear()) {
+                return;
+            }
         }
+
         setCurrentDate(newDate);
     };
 
@@ -70,4 +88,3 @@ export const PeriodNavigator = ({ viewType, currentDate, setCurrentDate }: Props
         </View>
     );
 };
-

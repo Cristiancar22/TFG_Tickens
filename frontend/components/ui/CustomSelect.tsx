@@ -9,8 +9,12 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
     Keyboard,
+    Animated,
+    Easing,
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { colors } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons'; // Usamos tus iconos
 
 type CustomSelectProps<T extends { id: string; name: string }> = {
     label: string;
@@ -36,20 +40,57 @@ export const CustomSelect = <T extends { id: string; name: string }>({
         item.name.toLowerCase().includes(query.toLowerCase()),
     );
 
+    // 👉 Animación
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (modalVisible) {
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 200,
+                easing: Easing.out(Easing.ease),
+                useNativeDriver: true,
+            }).start();
+        } else {
+            fadeAnim.setValue(0);
+        }
+    }, [modalVisible]);
+
     return (
         <View className="mb-4">
-            <Text className="font-semibold mb-1">{label}</Text>
+            <Text className="font-semibold mb-1 text-foreground">{label}</Text>
 
             <TouchableOpacity
                 onPress={() => setModalVisible(true)}
-                className="border rounded p-2 bg-gray-100"
+                style={{
+                    borderWidth: 1,
+                    borderColor: colors.primary,
+                    borderRadius: 8,
+                    padding: 12,
+                    backgroundColor: '#fff',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                }}
             >
-                <Text>
+                <Text
+                    style={{
+                        color: selectedItem ? colors.text : '#999',
+                        fontSize: 16,
+                    }}
+                >
                     {selectedItem?.name ?? `Selecciona ${label.toLowerCase()}`}
                 </Text>
+
+                <Ionicons
+                    name="chevron-down-outline"
+                    size={20}
+                    color={colors.primary}
+                />
             </TouchableOpacity>
+
             <Modal
-                animationType="fade"
+                animationType="none" // usamos animación manual con fade
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
@@ -61,50 +102,83 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                     <TouchableWithoutFeedback
                         onPress={() => Keyboard.dismiss()}
                     >
-                        <View style={styles.dropdownContainer}>
+                        <Animated.View
+                            style={[
+                                styles.dropdownContainer,
+                                { opacity: fadeAnim },
+                            ]}
+                        >
                             <TextInput
                                 placeholder={`Buscar ${label.toLowerCase()}...`}
                                 value={query}
                                 onChangeText={setQuery}
-                                className="border-b p-2"
+                                style={{
+                                    borderWidth: 1,
+                                    borderColor: colors.primary,
+                                    borderRadius: 8,
+                                    padding: 10,
+                                    marginBottom: 12,
+                                }}
                             />
+
                             <FlatList
                                 data={filtered}
                                 keyExtractor={(item) => item.id}
                                 keyboardShouldPersistTaps="handled"
                                 style={{ maxHeight: 300 }}
-                                renderItem={({ item }) => (
-                                    <Pressable
-                                        onPress={() => {
-                                            onChange(item.id);
-                                            setModalVisible(false);
-                                            setQuery('');
-                                        }}
-                                        className={`p-2 ${
-                                            selectedId === item.id
-                                                ? 'bg-primary'
-                                                : 'bg-white'
-                                        }`}
-                                    >
-                                        <Text
-                                            className={
-                                                selectedId === item.id
-                                                    ? 'text-white'
-                                                    : 'text-black'
-                                            }
+                                renderItem={({ item }) => {
+                                    const isSelected = selectedId === item.id;
+
+                                    return (
+                                        <Pressable
+                                            onPress={() => {
+                                                onChange(item.id);
+                                                setModalVisible(false);
+                                                setQuery('');
+                                            }}
+                                            style={{
+                                                paddingVertical: 12,
+                                                paddingHorizontal: 8,
+                                                backgroundColor: isSelected
+                                                    ? colors.primary
+                                                    : '#fff',
+                                                borderRadius: 6,
+                                                marginBottom: 6,
+                                            }}
                                         >
-                                            {item.name}
-                                        </Text>
-                                    </Pressable>
-                                )}
+                                            <Text
+                                                style={{
+                                                    color: isSelected
+                                                        ? '#fff'
+                                                        : colors.text,
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {item.name}
+                                            </Text>
+                                        </Pressable>
+                                    );
+                                }}
                             />
+
                             <TouchableOpacity
                                 onPress={() => setModalVisible(false)}
-                                className="mt-2 py-2 px-4 bg-gray-300 rounded"
+                                style={{
+                                    marginTop: 16,
+                                    paddingVertical: 12,
+                                    paddingHorizontal: 16,
+                                    backgroundColor: colors.secondary,
+                                    borderRadius: 8,
+                                    alignItems: 'center',
+                                }}
                             >
-                                <Text className="text-center">Cerrar</Text>
+                                <Text
+                                    style={{ color: '#fff', fontWeight: '600' }}
+                                >
+                                    Cerrar
+                                </Text>
                             </TouchableOpacity>
-                        </View>
+                        </Animated.View>
                     </TouchableWithoutFeedback>
                 </Pressable>
             </Modal>

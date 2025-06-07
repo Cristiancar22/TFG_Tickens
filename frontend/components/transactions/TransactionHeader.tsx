@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Platform,
+} from 'react-native';
 import { colors } from '@/constants/colors';
 import { CustomSelect } from '@/components/ui/CustomSelect';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -49,23 +55,31 @@ export const TransactionHeader = ({
                 />
 
                 <Text style={styles.label}>Fecha de compra</Text>
+
                 <TouchableOpacity
                     onPress={() => setShowDatePicker(true)}
-                    style={styles.dateButton}
+                    style={styles.inputField}
                 >
-                    <Text>{formatDate(dateToShow.toISOString())}</Text>
+                    <Text
+                        style={{
+                            color: colors.text,
+                            fontSize: 16,
+                        }}
+                    >
+                        {formatDate(dateToShow.toISOString())}
+                    </Text>
                 </TouchableOpacity>
 
                 {showDatePicker && (
                     <DateTimePicker
-                        value={new Date(dateToShow)}
+                        value={dateToShow}
                         mode="date"
-                        display="spinner"
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                         onChange={(_, date) => {
                             if (date) {
                                 onDateChange(date.toISOString());
-                                setShowDatePicker(false);
                             }
+                            setShowDatePicker(false);
                         }}
                     />
                 )}
@@ -103,7 +117,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 13,
         color: colors.foreground,
-        marginBottom: 2,
+        marginBottom: 4,
     },
     value: {
         fontSize: 17,
@@ -111,11 +125,12 @@ const styles = StyleSheet.create({
         color: colors.secondary,
         marginBottom: 10,
     },
-    dateButton: {
+    inputField: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: colors.primary,
         borderRadius: 8,
         padding: 12,
-        marginBottom: 8,
+        backgroundColor: '#fff',
+        marginBottom: 12,
     },
 });

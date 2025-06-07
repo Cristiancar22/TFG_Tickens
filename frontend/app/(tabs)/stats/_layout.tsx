@@ -9,7 +9,7 @@ export default function StatsStackLayout() {
                     headerShown: false,
                 }}
             />
-            <Stack.Screen name="storePricesCompare" options={{ title: 'Comparador de precios por tiendas' }} />
+            <Stack.Screen name="storePricesCompare/index" options={{ title: 'Comparador de precios por tiendas' }} />
             <Stack.Screen name="storePricesCompare/[id]" options={{ title: 'Cargando...' }} />
         </Stack>
     );

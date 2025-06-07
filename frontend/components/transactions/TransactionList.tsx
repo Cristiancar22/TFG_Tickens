@@ -2,6 +2,7 @@ import { Transaction } from '@/types';
 import { SectionList, ActivityIndicator, Text, View } from 'react-native';
 import { TransactionItem } from './TransactionItem';
 import { formatDate } from '@/utils';
+import { colors } from '@/constants/colors';
 
 type Props = {
     transactions: Transaction[];
@@ -21,7 +22,9 @@ export const TransactionList = ({
 }: Props) => {
     const groupedTransactions: Section[] = transactions.reduce(
         (groups, transaction) => {
-            const date = formatDate(new Date(transaction.purchaseDate).toISOString());
+            const date = formatDate(
+                new Date(transaction.purchaseDate).toISOString(),
+            );
 
             const group = groups.find((g) => g.title === date);
             if (group) {
@@ -40,9 +43,18 @@ export const TransactionList = ({
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => <TransactionItem item={item} />}
             renderSectionHeader={({ section: { title } }) => (
-                <View className="bg-gray-200 px-4 py-2">
-                    <Text className="text-gray-700 font-bold">{title}</Text>
-                </View>
+                <Text
+                    style={{
+                        fontSize: 14,
+                        fontWeight: '600',
+                        color: colors.primary,
+                        marginVertical: 8,
+                        marginLeft: 16,
+                        textTransform: 'uppercase',
+                    }}
+                >
+                    {title}
+                </Text>
             )}
             onRefresh={onRefresh}
             refreshing={isLoading}
