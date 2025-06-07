@@ -22,8 +22,6 @@ services:
             ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
             ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
             ME_CONFIG_MONGODB_SERVER: mongo
-            OCR_PORT: ${OCR_PORT}
-            LLM_PORT: ${LLM_PORT}
 
     backend:
         build: ./backend
@@ -36,6 +34,8 @@ services:
             MONGO_URI: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=admin
             PORT: ${BACKEND_PORT}
             JWT_SECRET: ${JWT_SECRET}
+            OCR_PORT: ${OCR_PORT}
+            LLM_PORT: ${LLM_PORT}
         restart: always
         volumes:
             - ./backend:/app
