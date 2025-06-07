@@ -1,16 +1,18 @@
+# Imagen base
 FROM node:20
 
+# Directorio de trabajo
 WORKDIR /app
 
-# Solo copiamos package.json para instalar dependencias
+# Copiar solo package.json y package-lock.json
 COPY package*.json ./
 
+# Instalar TODAS las dependencias (incluidas devDependencies)
+ENV NODE_ENV=development
 RUN npm install
 
-# Copiamos el resto del código
+# Copiar el resto del código fuente
 COPY . .
 
-# Instalamos nodemon globalmente por comodidad
-RUN npm install -g nodemon
-
-CMD ["npm", "run", "dev"]
+# Comando por defecto
+CMD ["npx", "nodemon", "index.ts"]

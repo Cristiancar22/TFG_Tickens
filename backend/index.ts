@@ -1,7 +1,20 @@
-import express, { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import {
+    authRoutes,
+    budgetRoutes,
+    categoryRoutes,
+    productRoutes,
+    profileRoutes,
+    statsRoutes,
+    storeRoutes,
+    ticketRoutes,
+    transactionRoutes,
+    userStatsRoutes,
+} from './routes';
 import { connectDB } from './config/db';
-import { authRoutes } from './routes';
+import dotenv from 'dotenv';
+import express from 'express';
+import path from 'path';
+import { logger } from './utils/logger';
 
 dotenv.config();
 
@@ -13,15 +26,31 @@ connectDB();
 
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-	res.status(200).send('Hello World');
-});
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use('/api/auth', authRoutes);
+app.use('/api/v1/auth', authRoutes);
+
+app.use('/api/v1/profile', profileRoutes);
+
+app.use('/api/v1/ticket', ticketRoutes);
+
+app.use('/api/v1/transactions', transactionRoutes);
+
+app.use('/api/v1/product', productRoutes);
+
+app.use('/api/v1/store', storeRoutes);
+
+app.use('/api/v1/user-stats', userStatsRoutes);
+
+app.use('/api/v1/categories', categoryRoutes);
+
+app.use('/api/v1/stats', statsRoutes);
+
+app.use('/api/v1/budgets', budgetRoutes);
 
 app.listen(PORT, () => {
-	console.log(`🚀 Server running at http://localhost:${PORT}`);
+    logger.info(`Server running at http://localhost:${PORT}`);
 }).on('error', (error: NodeJS.ErrnoException) => {
-	console.error('❌ Server failed to start:', error.message);
-	process.exit(1);
+    logger.error('Server failed to start:', error.message);
+    process.exit(1);
 });

@@ -1,25 +1,66 @@
 import '../global.css';
 
 import { Slot, useSegments, useRouter } from 'expo-router';
-import { useEffect } from 'react';
 import { useAuth } from '../store/useAuth';
+import { useEffect } from 'react';
+import * as SecureStore from 'expo-secure-store';
+import { getUserFromToken } from '@/services';
+import { useProducts } from '@/store/useProduct';
+import { useStores } from '@/store/useStore';
+import { useCategories } from '@/store/useCategories';
 
 export default function RootLayout() {
-	const { isAuthenticated } = useAuth();
-	const segments = useSegments();
-	const router = useRouter();
+    const { isAuthenticated, checking, login, logout, setUser, setChecking } =
+        useAuth();
+    const segments = useSegments();
+    const router = useRouter();
 
-	useEffect(() => {
-		const inAuthGroup = segments[0] === '(auth)';
+    const fetchProducts = useProducts((s) => s.fetchProducts);
+    const fetchStores = useStores((s) => s.fetchStores);
+    const fetchCategories = useCategories((s) => s.fetchCategories);
 
-		if (!isAuthenticated && !inAuthGroup) {
-			router.replace('/login');
-		}
+    useEffect(() => {
+        const initializeAuth = async () => {
+            try {
+                const storedToken = await SecureStore.getItemAsync('token');
 
-		if (isAuthenticated && inAuthGroup) {
-			router.replace('/');
-		}
-	}, [isAuthenticated, segments]);
+                if (storedToken) {
+                    login(storedToken);
 
-	return <Slot />;
+                    const user = await getUserFromToken();
+                    setUser(user);
+                } else {
+                    setChecking(false);
+                }
+            } catch (error) {
+                console.error('Error al verificar token:', error);
+                logout();
+            }
+        };
+
+        initializeAuth();
+    }, []);
+
+    useEffect(() => {
+
+        if (checking) return;
+
+        const inAuthGroup = segments[0] === '(auth)';
+
+        if (!isAuthenticated && !inAuthGroup) {
+            router.replace('/login');
+        }
+
+        if (isAuthenticated && inAuthGroup) {
+            router.replace('/');
+        }
+
+        if (isAuthenticated) {
+            fetchProducts();
+            fetchStores();
+            fetchCategories();
+        }
+    }, [isAuthenticated, segments]);
+
+    return <Slot />;
 }

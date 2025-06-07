@@ -1,0 +1,29 @@
+{
+    "editor.formatOnSave": false,
+
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
+    "eslint.workingDirectories": [
+        {
+            "directory": "../backend",
+            "changeProcessCWD": true
+        },
+        {
+            "directory": "../frontend",
+            "changeProcessCWD": true
+        }
+    ],
+
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "never"
+    },
+
+    "editor.defaultFormatter": null,
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
