@@ -6,7 +6,7 @@ import { useAuth } from '@/store/useAuth';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View, Text, Pressable, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 
 export const ProfileScreen = () => {
     const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
@@ -23,7 +23,7 @@ export const ProfileScreen = () => {
     return (
         <View className="flex-1 items-center flex-col">
             <View className="items-center mt-10">
-                <Pressable onPress={updateAvatar} className="mt-10">
+                <TouchableOpacity onPress={updateAvatar} className="mt-10">
                     {avatarUrl ? (
                         <Image
                             source={{
@@ -38,7 +38,7 @@ export const ProfileScreen = () => {
                             color="#999"
                         />
                     )}
-                </Pressable>
+                </TouchableOpacity>
                 <Text className="text-xl font-semibold mt-1">{`${name} ${surname}`}</Text>
                 <Text className="text-gray-500">{email}</Text>
             </View>

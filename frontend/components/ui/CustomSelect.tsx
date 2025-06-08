@@ -3,7 +3,6 @@ import {
     Text,
     TextInput,
     FlatList,
-    Pressable,
     TouchableOpacity,
     Modal,
     StyleSheet,
@@ -95,7 +94,7 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
-                <Pressable
+                <TouchableOpacity
                     style={styles.modalBackdrop}
                     onPress={() => setModalVisible(false)}
                 >
@@ -130,7 +129,7 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                                     const isSelected = selectedId === item.id;
 
                                     return (
-                                        <Pressable
+                                        <TouchableOpacity
                                             onPress={() => {
                                                 onChange(item.id);
                                                 setModalVisible(false);
@@ -156,7 +155,7 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                                             >
                                                 {item.name}
                                             </Text>
-                                        </Pressable>
+                                        </TouchableOpacity>
                                     );
                                 }}
                             />
@@ -180,7 +179,7 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                             </TouchableOpacity>
                         </Animated.View>
                     </TouchableWithoutFeedback>
-                </Pressable>
+                </TouchableOpacity>
             </Modal>
         </View>
     );

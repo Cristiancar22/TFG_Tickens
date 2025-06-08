@@ -5,7 +5,6 @@ import {
     Text,
     TextInput,
     FlatList,
-    Pressable,
     TouchableOpacity,
     Modal,
     StyleSheet,
@@ -60,7 +59,7 @@ export const SelectStore = ({ selectedId, onChange }: Props) => {
                             keyboardShouldPersistTaps="handled"
                             style={{ maxHeight: 300 }}
                             renderItem={({ item }) => (
-                                <Pressable
+                                <TouchableOpacity
                                     onPress={() => {
                                         onChange(item.id);
                                         setModalVisible(false);
@@ -81,7 +80,7 @@ export const SelectStore = ({ selectedId, onChange }: Props) => {
                                     >
                                         {item.name}
                                     </Text>
-                                </Pressable>
+                                </TouchableOpacity>
                             )}
                         />
                         <TouchableOpacity

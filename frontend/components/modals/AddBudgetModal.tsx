@@ -4,7 +4,7 @@ import {
     View,
     Text,
     TextInput,
-    Pressable,
+    TouchableOpacity,
     StyleSheet,
     Alert,
 } from 'react-native';
@@ -108,19 +108,19 @@ export const AddBudgetModal = ({
                         label="Categoría"
                     />
 
-                    <Pressable style={styles.button} onPress={handleSubmit}>
+                    <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                         <Text style={styles.buttonText}>Guardar</Text>
-                    </Pressable>
+                    </TouchableOpacity>
 
                     {budget && (
-                        <Pressable style={styles.deleteButton} onPress={handleDelete}>
+                        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                             <Text style={styles.deleteButtonText}>Eliminar</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     )}
 
-                    <Pressable style={styles.cancelButton} onPress={onClose}>
+                    <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
                         <Text style={styles.cancelButtonText}>Cancelar</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     button: {
-        backgroundColor: colors.accent,
+        backgroundColor: colors.primary,
         padding: 12,
         borderRadius: 8,
         alignItems: 'center',

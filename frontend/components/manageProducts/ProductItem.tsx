@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Product } from '@/types';
 import { useProductManager } from '@/hooks/manageProduct/useProductManager';
@@ -15,7 +15,7 @@ export const ProductItem = ({ product, onEdit, isGroupingMode, isSelected, onTog
     const { handleDelete } = useProductManager();
 
     return (
-        <Pressable
+        <TouchableOpacity
             className="flex-row items-center justify-between px-4 py-3 border-b border-gray-200"
             style={{
                 backgroundColor: isSelected ? '#e0f7fa' : '#fff',
@@ -26,13 +26,13 @@ export const ProductItem = ({ product, onEdit, isGroupingMode, isSelected, onTog
             {
                 !isGroupingMode && (
                     <View className="flex-row items-center space-x-3">
-                        <Pressable
+                        <TouchableOpacity
                             className="bg-primary rounded-full p-2 shadow-lg"
                             onPress={() => onEdit(product)}
                         >
                             <Ionicons name="pencil" size={17} color="#fff" />
-                        </Pressable>
-                        <Pressable
+                        </TouchableOpacity>
+                        <TouchableOpacity
                             className="bg-primary rounded-full p-2 shadow-lg ml-2"
                             onPress={() => {
                                 Alert.alert(
@@ -50,10 +50,10 @@ export const ProductItem = ({ product, onEdit, isGroupingMode, isSelected, onTog
                             }}
                         >
                             <Ionicons name="trash" size={17} color="#fff" />
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
                 )
             }
-        </Pressable>
+        </TouchableOpacity>
     );
 };

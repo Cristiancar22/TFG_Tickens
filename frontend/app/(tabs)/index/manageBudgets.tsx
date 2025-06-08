@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useBudgets } from '@/store/useBudgets';
 import { BudgetList } from '@/components/manageBudgets/BudgetList';
@@ -54,9 +54,9 @@ export const ManageBudgetsScreen = () => {
         <View className="flex-1 bg-white">
             <BudgetList onEditBudget={handleOpenEdit} />
 
-            <Pressable style={styles.floatingButton} onPress={handleOpenCreate}>
+            <TouchableOpacity style={styles.floatingButton} onPress={handleOpenCreate}>
                 <Ionicons name="add" size={28} color="#fff" />
-            </Pressable>
+            </TouchableOpacity>
 
             <AddBudgetModal
                 budget={selectedBudget}

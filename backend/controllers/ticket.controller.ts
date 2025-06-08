@@ -51,7 +51,6 @@ export const processTicket = async (
         );
 
         const { text } = ocrResponse.data;
-
         if (!text?.trim()) {
             res.status(400).json({
                 message:
@@ -71,14 +70,13 @@ export const processTicket = async (
             { text },
         );
         const parsed = llmResponse.data;
-
         // Paso 4: Obtener o crear el supermercado
         const storeName = parsed.supermercado?.trim();
         let store = null;
         const nameToUse = storeName || 'Desconocido';
 
         // Busca o crea el supermercado, siempre
-        store = await Store.findOne({ name: nameToUse });
+        store = await Store.findOne({ name: nameToUse, createdBy: userId });
         if (!store) {
             store = await Store.create({
                 name: nameToUse,

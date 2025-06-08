@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, Text } from 'react-native';
+import { TouchableOpacity, ScrollView, Text } from 'react-native';
 import { useState } from 'react';
 import {
     PeriodNavigator,
@@ -29,15 +29,28 @@ const StatsScreen = () => {
 
             <StatsChart viewType={viewType} currentDate={currentDate} />
 
-            <Pressable
+            <TouchableOpacity
                 onPress={() => router.push('/stats/storePricesCompare')}
-                className="bg-secondary flex-row items-center justify-between p-4 rounded-xl"
+                className="bg-primary flex-row items-center justify-between p-4 rounded-xl mb-4"
             >
                 <Text className="text-white text-lg font-semibold">
                     Comparar precios entre tiendas
                 </Text>
                 <Ionicons name="storefront-outline" size={24} color="white" />
-            </Pressable>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => router.push('/stats/customReport')}
+                className="bg-secondary flex-row items-center justify-between p-4 rounded-xl mb-4"
+            >
+                <Text className="text-white text-lg font-semibold">
+                    Crear informe personalizado
+                </Text>
+                <Ionicons
+                    name="document-text-outline"
+                    size={24}
+                    color="white"
+                />
+            </TouchableOpacity>
         </ScrollView>
     );
 };

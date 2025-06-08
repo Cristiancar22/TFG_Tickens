@@ -4,7 +4,7 @@ import {
     RefreshControl,
     View,
     Text,
-    Pressable,
+    TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -44,12 +44,10 @@ export const HomeScreen = () => {
             }
         >
             <View className="p-6">
-                {/* Saludo */}
                 <Text className="text-2xl font-bold text-primary mb-4">
                     ¡Hola {user?.name}!
                 </Text>
 
-                {/* Tarjeta de transacciones */}
                 <View className="bg-white p-4 rounded-xl shadow mb-6">
                     <Text className="text-lg text-foreground mb-1">
                         Transacciones este mes:
@@ -66,7 +64,6 @@ export const HomeScreen = () => {
                     </Text>
                 </View>
 
-                {/* Tarjeta de presupuestos */}
                 <View className="bg-white p-4 rounded-xl shadow mb-6">
                     <Text className="text-lg text-foreground mb-4">
                         Presupuestos del mes
@@ -88,7 +85,7 @@ export const HomeScreen = () => {
                                 <View
                                     key={budget.id}
                                     style={{
-                                        width: '47%', // Ajustable (47-48% para espacio entre columnas)
+                                        width: '47%',
                                         marginBottom: 16,
                                         overflow: 'visible',
                                     }}
@@ -101,7 +98,7 @@ export const HomeScreen = () => {
                 </View>
 
                 {/* Botones */}
-                <Pressable
+                <TouchableOpacity
                     onPress={() => router.push('/(tabs)/manageProducts')}
                     className="bg-primary flex-row items-center justify-between p-4 rounded-xl mb-4"
                 >
@@ -109,9 +106,9 @@ export const HomeScreen = () => {
                         Gestionar Productos
                     </Text>
                     <Ionicons name="cube-outline" size={24} color="white" />
-                </Pressable>
+                </TouchableOpacity>
 
-                <Pressable
+                <TouchableOpacity
                     onPress={() => router.push('/(tabs)/manageStores')}
                     className="bg-secondary flex-row items-center justify-between p-4 rounded-xl mb-4"
                 >
@@ -123,9 +120,9 @@ export const HomeScreen = () => {
                         size={24}
                         color="white"
                     />
-                </Pressable>
+                </TouchableOpacity>
 
-                <Pressable
+                <TouchableOpacity
                     onPress={() => router.push('/(tabs)/manageBudgets')}
                     className="bg-accent flex-row items-center justify-between p-4 rounded-xl mb-4"
                 >
@@ -133,8 +130,8 @@ export const HomeScreen = () => {
                         Gestionar Presupuestos
                     </Text>
                     <Ionicons name="wallet-outline" size={24} color="white" />
-                </Pressable>
-                <Pressable
+                </TouchableOpacity>
+                <TouchableOpacity
                     onPress={() => router.push('/(tabs)/manageSavings')}
                     className="bg-danger flex-row items-center justify-between p-4 rounded-xl mb-4"
                 >
@@ -146,7 +143,7 @@ export const HomeScreen = () => {
                         size={24}
                         color="white"
                     />
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );

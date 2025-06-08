@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useProducts } from '@/store/useProduct';
-import { FlatList, TextInput, View, Text, Pressable } from 'react-native';
+import { FlatList, TextInput, View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Product } from '@/types';
 
@@ -41,7 +41,7 @@ export const StorePricesCompareScreen = () => {
                 data={filteredProducts}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <Pressable
+                    <TouchableOpacity
                         onPress={() => handleViewComparison(item)}
                         style={{
                             padding: 12,
@@ -57,7 +57,7 @@ export const StorePricesCompareScreen = () => {
                                 Marca: {item.brand}
                             </Text>
                         )}
-                    </Pressable>
+                    </TouchableOpacity>
                 )}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}

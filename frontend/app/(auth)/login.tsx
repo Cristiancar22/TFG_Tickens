@@ -57,7 +57,7 @@ export default function Login() {
                     title="Iniciar sesión"
                     onPress={handleSubmit(onSubmit)}
                 />
-                <PrimaryButton
+                {/* <PrimaryButton
                     title="Login rápido (Juan)"
                     onPress={() =>
                         onSubmit({
@@ -65,7 +65,7 @@ export default function Login() {
                             password: 'MiPassword123',
                         })
                     }
-                />
+                /> */}
                 <Text
                     className="text-center my-4 text-primary underline"
                     onPress={() => router.push('/register')}

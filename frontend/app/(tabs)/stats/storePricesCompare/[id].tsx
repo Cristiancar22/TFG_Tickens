@@ -7,9 +7,11 @@ import {
     Text,
     FlatList,
     ActivityIndicator,
-    Pressable,
+    TouchableOpacity,
 } from 'react-native';
 import { useProducts } from '@/store/useProduct';
+import { colors } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function StorePricesCompareDetailScreen() {
     const router = useRouter();
@@ -47,14 +49,12 @@ export default function StorePricesCompareDetailScreen() {
         fetchComparison();
     }, [id]);
 
-    // 🏷️ Actualizar title del header
     useLayoutEffect(() => {
         navigation.setOptions({
             title: `Precios de ${product?.name ?? ''}`,
         });
     }, [navigation, product?.name]);
 
-    // 🏷️ Precio más bajo
     const minPrice = useMemo(() => {
         if (comparisonData.length === 0) return null;
         return Math.min(...comparisonData.map((entry) => entry.lastPrice));
@@ -66,38 +66,87 @@ export default function StorePricesCompareDetailScreen() {
         return (
             <View
                 style={{
+                    backgroundColor: '#fff',
+                    borderRadius: 12,
                     padding: 16,
-                    borderBottomColor: '#eee',
-                    borderBottomWidth: 1,
-                    backgroundColor: isLowest ? '#e7f7ec' : 'white', // verde muy sutil
+                    marginHorizontal: 16,
+                    marginVertical: 8,
+                    shadowColor: '#000',
+                    shadowOpacity: 0.08,
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowRadius: 8,
+                    elevation: 4,
                 }}
             >
-                <Text
+                <View
                     style={{
-                        fontSize: 16,
-                        fontWeight: isLowest ? 'bold' : '500',
-                        color: isLowest ? '#2e7d32' : 'black',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginBottom: 8,
                     }}
                 >
-                    {item.storeName}
-                </Text>
-                <Text style={{ marginTop: 4 }}>
-                    Precio: {item.lastPrice.toFixed(2)} €
-                </Text>
-                <Text style={{ marginTop: 2, color: 'gray' }}>
-                    Fecha:{' '}
-                    {new Date(item.lastPurchaseDate).toLocaleDateString()}
-                </Text>
-                {isLowest && (
-                    <Text
+                    <View
                         style={{
-                            marginTop: 6,
-                            color: '#2e7d32',
-                            fontWeight: '600',
+                            borderRadius: 20,
+                            padding: 8,
+                            marginRight: 12,
+                            backgroundColor: '#f0f0f0',
                         }}
                     >
-                        🏆 Mejor precio
+                        <Ionicons
+                            name="storefront-outline"
+                            size={24}
+                            color={isLowest ? colors.accent : colors.primary}
+                        />
+                    </View>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                            color: colors.text,
+                            flexShrink: 1,
+                        }}
+                    >
+                        {item.storeName}
                     </Text>
+                </View>
+
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginTop: 8,
+                    }}
+                >
+                    <Text style={{ color: colors.foreground, fontSize: 14 }}>
+                        Precio: {item.lastPrice.toFixed(2)} €
+                    </Text>
+                    <Text style={{ color: colors.foreground, fontSize: 14 }}>
+                        {new Date(item.lastPurchaseDate).toLocaleDateString()}
+                    </Text>
+                </View>
+
+                {isLowest && (
+                    <View
+                        style={{
+                            marginTop: 10,
+                            backgroundColor: '#e7f7ec',
+                            borderRadius: 6,
+                            paddingVertical: 4,
+                            paddingHorizontal: 8,
+                            alignSelf: 'flex-start',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: colors.accent,
+                                fontSize: 12,
+                                fontWeight: '600',
+                            }}
+                        >
+                            🏆 Mejor precio
+                        </Text>
+                    </View>
                 )}
             </View>
         );
@@ -129,9 +178,9 @@ export default function StorePricesCompareDetailScreen() {
                 }}
             >
                 <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text>
-                <Pressable onPress={() => router.back()}>
+                <TouchableOpacity onPress={() => router.back()}>
                     <Text style={{ color: '#007AFF' }}>Volver</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         );
     }
