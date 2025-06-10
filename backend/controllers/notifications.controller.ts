@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import { Notification } from '../models/notification.model';
 import { Types } from 'mongoose';
+import { logger } from '../utils/logger';
 
 export const getUserNotifications = async (
     req: AuthRequest,
@@ -15,7 +16,7 @@ export const getUserNotifications = async (
 
         res.json(notifications);
     } catch (error) {
-        console.error('Error al obtener notificaciones:', error);
+        logger.error('Error al obtener notificaciones:', error);
         res.status(500).json({
             message: 'Error al obtener notificaciones',
             error,
@@ -50,7 +51,7 @@ export const updateNotificationStatus = async (
 
         res.json(notification);
     } catch (error) {
-        console.error('Error al actualizar la notificación:', error);
+        logger.error('Error al actualizar la notificación:', error);
         res.status(500).json({
             message: 'Error al actualizar la notificación',
             error,

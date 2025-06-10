@@ -1,13 +1,24 @@
 import { logger } from '../utils/logger';
 
-const requiredVars = ['MONGO_URI', 'PORT', 'JWT_SECRET', 'OCR_PORT', 'LLM_PORT', 'OCR_CONTAINER_NAME', 'LLM_CONTAINER_NAME'];
-const missingVars = requiredVars.filter((key) => !process.env[key]);
+const requiredVars = [
+    'MONGO_URI',
+    'PORT',
+    'JWT_SECRET',
+    'OCR_PORT',
+    'LLM_PORT',
+    'OCR_CONTAINER_NAME',
+    'LLM_CONTAINER_NAME',
+];
 
-if (missingVars.length > 0) {
-    logger.error(
-        `[ENV] Faltan variables de entorno: ${missingVars.join(', ')}`,
-    );
-    process.exit(1);
+if (process.env.NODE_ENV !== 'test') {
+    const missingVars = requiredVars.filter((v) => !process.env[v]);
+    if (missingVars.length > 0) {
+        logger.error(
+            `[ENV] Faltan variables de entorno: ${missingVars.join(', ')}`,
+            { timestamp: new Date().toISOString() },
+        );
+        process.exit(1);
+    }
 }
 
 export const MONGO_URI = process.env.MONGO_URI;

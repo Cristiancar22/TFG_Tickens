@@ -9,6 +9,7 @@ import {
     createBudgetNotification,
     getNextBudgetNotificationLevel,
 } from '../utils/budget';
+import { logger } from '../utils/logger';
 
 export const getBudgets = async (
     req: AuthRequest,
@@ -152,7 +153,7 @@ export const getBudgets = async (
 
         res.json(updatedBudgets);
     } catch (error) {
-        console.error('Error en getBudgets:', error);
+        logger.error('Error en getBudgets:', error);
         res.status(500).json({
             message: 'Error al obtener los presupuestos',
             error,
@@ -263,7 +264,7 @@ export const createBudget = async (
             spentAmount,
         });
     } catch (error) {
-        console.error('Error en createBudget:', error);
+        logger.error('Error en createBudget:', error);
         res.status(500).json({
             message: 'Error al crear el presupuesto',
             error,
@@ -289,7 +290,7 @@ export const updateBudget = async (
 
         res.json(updated);
     } catch (error) {
-        console.error('Error en updateBudget:', error);
+        logger.error('Error en updateBudget:', error);
         res.status(500).json({
             message: 'Error al actualizar el presupuesto',
             error,
@@ -313,7 +314,7 @@ export const deleteBudget = async (
 
         res.json({ message: 'Presupuesto eliminado correctamente' });
     } catch (error) {
-        console.error('Error en deleteBudget:', error);
+        logger.error('Error en deleteBudget:', error);
         res.status(500).json({
             message: 'Error al eliminar el presupuesto',
             error,

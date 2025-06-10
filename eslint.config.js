@@ -82,4 +82,12 @@ export default [
             globals: globals.node,
         },
     },
+    {
+        files: ['**/*.test.ts', '**/*.test.tsx'],
+        languageOptions: {
+            globals: {
+                ...globals.jest,
+            },
+        },
+    },
 ];

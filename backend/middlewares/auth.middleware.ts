@@ -12,7 +12,7 @@ export const authenticateToken = async (
     next: NextFunction,
 ): Promise<void> => {
     const authHeader = req.headers.authorization;
-
+    
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         res.status(401).json({ message: 'Token no proporcionado' });
         return;

@@ -215,7 +215,7 @@ export const getProductPriceComparison = async (
 
         res.json(results);
     } catch (error) {
-        console.error('Error en getProductPriceComparison:', error);
+        logger.error('Error en getProductPriceComparison:', error);
         res.status(500).json({
             message: 'Error al obtener el comparador de precios',
             error,

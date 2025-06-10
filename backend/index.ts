@@ -15,15 +15,14 @@ import { connectDB } from './config/db';
 import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
-import { logger } from './utils/logger';
 
 dotenv.config();
 
 const app = express();
 
-const PORT = parseInt(process.env.PORT || '5000', 10);
-
-connectDB();
+if (process.env.NODE_ENV !== 'test') {
+    connectDB();
+}
 
 app.use(express.json());
 
@@ -51,9 +50,4 @@ app.use('/api/v1/budgets', budgetRoutes);
 
 app.use('/api/v1/notifications', notificationsRoutes);
 
-app.listen(PORT, () => {
-    logger.info(`Server running at http://localhost:${PORT}`);
-}).on('error', (error: NodeJS.ErrnoException) => {
-    logger.error('Server failed to start:', error.message);
-    process.exit(1);
-});
+export default app;
