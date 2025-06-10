@@ -2,6 +2,7 @@ import {
     authRoutes,
     budgetRoutes,
     categoryRoutes,
+    notificationsRoutes,
     productRoutes,
     profileRoutes,
     statsRoutes,
@@ -47,6 +48,8 @@ app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/stats', statsRoutes);
 
 app.use('/api/v1/budgets', budgetRoutes);
+
+app.use('/api/v1/notifications', notificationsRoutes);
 
 app.listen(PORT, () => {
     logger.info(`Server running at http://localhost:${PORT}`);

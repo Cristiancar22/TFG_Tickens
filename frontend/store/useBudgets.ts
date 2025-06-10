@@ -37,8 +37,6 @@ export const useBudgets = create<BudgetsState>((set, get) => ({
         try {
             const newBudget = await createBudgetService(data);
             const current = get().budgets;
-            console.log('Nuevo presupuesto creado:', newBudget);
-            
             set({ budgets: [...current, newBudget] });
         } catch (error) {
             console.error('Error al crear presupuesto:', error);

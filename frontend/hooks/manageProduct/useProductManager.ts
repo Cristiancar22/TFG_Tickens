@@ -1,4 +1,3 @@
-// useProductManager.ts
 import { useState } from 'react';
 import { Product } from '@/types';
 import { useProducts } from '@/store/useProduct';
@@ -45,7 +44,7 @@ export const useProductManager = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            await deleteProduct(id); // asegúrate de tener esta función en Zustand
+            await deleteProduct(id);
         } catch (error) {
             console.error('Error al eliminar producto:', error);
         }

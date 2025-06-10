@@ -13,6 +13,7 @@ export interface IBudget extends Document {
     notificationsEnabled: boolean;
     isActive: boolean;
     isRecurring: boolean;
+    notificationBudgetState: 0 | 1 | 2 | 3; // 0 = none, 1 = 50%, 2 = 75%, 3 = 100%
 }
 
 const budgetSchema = new Schema<IBudget>({
@@ -25,6 +26,11 @@ const budgetSchema = new Schema<IBudget>({
     notificationsEnabled: { type: Boolean, default: true },
     isActive: { type: Boolean, default: true },
     isRecurring: { type: Boolean, default: false },
+    notificationBudgetState: {
+        type: Number,
+        enum: [0, 1, 2, 3],
+        default: 0,
+    },
 });
 
 export const Budget = model<IBudget>('Budget', budgetSchema);

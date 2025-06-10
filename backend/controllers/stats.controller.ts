@@ -98,7 +98,6 @@ export const getStats = async (
             res.json(response);
         }
 
-        // Modo anual (sin cambios)
         else {
             const result = await Transaction.aggregate([
                 {
@@ -162,7 +161,6 @@ export const getPredictionStats = async (
         const targetMonth = Number(month);
         const targetYear = Number(year);
 
-        // Construimos los últimos 12 meses con pesos
         const monthWeights: Record<string, number> = {};
 
         const now = new Date(targetYear, targetMonth - 1, 1);
@@ -173,26 +171,21 @@ export const getPredictionStats = async (
 
             const key = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
-            // Peso base (cuanto más lejos, menor peso)
-            const decayWeight = Math.max(0.1, 1 - i * 0.075); // por ejemplo
+            const decayWeight = Math.max(0.1, 1 - i * 0.075);
 
             monthWeights[key] = decayWeight;
         }
 
-        // Refuerzo al mismo mes del año anterior
         const sameMonthLastYear = `${targetYear - 1}-${targetMonth}`;
         monthWeights[sameMonthLastYear] = Math.max(
             monthWeights[sameMonthLastYear] ?? 0,
             0.6,
         );
 
-        // DEBUG: console.log(monthWeights);
-
-        // Buscar transacciones de los últimos 12 meses
         const startDate = new Date(now);
         startDate.setMonth(now.getMonth() - 12);
 
-        const endDate = new Date(now); // no incluimos el mes actual
+        const endDate = new Date(now);
 
         const result = await TransactionDetail.aggregate([
             {
@@ -274,7 +267,6 @@ export const getPredictionStats = async (
             },
         ]);
 
-        // Procesamos la predicción
         const categoryTotals: Record<
             string,
             {
@@ -305,7 +297,6 @@ export const getPredictionStats = async (
             }
         }
 
-        // Formato para el frontend
         const response = Object.entries(categoryTotals).map(
             ([categoryId, data]) => {
                 const predictedValue =

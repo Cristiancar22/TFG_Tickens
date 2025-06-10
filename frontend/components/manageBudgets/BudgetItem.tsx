@@ -6,7 +6,7 @@ import { Budget } from '@/types';
 
 type Props = {
     budget: Budget;
-    onEdit?: (budget: Budget) => void; // ✅ ahora es opcional
+    onEdit?: (budget: Budget) => void;
 };
 
 export const BudgetItem: React.FC<Props> = ({ budget, onEdit }) => {

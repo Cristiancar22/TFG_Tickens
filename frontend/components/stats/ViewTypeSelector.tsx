@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { colors } from '@/constants/colors'; // Ajusta la ruta según tu proyecto
+import { colors } from '@/constants/colors';
 
 interface Props {
     viewType: 'monthly' | 'annual';

@@ -33,7 +33,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
-    console.log('Login attempt:', { email, password });
     try {
         const user = await User.findOne({ email }).select('+passwordHash');
 

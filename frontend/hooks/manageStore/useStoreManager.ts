@@ -26,7 +26,7 @@ export const useStoreManager = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            await deleteStore(id); // asegúrate de implementar esto en zustand
+            await deleteStore(id);
         } catch (err) {
             console.error('Error al eliminar tienda:', err);
         }

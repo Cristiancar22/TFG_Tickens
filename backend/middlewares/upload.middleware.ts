@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import { AuthRequest } from './auth.middleware';
 
-// Asegúrate de que exista el directorio
 const uploadDir = path.join(__dirname, '..', 'uploads', 'avatars');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });

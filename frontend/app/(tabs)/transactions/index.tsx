@@ -30,7 +30,7 @@ export const TransactionDetailsScreen = () => {
     const [showFilters, setShowFilters] = useState(false);
 
     const [filters, setFilters] = useState({
-        sortOrderAsc: true,
+        sortOrderAsc: false,
         minDate: null as Date | null,
         maxDate: null as Date | null,
         minPrice: null as number | null,
@@ -50,7 +50,7 @@ export const TransactionDetailsScreen = () => {
 
     const resetFilters = () => {
         const reset = {
-            sortOrderAsc: true,
+            sortOrderAsc: false,
             minDate: null,
             maxDate: null,
             minPrice: null,

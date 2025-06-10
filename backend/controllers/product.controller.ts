@@ -113,7 +113,6 @@ export const groupProducts = async (
             return;
         }
 
-        // Validar que todos los productos pertenecen al usuario
         const allProducts = await Product.find({
             _id: { $in: [mainId, ...targetIds] },
             createdBy: userId,
@@ -126,13 +125,11 @@ export const groupProducts = async (
             return;
         }
 
-        // 1. Reasignar los TransactionDetails a mainId
         await TransactionDetail.updateMany(
             { product: { $in: targetIds } },
             { $set: { product: mainId } },
         );
 
-        // 2. Eliminar productos agrupados (ya no tienen transaction details asociados)
         await Product.deleteMany({ _id: { $in: targetIds } });
 
         res.json({ message: 'Productos agrupados correctamente' });

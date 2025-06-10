@@ -1,4 +1,3 @@
-// components/Collapsible.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { View, LayoutChangeEvent } from 'react-native';
 import Animated, {

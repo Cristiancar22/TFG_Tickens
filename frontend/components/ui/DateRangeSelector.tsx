@@ -19,7 +19,7 @@ export const DateRangeSelector = ({
 }: Props) => {
     const [pickerVisible, setPickerVisible] = useState(false);
     const [isSelectingMin, setIsSelectingMin] = useState(true);
-    const [selectingBoth, setSelectingBoth] = useState(false); // nuevo estado
+    const [selectingBoth, setSelectingBoth] = useState(false);
 
     const showPicker = (selectingMin: boolean, both = false) => {
         setIsSelectingMin(selectingMin);
@@ -31,11 +31,10 @@ export const DateRangeSelector = ({
         if (isSelectingMin) {
             setMinDate(date);
             if (selectingBoth) {
-                // ir al siguiente paso: seleccionar fecha máxima
                 setTimeout(() => {
                     setIsSelectingMin(false);
                     setPickerVisible(true);
-                }, 300); // pequeño retraso para evitar cierre/reapertura inmediato
+                }, 300);
                 return;
             }
         } else {
@@ -68,7 +67,7 @@ export const DateRangeSelector = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-                onPress={() => showPicker(true, true)} // activa selección doble
+                onPress={() => showPicker(true, true)}
                 style={styles.iconBox}
             >
                 <Ionicons
@@ -105,7 +104,6 @@ const styles = StyleSheet.create({
     dateBox: {
         paddingHorizontal: 10,
         paddingVertical: 6,
-        // backgroundColor: colors.background,
         color: colors.primary,
         borderRadius: 6,
         alignItems: 'center',

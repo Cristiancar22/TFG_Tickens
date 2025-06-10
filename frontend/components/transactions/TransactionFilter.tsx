@@ -43,23 +43,6 @@ export const TransactionFilter = ({
                 <View className="flex-row items-center justify-around">
                     <TouchableOpacity
                         style={
-                            sortOrderAsc
-                                ? styles.activeButton
-                                : styles.inactiveButton
-                        }
-                        onPress={() => setSortOrderAsc(true)}
-                    >
-                        <Text
-                            style={[
-                                styles.buttonText,
-                                sortOrderAsc && styles.activeButtonText,
-                            ]}
-                        >
-                            Ascendente
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={
                             !sortOrderAsc
                                 ? styles.activeButton
                                 : styles.inactiveButton
@@ -73,6 +56,23 @@ export const TransactionFilter = ({
                             ]}
                         >
                             Descendente
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={
+                            sortOrderAsc
+                                ? styles.activeButton
+                                : styles.inactiveButton
+                        }
+                        onPress={() => setSortOrderAsc(true)}
+                    >
+                        <Text
+                            style={[
+                                styles.buttonText,
+                                sortOrderAsc && styles.activeButtonText,
+                            ]}
+                        >
+                            Ascendente
                         </Text>
                     </TouchableOpacity>
                 </View>

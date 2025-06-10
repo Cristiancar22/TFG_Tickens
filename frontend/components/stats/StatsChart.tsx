@@ -31,7 +31,6 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth() + 1;
 
-                // Determinar si es futuro (solo aplica en monthly)
                 const today = new Date();
                 const isFuture =
                     viewType === 'monthly' &&
@@ -42,10 +41,8 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 let raw;
 
                 if (isFuture) {
-                    // 👉 Usar predicción
                     raw = await getStatsPrediction({ year, month });
                 } else {
-                    // 👉 Usar datos reales
                     raw = await getStatsData({
                         viewType,
                         year,
