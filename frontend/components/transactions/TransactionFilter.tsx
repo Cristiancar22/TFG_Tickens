@@ -37,9 +37,18 @@ export const TransactionFilter = ({
     absoluteMaxPrice,
 }: Props) => {
     return (
-        <View className="p-4 rounded-b-xl">
+        <View
+            className="p-4 rounded-b-xl"
+            accessibilityLabel="transaction-filter"
+        >
+            {/* Ordenar por fecha */}
             <View className="justify-between mb-4">
-                <Text className="font-bold mb-2">Ordenar por fecha:</Text>
+                <Text
+                    className="font-bold mb-2"
+                    accessibilityLabel="label-sort-order"
+                >
+                    Ordenar por fecha:
+                </Text>
                 <View className="flex-row items-center justify-around">
                     <TouchableOpacity
                         style={
@@ -48,6 +57,7 @@ export const TransactionFilter = ({
                                 : styles.inactiveButton
                         }
                         onPress={() => setSortOrderAsc(false)}
+                        accessibilityLabel="sort-desc-button"
                     >
                         <Text
                             style={[
@@ -65,6 +75,7 @@ export const TransactionFilter = ({
                                 : styles.inactiveButton
                         }
                         onPress={() => setSortOrderAsc(true)}
+                        accessibilityLabel="sort-asc-button"
                     >
                         <Text
                             style={[
@@ -77,50 +88,76 @@ export const TransactionFilter = ({
                     </TouchableOpacity>
                 </View>
             </View>
-            <Text className="font-bold mb-2">Filtrar por rango de fechas:</Text>
+
+            {/* Rango de fechas */}
+            <Text
+                className="font-bold mb-2"
+                accessibilityLabel="label-date-range"
+            >
+                Filtrar por rango de fechas:
+            </Text>
             <DateRangeSelector
                 minDate={minDate}
                 maxDate={maxDate}
                 setMinDate={setMinDate}
                 setMaxDate={setMaxDate}
             />
-            <Text className="font-bold mt-4 mb-2">
+
+            {/* Rango de precios */}
+            <Text
+                className="font-bold mt-4 mb-2"
+                accessibilityLabel="label-price-range"
+            >
                 Filtrar por rango de importe (€):
             </Text>
-            <View className="mb-2 items-center">
-                <Text>
+            <View
+                className="mb-2 items-center"
+                accessibilityLabel="price-slider-section"
+            >
+                <Text accessibilityLabel="price-range-values">
                     De {minPrice?.toFixed(2) ?? absoluteMinPrice.toFixed(2)}€ a{' '}
                     {maxPrice?.toFixed(2) ?? absoluteMaxPrice.toFixed(2)}€
                 </Text>
-                <MultiSlider
-                    values={[
-                        minPrice ?? absoluteMinPrice,
-                        maxPrice ?? absoluteMaxPrice,
-                    ]}
-                    min={absoluteMinPrice}
-                    max={absoluteMaxPrice}
-                    step={0.5}
-                    allowOverlap={false}
-                    snapped
-                    onValuesChange={(values) => {
-                        setMinPrice(values[0]);
-                        setMaxPrice(values[1]);
-                    }}
-                    selectedStyle={{
-                        backgroundColor: colors.primary,
-                        width: '100%',
-                    }}
-                />
+                <View accessibilityLabel="price-slider">
+                    <MultiSlider
+                        values={[
+                            minPrice ?? absoluteMinPrice,
+                            maxPrice ?? absoluteMaxPrice,
+                        ]}
+                        min={absoluteMinPrice}
+                        max={absoluteMaxPrice}
+                        step={0.5}
+                        allowOverlap={false}
+                        snapped
+                        onValuesChange={(values) => {
+                            setMinPrice(values[0]);
+                            setMaxPrice(values[1]);
+                        }}
+                        selectedStyle={{
+                            backgroundColor: colors.primary,
+                            width: '100%',
+                        }}
+                    />
+                </View>
             </View>
 
+            {/* Botones */}
             <View className="flex-row justify-between mt-4">
-                <TouchableOpacity style={styles.activeButton} onPress={onReset}>
-                    <Text style={styles.buttonText && styles.activeButtonText}>
+                <TouchableOpacity
+                    style={styles.activeButton}
+                    onPress={onReset}
+                    accessibilityLabel="reset-button"
+                >
+                    <Text style={[styles.buttonText, styles.activeButtonText]}>
                         Borrar filtros
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.activeButton} onPress={onApply}>
-                    <Text style={styles.buttonText && styles.activeButtonText}>
+                <TouchableOpacity
+                    style={styles.activeButton}
+                    onPress={onApply}
+                    accessibilityLabel="apply-button"
+                >
+                    <Text style={[styles.buttonText, styles.activeButtonText]}>
                         Aplicar filtros
                     </Text>
                 </TouchableOpacity>

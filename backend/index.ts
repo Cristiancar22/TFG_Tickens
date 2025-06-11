@@ -5,6 +5,7 @@ import {
     notificationsRoutes,
     productRoutes,
     profileRoutes,
+    savingsRoutes,
     statsRoutes,
     storeRoutes,
     ticketRoutes,
@@ -49,5 +50,7 @@ app.use('/api/v1/stats', statsRoutes);
 app.use('/api/v1/budgets', budgetRoutes);
 
 app.use('/api/v1/notifications', notificationsRoutes);
+
+app.use('/api/v1/savings-goals', savingsRoutes);
 
 export default app;

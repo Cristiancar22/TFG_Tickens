@@ -57,7 +57,7 @@ describe('Auth Endpoints', () => {
             })
             .expect(401);
 
-        expect(res.body.message).toMatch(/credenciales inválidas/i);
+        expect(res.body.message).toMatch(/credenciales incorrectas/i);
     });
 
     it('debe verificar el token y devolver los datos del usuario', async () => {

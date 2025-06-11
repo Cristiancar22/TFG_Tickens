@@ -9,28 +9,60 @@ export default function ProfileStackLayout() {
                     headerShown: false,
                 }}
             />
+
             <Stack.Screen
                 name="manageProducts"
                 options={{
                     title: 'Modificando productos',
                 }}
             />
+
             <Stack.Screen
                 name="manageStores"
                 options={{
                     title: 'Modificando Tiendas',
                 }}
             />
+
             <Stack.Screen
-                name="manageSavings"
+                name="manageBudgets"
+                options={{
+                    title: 'Gestionar Presupuestos',
+                }}
+            />
+
+            <Stack.Screen
+                name="savings/index"
                 options={{
                     title: 'Gestión de Ahorro',
                 }}
             />
+
             <Stack.Screen
-                name="manageBudgets"
+                name="savings/editGoal"
                 options={{
-                    title: 'Gestión de Presupuestos',
+                    title: 'Modificar Meta de Ahorro',
+                }}
+            />
+
+            <Stack.Screen
+                name="savings/history"
+                options={{
+                    title: 'Historial de ahorro',
+                }}
+            />
+
+            <Stack.Screen
+                name="savings/suggestions"
+                options={{
+                    title: 'Sugerencias de Ahorro',
+                }}
+            />
+
+            <Stack.Screen
+                name="savings/historyGoals"
+                options={{
+                    title: 'Historial de metas de ahorro',
                 }}
             />
         </Stack>

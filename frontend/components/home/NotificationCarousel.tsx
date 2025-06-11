@@ -11,8 +11,7 @@ import { useNotifications } from '@/store/useNotifications';
 import { colors } from '@/constants/colors';
 
 export const NotificationCarousel = () => {
-    const { notifications, markAsRead, archiveNotification } =
-        useNotifications();
+    const { notifications, archiveNotification } = useNotifications();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [containerWidth, setContainerWidth] = useState(0);
     const flatListRef = useRef<FlatList>(null);
@@ -25,8 +24,15 @@ export const NotificationCarousel = () => {
     };
 
     return (
-        <View className="mb-6" onLayout={handleLayout}>
-            <Text className="text-lg text-foreground mb-4">
+        <View
+            className="mb-6"
+            onLayout={handleLayout}
+            accessibilityLabel="notification-carousel-container"
+        >
+            <Text
+                className="text-lg text-foreground mb-4"
+                accessibilityLabel="notification-carousel-title"
+            >
                 Notificaciones importantes
             </Text>
 
@@ -49,8 +55,12 @@ export const NotificationCarousel = () => {
                             <View
                                 style={{ width: containerWidth }}
                                 className="bg-white p-6 rounded-xl shadow mx-1"
+                                accessibilityLabel={`notification-item-${item._id}`}
                             >
-                                <Text className="text-lg text-foreground mb-3">
+                                <Text
+                                    className="text-lg text-foreground mb-3"
+                                    accessibilityLabel={`notification-message-${item._id}`}
+                                >
                                     {item.message}
                                 </Text>
                                 <View className="flex-row justify-end space-x-3">
@@ -58,6 +68,7 @@ export const NotificationCarousel = () => {
                                         onPress={() =>
                                             archiveNotification(item._id)
                                         }
+                                        accessibilityLabel={`archive-button-${item._id}`}
                                     >
                                         <Ionicons
                                             name="archive-outline"

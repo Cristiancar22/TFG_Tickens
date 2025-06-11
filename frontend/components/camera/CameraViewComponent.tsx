@@ -31,7 +31,11 @@ export const CameraViewComponent = ({
         mirror={facing === 'front'}
         enableTorch={flash === 'on'}
     >
-        <TouchableOpacity onPress={onToggleFlash} style={styles.flashButton}>
+        <TouchableOpacity
+            onPress={onToggleFlash}
+            style={styles.flashButton}
+            accessibilityLabel="toggle-flash-button"
+        >
             <Ionicons
                 name={flash === 'on' ? 'flash' : 'flash-off'}
                 size={28}
@@ -40,15 +44,27 @@ export const CameraViewComponent = ({
         </TouchableOpacity>
 
         <View style={styles.bottomControls}>
-            <TouchableOpacity onPress={onSelectFile} style={styles.fileButton}>
+            <TouchableOpacity
+                onPress={onSelectFile}
+                style={styles.fileButton}
+                accessibilityLabel="select-file-button"
+            >
                 <Ionicons name="attach" size={32} color="#fff" />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={onCapture} style={styles.capture}>
+            <TouchableOpacity
+                onPress={onCapture}
+                style={styles.capture}
+                accessibilityLabel="capture-button"
+            >
                 <Ionicons name="camera-outline" size={32} color="black" />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={onFlipCamera} style={styles.flipButton}>
+            <TouchableOpacity
+                onPress={onFlipCamera}
+                style={styles.flipButton}
+                accessibilityLabel="flip-camera-button"
+            >
                 <Ionicons
                     name="camera-reverse-outline"
                     size={32}

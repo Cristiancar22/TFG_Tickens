@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { sendTicketImage } from '@/services/ticket.service';
 import {
     PermissionDenied,
@@ -7,6 +7,7 @@ import {
     PdfPreview,
 } from '@/components/camera';
 import { useCameraHandler, useFilePicker } from '@/hooks/camera';
+import axios from 'axios';
 
 export const CameraScreen = () => {
     const {
@@ -44,7 +45,14 @@ export const CameraScreen = () => {
                 name: 'photo.jpg',
             };
             await sendTicketImage(image);
+            Alert.alert('Enviado', 'El archivo se ha subido correctamente.');
         } catch (err) {
+            if (axios.isAxiosError(err)) {
+                const message =
+                    err.response?.data?.message ?? 'Error desconocido';
+                Alert.alert('Error', message);
+                return;
+            }
             console.error('Error al enviar imagen OCR', err);
         } finally {
             setLoading(false);
@@ -62,7 +70,14 @@ export const CameraScreen = () => {
                 name: selectedFile.name,
             };
             await sendTicketImage(image);
+            Alert.alert('Enviado', 'El archivo se ha subido correctamente.');
         } catch (err) {
+            if (axios.isAxiosError(err)) {
+                const message =
+                    err.response?.data?.message ?? 'Error desconocido';
+                Alert.alert('Error', message);
+                return;
+            }
             console.error('Error al enviar imagen OCR', err);
         } finally {
             setLoading(false);

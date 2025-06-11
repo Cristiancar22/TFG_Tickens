@@ -1,3 +1,8 @@
+import React from 'react';
+import { View, Text } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import { InputField } from '@/components/ui/InputField';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { useUpdateProfile } from '@/hooks/profile/useUpdateProfile';
@@ -6,13 +11,9 @@ import {
     editProfileSchema,
 } from '@/schemas/editProfile.schema';
 import { useAuth } from '@/store/useAuth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form';
-import { View, Text } from 'react-native';
 
 export const EditProfileScreen = () => {
     const user = useAuth((s) => s.user);
-
     const { update, loading } = useUpdateProfile();
 
     const {
@@ -29,9 +30,18 @@ export const EditProfileScreen = () => {
     });
 
     return (
-        <View className="flex-1 p-6 bg-background">
-            <Text className="text-xl font-semibold mb-4">Editar perfil</Text>
+        <View
+            className="flex-1 p-6 bg-background"
+            accessibilityLabel="edit-profile-screen"
+        >
+            <Text
+                className="text-xl font-semibold mb-4"
+                accessibilityLabel="edit-profile-title"
+            >
+                Editar perfil
+            </Text>
 
+            {/* Nombre */}
             <Controller
                 control={control}
                 name="name"
@@ -42,10 +52,12 @@ export const EditProfileScreen = () => {
                         onChangeText={onChange}
                         placeholder="Tu nombre"
                         error={errors.name?.message}
+                        accessibilityLabel="input-name"
                     />
                 )}
             />
 
+            {/* Apellidos */}
             <Controller
                 control={control}
                 name="surname"
@@ -56,10 +68,12 @@ export const EditProfileScreen = () => {
                         onChangeText={onChange}
                         placeholder="Tus apellidos"
                         error={errors.surname?.message}
+                        accessibilityLabel="input-surname"
                     />
                 )}
             />
 
+            {/* Email */}
             <Controller
                 control={control}
                 name="email"
@@ -72,15 +86,18 @@ export const EditProfileScreen = () => {
                         keyboardType="email-address"
                         autoCapitalize="none"
                         error={errors.email?.message}
+                        accessibilityLabel="input-email"
                     />
                 )}
             />
 
+            {/* Botón Guardar */}
             <View className="mt-6">
                 <PrimaryButton
                     title={loading ? 'Guardando...' : 'Guardar cambios'}
                     onPress={handleSubmit(update)}
                     disabled={loading}
+                    accessibilityLabel="save-profile-button"
                 />
             </View>
         </View>

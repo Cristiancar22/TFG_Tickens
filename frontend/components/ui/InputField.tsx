@@ -1,4 +1,10 @@
-import { TextInput, View, Text, TextInputProps, TouchableOpacity } from 'react-native';
+import {
+    TextInput,
+    View,
+    Text,
+    TextInputProps,
+    TouchableOpacity,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
@@ -50,7 +56,12 @@ export const InputField = ({
             </View>
 
             {error && (
-                <Text className="mt-1 text-sm text-red-500">{error}</Text>
+                <Text
+                    className="text-danger"
+                    accessibilityLabel={`error-${label?.toLowerCase()}`}
+                >
+                    {error}
+                </Text>
             )}
         </View>
     );

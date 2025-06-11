@@ -11,24 +11,28 @@ export const ManageButtons = () => {
             route: '/(tabs)/manageProducts',
             color: 'bg-primary',
             icon: 'cube-outline',
+            a11y: 'manage-products-button',
         },
         {
             label: 'Gestionar Tiendas',
             route: '/(tabs)/manageStores',
             color: 'bg-secondary',
             icon: 'storefront-outline',
+            a11y: 'manage-stores-button',
         },
         {
             label: 'Gestionar Presupuestos',
             route: '/(tabs)/manageBudgets',
             color: 'bg-accent',
             icon: 'wallet-outline',
+            a11y: 'manage-budgets-button',
         },
         {
             label: 'Gestionar Ahorro',
-            route: '/(tabs)/manageSavings',
+            route: '/(tabs)/savings',
             color: 'bg-danger',
             icon: 'stats-chart-outline',
+            a11y: 'manage-savings-button',
         },
     ];
 
@@ -37,6 +41,7 @@ export const ManageButtons = () => {
             {buttons.map((btn) => (
                 <TouchableOpacity
                     key={btn.route}
+                    accessibilityLabel={btn.a11y}
                     onPress={() => router.push(btn.route)}
                     className={`${btn.color} flex-row items-center justify-between p-4 rounded-xl mb-4`}
                 >

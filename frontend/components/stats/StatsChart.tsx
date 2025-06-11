@@ -23,6 +23,7 @@ interface ChartDatum {
 export const StatsChart = ({ viewType, currentDate }: Props) => {
     const [data, setData] = useState<ChartDatum[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isPrediction, setIsPrediction] = useState(false);
 
     useEffect(() => {
         const fetchChartData = async () => {
@@ -32,7 +33,7 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 const month = currentDate.getMonth() + 1;
 
                 const today = new Date();
-                const isFuture =
+                const futureMonth =
                     viewType === 'monthly' &&
                     (year > today.getFullYear() ||
                         (year === today.getFullYear() &&
@@ -40,24 +41,28 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
 
                 let raw;
 
-                if (isFuture) {
+                if (futureMonth) {
                     raw = await getStatsPrediction({ year, month });
+                    setIsPrediction(true);
                 } else {
                     raw = await getStatsData({
                         viewType,
                         year,
                         ...(viewType === 'monthly' ? { month } : {}),
                     });
+                    setIsPrediction(false);
                 }
 
-                const parsed: ChartDatum[] = raw.map((item: any) => ({
-                    x: item.label,
-                    y: Number(item.value) || 0,
-                    color:
-                        viewType === 'monthly'
-                            ? item.color || appColors.primary
-                            : appColors.primary,
-                }));
+                const parsed: ChartDatum[] = raw
+                    .map((item: any) => ({
+                        x: item.label,
+                        y: Number(item.value) || 0,
+                        color: isPrediction
+                            ? `${appColors.accent}AA`
+                            : item.color || appColors.primary,
+                    }))
+                    .sort((a, b) => b.y - a.y)
+                    .slice(0, 6);
 
                 setData(parsed);
             } catch (error) {
@@ -66,7 +71,6 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
             }
             setLoading(false);
         };
-
         fetchChartData();
     }, [viewType, currentDate]);
 
@@ -97,6 +101,21 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 alignItems: 'center',
             }}
         >
+            {/* Disclaimer sobre el tipo de datos */}
+            <Text
+                style={{
+                    alignSelf: 'flex-start',
+                    marginBottom: 4,
+                    color: isPrediction
+                        ? appColors.accent
+                        : appColors.secondary,
+                    fontStyle: 'italic',
+                    fontSize: 12,
+                }}
+            >
+                {isPrediction ? 'Predicción de gasto' : 'Datos reales'}
+            </Text>
+
             <VictoryChart
                 width={Dimensions.get('window').width - 32}
                 height={240}
@@ -107,7 +126,8 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     style={{
                         tickLabels: {
                             fontSize: 10,
-                            angle: data.length < 4 ? 0 : data.length < 6 ? 10 : 15,
+                            angle:
+                                data.length < 4 ? 0 : data.length < 6 ? 10 : 15,
                             padding: 8,
                         },
                     }}
@@ -129,7 +149,7 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     }}
                     barRatio={0.7}
                     labels={({ datum }) => `${datum.y.toFixed(2)}€`}
-                    animate={{ duration: 500, onLoad: { duration: 200 }, }}
+                    animate={{ duration: 500, onLoad: { duration: 200 } }}
                 />
             </VictoryChart>
         </View>

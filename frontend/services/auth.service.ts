@@ -23,8 +23,8 @@ export const loginUser = async (data: LoginData) => {
         const response = await api.post('/auth/login', data);
         return response.data;
     } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
-            throw new Error(error.response.data.error.message);
+        if (axios.isAxiosError(error) && error.response?.data?.message) {
+            throw new Error(error.response.data.message);
         }
 
         throw new Error('Error al iniciar sesión');
@@ -36,10 +36,10 @@ export const registerUser = async (data: RegisterData) => {
         const response = await api.post('/auth/register', data);
         return response.data;
     } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
-            throw new Error(error.response.data.error.message);
+        if (axios.isAxiosError(error) && error.response?.data?.message) {
+            throw new Error(error.response.data.message);
         }
-
+        
         throw new Error('Error al registrar usuario');
     }
 };

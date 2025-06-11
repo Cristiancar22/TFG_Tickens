@@ -90,4 +90,13 @@ export default [
             },
         },
     },
+    {
+        files: ['**/jest.setup.{js,ts}', '**/__mocks__/**/*.{js,ts}'],
+        languageOptions: {
+            globals: globals.jest,
+        },
+        rules: {
+            '@typescript-eslint/no-var-requires': 'off',
+        },
+    },
 ];

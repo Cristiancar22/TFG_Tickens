@@ -38,9 +38,14 @@ const ManageSavingsScreen = () => {
     }, [month, year]);
 
     const calculateTotalSavings = () => {
-        return budgets.reduce((total, budget) => {
-            const diff = budget.limitAmount - budget.spentAmount;
-            return total + diff;
+        const uncategorized = budgets.find((b) => !b.category);
+
+        if (uncategorized) {
+            return uncategorized.limitAmount - uncategorized.spentAmount;
+        }
+
+        return budgets.reduce((total, b) => {
+            return total + (b.limitAmount - b.spentAmount);
         }, 0);
     };
 
@@ -82,9 +87,7 @@ const ManageSavingsScreen = () => {
                 <FlatList
                     data={budgets}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <BudgetItem budget={item} />
-                    )}
+                    renderItem={({ item }) => <BudgetItem budget={item} />}
                     contentContainerStyle={{ paddingBottom: 32 }}
                 />
             )}

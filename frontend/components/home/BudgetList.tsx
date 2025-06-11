@@ -7,16 +7,23 @@ export const BudgetList = () => {
 
     return (
         <View className="bg-white p-4 rounded-xl shadow mb-6">
-            <Text className="text-lg text-foreground mb-4">
+            <Text
+                className="text-lg text-foreground mb-4"
+                accessibilityLabel="budget-list-title"
+            >
                 Presupuestos del mes
             </Text>
 
             {budgets.length === 0 ? (
-                <Text className="text-center text-foreground">
+                <Text
+                    className="text-center text-foreground"
+                    accessibilityLabel="no-budgets"
+                >
                     No hay presupuestos
                 </Text>
             ) : (
                 <View
+                    accessibilityLabel="budget-list-container"
                     style={{
                         flexDirection: 'row',
                         flexWrap: 'wrap',
@@ -26,6 +33,7 @@ export const BudgetList = () => {
                     {budgets.map((budget) => (
                         <View
                             key={budget.id}
+                            accessibilityLabel={`budget-item-${budget.id}`}
                             style={{
                                 width: '47%',
                                 marginBottom: 16,

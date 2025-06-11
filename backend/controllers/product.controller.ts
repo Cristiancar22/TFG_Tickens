@@ -12,9 +12,7 @@ export const getProducts = async (
     try {
         const userId = req.user?._id;
 
-        const products = await Product.find({ createdBy: userId }).populate(
-            'group',
-        );
+        const products = await Product.find({ createdBy: userId });
 
         res.json(products);
     } catch (error) {

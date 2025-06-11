@@ -25,6 +25,7 @@ export const BudgetItem: React.FC<Props> = ({ budget, onEdit }) => {
     return (
         <Container
             onPress={onEdit ? () => onEdit(budget) : undefined}
+            accessibilityLabel={`budget-item-${budget.id}`}
             style={{
                 backgroundColor: '#fff',
                 marginHorizontal: 16,
@@ -57,9 +58,11 @@ export const BudgetItem: React.FC<Props> = ({ budget, onEdit }) => {
                         name={iconName as any}
                         size={24}
                         color={primaryColor}
+                        accessibilityLabel={`budget-icon-${budget.id}`}
                     />
                 </View>
                 <Text
+                    accessibilityLabel={`budget-name-${budget.id}`}
                     style={{
                         fontSize: 16,
                         fontWeight: 'bold',
@@ -71,16 +74,23 @@ export const BudgetItem: React.FC<Props> = ({ budget, onEdit }) => {
             </View>
 
             <View style={{ marginBottom: 8 }}>
-                <Text style={{ color: colors.foreground, fontSize: 14 }}>
+                <Text
+                    accessibilityLabel={`budget-limit-${budget.id}`}
+                    style={{ color: colors.foreground, fontSize: 14 }}
+                >
                     Límite: {budget.limitAmount.toFixed(2)} €
                 </Text>
-                <Text style={{ color: colors.foreground, fontSize: 14 }}>
+                <Text
+                    accessibilityLabel={`budget-spent-${budget.id}`}
+                    style={{ color: colors.foreground, fontSize: 14 }}
+                >
                     Gastado: {budget.spentAmount.toFixed(2)} €
                 </Text>
             </View>
 
             {/* Progress Bar */}
             <View
+                accessibilityLabel={`budget-progress-${budget.id}`}
                 style={{
                     height: 8,
                     borderRadius: 4,

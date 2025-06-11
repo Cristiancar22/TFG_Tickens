@@ -34,9 +34,19 @@ export const SelectMainProductModal = ({
     };
 
     return (
-        <Modal visible={visible} animationType="slide">
-            <View style={styles.container}>
-                <Text style={styles.title}>
+        <Modal
+            visible={visible}
+            animationType="slide"
+            accessibilityLabel="select-main-product-modal"
+        >
+            <View
+                style={styles.container}
+                accessibilityLabel="select-main-product-container"
+            >
+                <Text
+                    style={styles.title}
+                    accessibilityLabel="select-main-product-title"
+                >
                     Selecciona el producto principal
                 </Text>
 
@@ -47,6 +57,7 @@ export const SelectMainProductModal = ({
                         <TouchableOpacity
                             style={styles.productItem}
                             onPress={() => handleSelect(item.id)}
+                            accessibilityLabel={`product-option-${item.name}`}
                         >
                             <Ionicons
                                 name="cube-outline"
@@ -54,14 +65,21 @@ export const SelectMainProductModal = ({
                                 color="#333"
                                 style={{ marginRight: 10 }}
                             />
-                            <Text style={styles.productText}>{item.name}</Text>
+                            <Text
+                                style={styles.productText}
+                                accessibilityLabel={`product-name-${item.name}`}
+                            >
+                                {item.name}
+                            </Text>
                         </TouchableOpacity>
                     )}
+                    accessibilityLabel="product-options-list"
                 />
 
                 <TouchableOpacity
                     onPress={onCancel}
                     style={styles.cancelButton}
+                    accessibilityLabel="cancel-select-main-product"
                 >
                     <Text style={styles.cancelText}>Cancelar</Text>
                 </TouchableOpacity>

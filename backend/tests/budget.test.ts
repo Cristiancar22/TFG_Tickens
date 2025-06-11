@@ -32,7 +32,6 @@ describe('Budget Endpoints', () => {
         });
 
         it('debe devolver presupuestos existentes si hay datos', async () => {
-            // Primero creamos un presupuesto
             await request(app)
                 .post('/api/v1/budgets')
                 .set('Authorization', `Bearer ${token}`)
@@ -58,7 +57,6 @@ describe('Budget Endpoints', () => {
         });
 
         it('debe clonar presupuestos recurrentes del mes anterior si no existen', async () => {
-            // Crea presupuesto en mayo (recurrente)
             await request(app)
                 .post('/api/v1/budgets')
                 .set('Authorization', `Bearer ${token}`)
@@ -73,7 +71,6 @@ describe('Budget Endpoints', () => {
                 })
                 .expect(201);
 
-            // Consulta junio, debería clonar
             const res = await request(app)
                 .get('/api/v1/budgets?month=6&year=2025')
                 .set('Authorization', `Bearer ${token}`)
@@ -144,9 +141,8 @@ describe('Budget Endpoints', () => {
                 .send({
                     month: 6,
                     year: 2025,
-                    // Falta limitAmount, por ejemplo
                 })
-                .expect(500); // o 400 si tienes validación explícita
+                .expect(500);
 
             expect(res.body.message).toMatch(/error/i);
         });
@@ -280,7 +276,6 @@ describe('Budget Endpoints', () => {
 
             expect(res.body.message).toMatch(/eliminado correctamente/i);
 
-            // Verifica que ya no exista
             await request(app)
                 .get('/api/v1/budgets?month=6&year=2025')
                 .set('Authorization', `Bearer ${token}`)

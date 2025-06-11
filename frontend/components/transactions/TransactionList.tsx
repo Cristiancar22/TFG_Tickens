@@ -1,5 +1,10 @@
 import { Transaction } from '@/types';
-import { SectionList, ActivityIndicator, Text, View } from 'react-native';
+import {
+    SectionList,
+    ActivityIndicator,
+    Text,
+    View,
+} from 'react-native';
 import { TransactionItem } from './TransactionItem';
 import { formatDate } from '@/utils';
 import { colors } from '@/constants/colors';
@@ -23,7 +28,7 @@ export const TransactionList = ({
     const groupedTransactions: Section[] = transactions.reduce(
         (groups, transaction) => {
             const date = formatDate(
-                new Date(transaction.purchaseDate).toISOString(),
+                new Date(transaction.purchaseDate).toISOString()
             );
 
             const group = groups.find((g) => g.title === date);
@@ -34,16 +39,20 @@ export const TransactionList = ({
             }
             return groups;
         },
-        [] as Section[],
+        [] as Section[]
     );
 
     return (
         <SectionList
             sections={groupedTransactions}
             keyExtractor={(item) => item._id}
-            renderItem={({ item }) => <TransactionItem item={item} />}
+            accessibilityLabel="transaction-list"
+            renderItem={({ item }) => (
+                <TransactionItem item={item} />
+            )}
             renderSectionHeader={({ section: { title } }) => (
                 <Text
+                    accessibilityLabel={`section-${title}`}
                     style={{
                         fontSize: 14,
                         fontWeight: '600',
@@ -60,11 +69,17 @@ export const TransactionList = ({
             refreshing={isLoading}
             ListEmptyComponent={
                 isLoading ? (
-                    <View className="flex-1 justify-center items-center py-10">
+                    <View
+                        className="flex-1 justify-center items-center py-10"
+                        accessibilityLabel="loading-spinner"
+                    >
                         <ActivityIndicator size="large" />
                     </View>
                 ) : (
-                    <View className="flex-1 justify-center items-center py-10">
+                    <View
+                        className="flex-1 justify-center items-center py-10"
+                        accessibilityLabel="empty-transaction-list"
+                    >
                         <Text className="text-gray-500">
                             No hay transacciones disponibles
                         </Text>

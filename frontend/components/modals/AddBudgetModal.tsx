@@ -87,10 +87,24 @@ export const AddBudgetModal = ({
     };
 
     return (
-        <Modal visible={isVisible} animationType="slide" transparent>
-            <View style={styles.overlay}>
-                <View style={styles.modal}>
-                    <Text style={styles.title}>
+        <Modal
+            visible={isVisible}
+            animationType="slide"
+            transparent
+            accessibilityLabel="add-budget-modal"
+        >
+            <View
+                style={styles.overlay}
+                accessibilityLabel="add-budget-overlay"
+            >
+                <View
+                    style={styles.modal}
+                    accessibilityLabel="add-budget-container"
+                >
+                    <Text
+                        style={styles.title}
+                        accessibilityLabel="add-budget-title"
+                    >
                         {budget ? 'Editar presupuesto' : 'Nuevo presupuesto'}
                     </Text>
 
@@ -100,25 +114,41 @@ export const AddBudgetModal = ({
                         value={limitAmount}
                         onChangeText={setLimitAmount}
                         style={styles.input}
+                        accessibilityLabel="add-budget-limit-input"
                     />
 
                     <CustomCategorySelect
                         selectedId={category}
                         onChange={setCategory}
                         label="Categoría"
+                        accessibilityLabel="add-budget-category-select"
                     />
 
-                    <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleSubmit}
+                        accessibilityLabel="add-budget-submit-button"
+                    >
                         <Text style={styles.buttonText}>Guardar</Text>
                     </TouchableOpacity>
 
                     {budget && (
-                        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                            <Text style={styles.deleteButtonText}>Eliminar</Text>
+                        <TouchableOpacity
+                            style={styles.deleteButton}
+                            onPress={handleDelete}
+                            accessibilityLabel="add-budget-delete-button"
+                        >
+                            <Text style={styles.deleteButtonText}>
+                                Eliminar
+                            </Text>
                         </TouchableOpacity>
                     )}
 
-                    <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+                    <TouchableOpacity
+                        style={styles.cancelButton}
+                        onPress={onClose}
+                        accessibilityLabel="add-budget-cancel-button"
+                    >
                         <Text style={styles.cancelButtonText}>Cancelar</Text>
                     </TouchableOpacity>
                 </View>

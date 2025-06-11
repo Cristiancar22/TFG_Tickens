@@ -24,12 +24,11 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
         <View
             style={[
                 styles.container,
-                {
-                    backgroundColor: primaryColor,
-                    borderColor: secondaryColor,
-                },
+                { backgroundColor: primaryColor, borderColor: secondaryColor },
             ]}
+            accessibilityLabel="transaction-detail-item"
         >
+            {/* Producto */}
             <View style={styles.row}>
                 <Text
                     style={[
@@ -41,11 +40,18 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                     : secondaryColor,
                         },
                     ]}
+                    accessibilityLabel="label-product"
                 >
                     Producto
                 </Text>
+
                 {icon && (
-                    <Ionicons name={icon} size={20} color={secondaryColor} />
+                    <Ionicons
+                        name={icon}
+                        size={20}
+                        color={secondaryColor}
+                        accessibilityLabel="product-icon"
+                    />
                 )}
             </View>
 
@@ -59,11 +65,14 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                 : secondaryColor,
                     },
                 ]}
+                accessibilityLabel="product-name"
             >
                 {product?.name ?? 'Producto desconocido'}
             </Text>
 
+            {/* Cantidad, Precio unitario, Subtotal */}
             <View style={styles.row}>
+                {/* Cantidad */}
                 <View style={styles.column}>
                     <Text
                         style={[
@@ -75,6 +84,7 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                         : secondaryColor,
                             },
                         ]}
+                        accessibilityLabel="label-quantity"
                     >
                         Cantidad
                     </Text>
@@ -88,10 +98,13 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                         : secondaryColor,
                             },
                         ]}
+                        accessibilityLabel="detail-quantity"
                     >
                         {detail.quantity}
                     </Text>
                 </View>
+
+                {/* Precio unitario */}
                 <View style={styles.column}>
                     <Text
                         style={[
@@ -103,6 +116,7 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                         : secondaryColor,
                             },
                         ]}
+                        accessibilityLabel="label-unit-price"
                     >
                         Precio unitario
                     </Text>
@@ -116,10 +130,13 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                         : secondaryColor,
                             },
                         ]}
+                        accessibilityLabel="detail-unit-price"
                     >
                         {detail.unitPrice.toFixed(2)} €
                     </Text>
                 </View>
+
+                {/* Subtotal */}
                 <View style={styles.column}>
                     <Text
                         style={[
@@ -131,6 +148,7 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                         : secondaryColor,
                             },
                         ]}
+                        accessibilityLabel="label-subtotal"
                     >
                         Subtotal
                     </Text>
@@ -144,6 +162,7 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                                         : secondaryColor,
                             },
                         ]}
+                        accessibilityLabel="detail-subtotal"
                     >
                         {detail.subtotal.toFixed(2)} €
                     </Text>

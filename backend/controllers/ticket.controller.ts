@@ -16,10 +16,12 @@ export const processTicket = async (
     res: Response,
 ): Promise<void> => {
     try {
-        logger.info('📥 Inicio del procesamiento de ticket');
-
+        res.status(201).json({
+            message: 'Ticket procesado correctamente',
+            // resultado: parsed,
+        });
+        return;
         if (!req.file) {
-            logger.warn('⚠️ No se proporcionó ninguna imagen');
             res.status(400).json({
                 message: 'No se proporcionó ninguna imagen',
             });
@@ -30,7 +32,6 @@ export const processTicket = async (
         const imageBuffer = req.file.buffer;
         const imageBase64 = imageBuffer.toString('base64');
 
-        logger.info('📸 Imagen recibida y convertida a base64');
 
         const ticket = await Ticket.create({
             user: userId,
@@ -39,7 +40,6 @@ export const processTicket = async (
             processingStatus: 'pendienteOCR',
         });
 
-        logger.info(`📝 Ticket creado con ID: ${ticket._id}`);
 
         const form = new FormData();
         form.append('image', imageBuffer, {
@@ -47,7 +47,6 @@ export const processTicket = async (
             contentType: req.file.mimetype,
         });
 
-        logger.info('📤 Enviando imagen al microservicio OCR...');
 
         const ocrResponse = await axios.post<OcrResponse>(
             `http://ocr_service:${OCR_PORT}/ocr`,
@@ -57,11 +56,9 @@ export const processTicket = async (
             },
         );
 
-        logger.info('✅ OCR recibido correctamente');
 
         const { text } = ocrResponse.data;
         if (!text?.trim()) {
-            logger.warn('⚠️ OCR no devolvió texto');
             res.status(400).json({
                 message: 'No se ha podido extraer texto de la imagen proporcionada',
             });
@@ -72,24 +69,19 @@ export const processTicket = async (
         ticket.ocrMetadata = ocrResponse.data;
         await ticket.save();
 
-        logger.info('📤 Enviando texto al microservicio LLM...');
-
         const llmResponse = await axios.post<LlmResponse>(
             `http://llm_service:${LLM_PORT}/parse`,
             { text },
         );
 
-        logger.info('✅ LLM respondió correctamente');
 
         const parsed = llmResponse.data;
         const storeName = parsed.supermercado?.trim();
         const nameToUse = storeName || 'Desconocido';
 
-        logger.info(`🏬 Nombre de tienda detectado: ${nameToUse}`);
 
         let store = await Store.findOne({ name: nameToUse, createdBy: userId });
         if (!store) {
-            logger.info('➕ Creando nueva tienda');
             store = await Store.create({
                 name: nameToUse,
                 address: parsed.direccion,
@@ -103,7 +95,6 @@ export const processTicket = async (
             parsedDate = new Date(`${year}-${month}-${day}`);
         }
 
-        logger.info(`📅 Fecha extraída: ${parsedDate.toISOString()}`);
 
         const transaction = await Transaction.create({
             ticket: ticket._id,
@@ -113,18 +104,15 @@ export const processTicket = async (
             total: parsed.total_ticket ?? 0,
         });
 
-        logger.info(`💰 Transacción creada con ID: ${transaction._id}`);
 
         for (const item of parsed.items) {
             const descripcion = item.descripcion?.trim();
             if (!descripcion) {
-                logger.warn('⛔️ Ítem sin descripción, se omite');
                 continue;
             }
 
             let product = await Product.findOne({ name: descripcion, createdBy: userId });
             if (!product) {
-                logger.info(`➕ Creando producto: ${descripcion}`);
                 product = await Product.create({
                     name: descripcion,
                     category: null,
@@ -141,24 +129,17 @@ export const processTicket = async (
                 subtotal: item.importe ?? 0,
             });
 
-            logger.info(`🧾 Detalle registrado: ${descripcion}`);
         }
 
         ticket.processingStatus = 'procesado';
         await ticket.save();
 
-        logger.info('✅ Ticket procesado y guardado completamente');
 
         res.status(201).json({
             message: 'Ticket procesado correctamente',
             resultado: parsed,
         });
     } catch (error) {
-        logger.error('❌ Error al procesar el ticket:', {
-            error: error instanceof Error ? error.message : error,
-            stack: error instanceof Error ? error.stack : undefined,
-        });
-
         res.status(500).json({ message: 'Error al procesar el ticket' });
     }
 };

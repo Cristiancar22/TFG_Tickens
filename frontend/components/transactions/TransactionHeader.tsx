@@ -45,7 +45,10 @@ export const TransactionHeader = ({
 
     if (editMode) {
         return (
-            <View style={styles.headerContainer}>
+            <View
+                style={styles.headerContainer}
+                accessibilityLabel="transaction-header-edit"
+            >
                 <CustomSelect
                     label="Tienda"
                     items={stores}
@@ -54,17 +57,21 @@ export const TransactionHeader = ({
                     onChange={onStoreChange}
                 />
 
-                <Text style={styles.label}>Fecha de compra</Text>
+                <Text style={styles.label} accessibilityLabel="label-date">
+                    Fecha de compra
+                </Text>
 
                 <TouchableOpacity
                     onPress={() => setShowDatePicker(true)}
                     style={styles.inputField}
+                    accessibilityLabel="date-picker-toggle"
                 >
                     <Text
                         style={{
                             color: colors.text,
                             fontSize: 16,
                         }}
+                        accessibilityLabel="selected-date"
                     >
                         {formatDate(dateToShow.toISOString())}
                     </Text>
@@ -88,17 +95,28 @@ export const TransactionHeader = ({
     }
 
     return (
-        <View style={styles.headerContainer}>
-            <Text style={styles.label}>Tienda</Text>
-            <Text style={styles.value}>
+        <View
+            style={styles.headerContainer}
+            accessibilityLabel="transaction-header-view"
+        >
+            <Text style={styles.label} accessibilityLabel="label-store">
+                Tienda
+            </Text>
+            <Text style={styles.value} accessibilityLabel="store-name">
                 {store?.name ?? 'Tienda desconocida'}
             </Text>
 
-            <Text style={styles.label}>Total</Text>
-            <Text style={styles.value}>{total.toFixed(2)} €</Text>
+            <Text style={styles.label} accessibilityLabel="label-total">
+                Total
+            </Text>
+            <Text style={styles.value} accessibilityLabel="total-amount">
+                {total.toFixed(2)} €
+            </Text>
 
-            <Text style={styles.label}>Fecha de compra</Text>
-            <Text style={styles.value}>
+            <Text style={styles.label} accessibilityLabel="label-date">
+                Fecha de compra
+            </Text>
+            <Text style={styles.value} accessibilityLabel="purchase-date">
                 {formatDate(new Date(purchaseDate).toISOString())}
             </Text>
         </View>

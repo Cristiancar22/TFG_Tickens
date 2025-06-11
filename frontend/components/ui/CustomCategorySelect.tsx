@@ -8,9 +8,10 @@ type Props = {
     selectedId: string | null;
     onChange: (id: string) => void;
     label?: string;
+    accessibilityLabel?: string;
 };
 
-export const CustomCategorySelect = ({ selectedId, onChange, label }: Props) => {
+export const CustomCategorySelect = ({ selectedId, onChange, label, accessibilityLabel }: Props) => {
     const { categories, getCategoryById } = useCategories();
     const selectedCategory = selectedId ? getCategoryById(selectedId) : null;
 
@@ -22,7 +23,7 @@ export const CustomCategorySelect = ({ selectedId, onChange, label }: Props) => 
     };
 
     return (
-        <View className="mb-4">
+        <View className="mb-4" accessibilityLabel={accessibilityLabel}>
             {label && <Text className="mb-1 font-semibold">{label}</Text>}
 
             <TouchableOpacity

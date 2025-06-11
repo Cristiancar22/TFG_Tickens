@@ -19,7 +19,7 @@ export const useUpdateProfile = () => {
             const updatedUser = await updateProfile(data);
             setUser(updatedUser);
             router.back();
-            Alert.alert('Perfil actualizado');
+            Alert.alert('Cambios guardados', 'Tu perfil ha sido actualizado correctamente');
         } catch (err: unknown) {
             const errorMessage =
                 err instanceof Error ? err.message : 'Error inesperado';
