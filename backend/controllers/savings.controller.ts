@@ -250,7 +250,7 @@ export const getSavingsRecommendations = async (
             if ((avgSpent / avgLimit) * 100 === 0) continue;
             if (avgSpent < avgLimit * 0.6) {
                 recommendations.push(
-                    `Podrías reducir el presupuesto de "${stats.name}" ya que solo usas un ${(
+                    `Podrías reducir el presupuesto de "${stats.name}" ya que solo consumes un ${(
                         (avgSpent / avgLimit) *
                         100
                     ).toFixed(0)}% de media.`,

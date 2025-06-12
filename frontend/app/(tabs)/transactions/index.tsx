@@ -95,6 +95,7 @@ export const TransactionDetailsScreen = () => {
                     <TouchableOpacity
                         onPress={toggleFilters}
                         style={styles.filterButton}
+                        accessibilityLabel="filter-button"
                     >
                         <Ionicons
                             name={
@@ -148,6 +149,7 @@ export const TransactionDetailsScreen = () => {
             />
             <TouchableOpacity
                 style={styles.floatingButton}
+                accessibilityLabel="floating-add-button"
                 onPress={() =>
                     router.push({
                         pathname: '/transactions/newTransaction',

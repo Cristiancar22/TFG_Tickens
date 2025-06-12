@@ -80,7 +80,11 @@ export const ManageStoreScreen = () => {
                 onToggleSelect={onToggleSelect}
             />
 
-            <TouchableOpacity style={styles.floatingButton} onPress={handleOpenCreate}>
+            <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={handleOpenCreate}
+                accessibilityLabel="add-store-button"
+            >
                 <Ionicons name="add" size={28} color="#fff" />
             </TouchableOpacity>
 

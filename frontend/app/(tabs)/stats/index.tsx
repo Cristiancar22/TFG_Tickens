@@ -15,32 +15,50 @@ const StatsScreen = () => {
     const router = useRouter();
 
     return (
-        <ScrollView className="flex-1 p-4 bg-white">
-            <Text className="text-xl font-bold mb-4 text-center">
+        <ScrollView
+            className="flex-1 p-4 bg-white"
+            accessibilityLabel="stats-screen"
+        >
+            <Text
+                className="text-xl font-bold mb-4 text-center"
+                accessibilityLabel="stats-title"
+            >
                 Estadísticas de Gastos
             </Text>
 
-            <ViewTypeSelector viewType={viewType} setViewType={setViewType} />
+            <ViewTypeSelector
+                viewType={viewType}
+                setViewType={setViewType}
+                
+            />
+
             <PeriodNavigator
                 viewType={viewType}
                 currentDate={currentDate}
                 setCurrentDate={setCurrentDate}
+                
             />
 
-            <StatsChart viewType={viewType} currentDate={currentDate} />
+            <StatsChart
+                viewType={viewType}
+                currentDate={currentDate}
+            />
 
             <TouchableOpacity
                 onPress={() => router.push('/stats/storePricesCompare')}
                 className="bg-primary flex-row items-center justify-between p-4 rounded-xl mb-4"
+                accessibilityLabel="compare-store-prices-button"
             >
                 <Text className="text-white text-lg font-semibold">
                     Comparar precios entre tiendas
                 </Text>
                 <Ionicons name="storefront-outline" size={24} color="white" />
             </TouchableOpacity>
+
             <TouchableOpacity
                 onPress={() => router.push('/stats/customReport')}
                 className="bg-secondary flex-row items-center justify-between p-4 rounded-xl mb-4"
+                accessibilityLabel="custom-report-button"
             >
                 <Text className="text-white text-lg font-semibold">
                     Crear informe personalizado

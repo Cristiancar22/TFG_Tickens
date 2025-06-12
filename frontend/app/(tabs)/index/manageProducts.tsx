@@ -83,7 +83,11 @@ export const ManageProductScreen = () => {
                 onToggleSelect={onToggleSelect}
             />
 
-            <TouchableOpacity style={styles.floatingButton} onPress={handleOpenCreate}>
+            <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={handleOpenCreate}
+                accessibilityLabel="add-product-button"
+            >
                 <Ionicons name="add" size={28} color="#fff" />
             </TouchableOpacity>
 
@@ -96,7 +100,7 @@ export const ManageProductScreen = () => {
             <SelectMainProductModal
                 visible={isSelectMainModalVisible}
                 selectedIds={selectedIds}
-                onSelectMain={async(mainId) => {
+                onSelectMain={async (mainId) => {
                     await groupProducts(mainId, selectedIds);
                     setSelectMainModalVisible(false);
                     setGroupingMode(false);

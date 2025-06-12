@@ -91,19 +91,17 @@ export default function EditGoalScreen() {
     if (loading) {
         return (
             <View className="flex-1 items-center justify-center bg-white">
-                <ActivityIndicator size="large" color={colors.primary} />
+                <ActivityIndicator
+                    size="large"
+                    color={colors.primary}
+                    testID="ActivityIndicator"
+                />
             </View>
         );
     }
 
     return (
         <View className="flex-1 bg-white px-6 py-8">
-            <Text className="text-xl font-bold text-center mb-8 text-neutral-800">
-                {currentGoal
-                    ? 'Editar objetivo de ahorro'
-                    : 'Crear objetivo de ahorro'}
-            </Text>
-
             <View className="mb-4">
                 <Text className="mb-2 font-semibold text-neutral-700">
                     Título

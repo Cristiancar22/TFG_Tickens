@@ -12,6 +12,7 @@ import { colors as appColors } from '@/constants/colors';
 interface Props {
     viewType: 'monthly' | 'annual';
     currentDate: Date;
+    accessibilityLabel?: string;
 }
 
 interface ChartDatum {
@@ -20,7 +21,11 @@ interface ChartDatum {
     color: string;
 }
 
-export const StatsChart = ({ viewType, currentDate }: Props) => {
+export const StatsChart = ({
+    viewType,
+    currentDate,
+    accessibilityLabel = 'stats-chart',
+}: Props) => {
     const [data, setData] = useState<ChartDatum[]>([]);
     const [loading, setLoading] = useState(false);
     const [isPrediction, setIsPrediction] = useState(false);
@@ -57,7 +62,7 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     .map((item: any) => ({
                         x: item.label,
                         y: Number(item.value) || 0,
-                        color: item.color || appColors.primary
+                        color: item.color || appColors.primary,
                     }))
                     .sort((a, b) => b.y - a.y)
                     .slice(0, 6);
@@ -83,7 +88,10 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
 
     if (data.length === 0) {
         return (
-            <View className="h-[220px] justify-center items-center">
+            <View
+                className="h-[220px] justify-center items-center"
+                accessibilityLabel={accessibilityLabel}
+            >
                 <Text className="text-gray-500 text-base">
                     ¡No hay registros!
                 </Text>
@@ -98,6 +106,7 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 display: 'flex',
                 alignItems: 'center',
             }}
+            accessibilityLabel={accessibilityLabel}
         >
             {/* Disclaimer sobre el tipo de datos */}
             <Text

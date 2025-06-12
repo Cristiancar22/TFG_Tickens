@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,14 +20,25 @@ export const EditProfileScreen = () => {
         control,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm<EditProfileSchema>({
         resolver: zodResolver(editProfileSchema),
         defaultValues: {
-            name: user?.name || '',
-            surname: user?.surname || '',
-            email: user?.email || '',
+            name: '',
+            surname: '',
+            email: '',
         },
     });
+
+    useEffect(() => {
+        if (user) {
+            reset({
+                name: user.name || '',
+                surname: user.surname || '',
+                email: user.email || '',
+            });
+        }
+    }, [user]);
 
     return (
         <View

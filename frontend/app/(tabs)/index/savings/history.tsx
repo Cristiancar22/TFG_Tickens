@@ -7,7 +7,7 @@ import { BudgetItem } from '@/components/manageBudgets/BudgetItem';
 import { getBudgets } from '@/services/budget.service';
 import { Budget } from '@/types';
 
-const ManageSavingsScreen = () => {
+const SavingsHistoryScreen = () => {
     const [currentDate, setCurrentDate] = useState(() => {
         const d = new Date();
         d.setMonth(d.getMonth() - 1);
@@ -82,7 +82,11 @@ const ManageSavingsScreen = () => {
             </Text>
 
             {loading ? (
-                <ActivityIndicator size="large" color={colors.primary} />
+                <ActivityIndicator
+                    size="large"
+                    color={colors.primary}
+                    testID="ActivityIndicator"
+                />
             ) : (
                 <FlatList
                     data={budgets}
@@ -95,4 +99,4 @@ const ManageSavingsScreen = () => {
     );
 };
 
-export default ManageSavingsScreen;
+export default SavingsHistoryScreen;
