@@ -4,6 +4,7 @@ import { AuthRequest } from '../middlewares/auth.middleware';
 import dayjs from 'dayjs';
 import { Budget } from '../models/budget.model';
 import { Types } from 'mongoose';
+import { logger } from '../utils/logger';
 
 export const getSavingsGoal = async (
     req: AuthRequest,
@@ -23,10 +24,10 @@ export const getSavingsGoal = async (
             return;
         }
 
-        const start = new Date(goal.startDate);
+        const start = goal.startDate ? new Date(goal.startDate) : new Date();
         const now = new Date();
 
-        const totalSavings = await calculateTotalSavings(userId, start, now);
+        const totalSavings = await calculateTotalSavings(userId!, start, now);
 
         res.json({
             ...goal.toObject(),
@@ -186,7 +187,7 @@ export const getTotalSavings = async (
 
         res.json({ totalSavings });
     } catch (error) {
-        console.error('Error al calcular el ahorro total:', error);
+        logger.error('Error al calcular el ahorro total:', error);
         res.status(500).json({ message: 'Error al calcular el ahorro total' });
     }
 };
@@ -222,10 +223,15 @@ export const getSavingsRecommendations = async (
 
         for (const b of budgets) {
             const key = b.category ? b.category._id.toString() : 'general';
-
+            const categoryName =
+                typeof b.category === 'object' &&
+                b.category !== null &&
+                'name' in b.category
+                    ? b.category.name
+                    : 'General';
             if (!categoryStats.has(key)) {
                 categoryStats.set(key, {
-                    name: b.category?.name || 'General',
+                    name: categoryName,
                     totalSpent: 0,
                     totalLimit: 0,
                     months: 0,
@@ -268,7 +274,7 @@ export const getSavingsRecommendations = async (
 
         res.json({ recommendations });
     } catch (error) {
-        console.error('Error al generar recomendaciones:', error);
+        logger.error('Error al generar recomendaciones:', error);
         res.status(500).json({
             message: 'Error al generar recomendaciones',
             error,

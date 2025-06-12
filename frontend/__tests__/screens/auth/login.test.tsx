@@ -80,7 +80,6 @@ describe('Login Screen', () => {
 
         await waitFor(() => {
             expect(loginUser).toHaveBeenCalled();
-            // `Alert.alert` no se puede testear directamente en JSDOM. Se puede mockear o verificar visualmente si se reemplaza por un componente personalizado.
         });
 
         alertSpy.mockRestore();

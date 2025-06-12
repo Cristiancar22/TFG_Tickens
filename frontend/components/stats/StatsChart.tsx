@@ -57,9 +57,7 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     .map((item: any) => ({
                         x: item.label,
                         y: Number(item.value) || 0,
-                        color: isPrediction
-                            ? `${appColors.accent}AA`
-                            : item.color || appColors.primary,
+                        color: item.color || appColors.primary
                     }))
                     .sort((a, b) => b.y - a.y)
                     .slice(0, 6);
@@ -105,15 +103,15 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
             <Text
                 style={{
                     alignSelf: 'flex-start',
-                    marginBottom: 4,
+                    marginBottom: 1,
                     color: isPrediction
                         ? appColors.accent
                         : appColors.secondary,
                     fontStyle: 'italic',
-                    fontSize: 12,
+                    fontSize: 15,
                 }}
             >
-                {isPrediction ? 'Predicción de gasto' : 'Datos reales'}
+                {isPrediction ? 'Predicción de gasto' : ''}
             </Text>
 
             <VictoryChart

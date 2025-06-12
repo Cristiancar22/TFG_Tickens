@@ -21,37 +21,127 @@ export const getBudgets = async (
         const year = parseInt(req.query.year as string, 10);
 
         if (isNaN(month) || isNaN(year)) {
-
             res.status(400).json({
                 message: 'Parámetros month y year requeridos',
             });
             return;
         }
-        /* ---------- 1. Cargar / clonar presupuestos como ya tenías ---------- */
-        /* … se mantiene exactamente igual …  */
 
-        const budgets = await Budget.find({
+        const today = dayjs();
+        const isCurrentMonth =
+            month === today.month() + 1 && year === today.year(); // month() es 0-based
+
+        let budgets = await Budget.find({
             user: userId,
             month,
             year,
         }).populate('category');
 
-        /* ---------- 2. ¿Debo recalcular spentAmount? ---------- */
-        const today = dayjs();
-        const isCurrentMonth =
-            month === today.month() + 1 && year === today.year(); // month() es 0-based
+        // Solo si estamos en el mes actual y no hay presupuestos → clonar
+        if (budgets.length === 0 && isCurrentMonth) {
+            const prevMonth = month === 1 ? 12 : month - 1;
+            const prevYear = month === 1 ? year - 1 : year;
+
+            const prevBudgets = await Budget.find({
+                user: userId,
+                month: prevMonth,
+                year: prevYear,
+                isRecurring: true,
+            });
+
+            for (const prev of prevBudgets) {
+                const startOfPrevMonth = dayjs(`${prevYear}-${prevMonth}-01`)
+                    .startOf('month')
+                    .toDate();
+                const endOfPrevMonth = dayjs(`${prevYear}-${prevMonth}-01`)
+                    .endOf('month')
+                    .toDate();
+
+                const prevTransactions = await Transaction.find({
+                    user: userId,
+                    purchaseDate: {
+                        $gte: startOfPrevMonth,
+                        $lte: endOfPrevMonth,
+                    },
+                }).select('_id');
+
+                const prevTransactionIds = prevTransactions.map((t) => t._id);
+
+                let spentAmount = 0;
+
+                if (prevTransactionIds.length > 0) {
+                    const categoryId =
+                        typeof prev.category === 'object' &&
+                        '_id' in prev.category
+                            ? prev.category._id
+                            : prev.category;
+                    const details = await TransactionDetail.aggregate([
+                        {
+                            $match: {
+                                transaction: { $in: prevTransactionIds },
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: 'products',
+                                localField: 'product',
+                                foreignField: '_id',
+                                as: 'productData',
+                            },
+                        },
+                        { $unwind: '$productData' },
+                        ...(prev.category
+                            ? [
+                                  {
+                                      $match: {
+                                          'productData.category':
+                                              new Types.ObjectId(categoryId),
+                                      },
+                                  },
+                              ]
+                            : []),
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: '$subtotal' },
+                            },
+                        },
+                    ]);
+
+                    spentAmount = details.length > 0 ? details[0].total : 0;
+                }
+
+                await Budget.create({
+                    user: prev.user,
+                    category: prev.category,
+                    month,
+                    year,
+                    limitAmount: prev.limitAmount,
+                    isRecurring: prev.isRecurring,
+                    isActive: prev.isActive,
+                    notificationsEnabled: prev.notificationsEnabled,
+                    spentAmount, // guardamos el valor del mes anterior
+                });
+            }
+
+            // Recargar presupuestos ya clonados
+            budgets = await Budget.find({
+                user: userId,
+                month,
+                year,
+            }).populate('category');
+        }
 
         const updatedBudgets: any[] = [];
 
         if (!isCurrentMonth) {
-            /* Mes pasado → NO recalculo, uso el valor guardado */
+            // Mes anterior o futuro → no recalculamos
             budgets.forEach((b) => updatedBudgets.push(b));
             res.json(updatedBudgets);
             return;
         }
 
-        /* ---------- 3. Mes ACTUAL → recalculo como siempre ---------- */
-
+        // Mes actual → recalcular spentAmount
         const startOfMonth = dayjs(`${year}-${month}-01`)
             .startOf('month')
             .toDate();
@@ -99,10 +189,8 @@ export const getBudgets = async (
                     },
                 ]);
 
-                spentAmount = details.length ? details[0].total : 0;
+                spentAmount = details.length > 0 ? details[0].total : 0;
             }
-
-            /* notificaciones de presupuesto … (sin cambios) */
 
             updatedBudgets.push({
                 ...budget.toObject(),

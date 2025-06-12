@@ -30,6 +30,6 @@ describe('ManageButtons', () => {
         expect(pushMock).toHaveBeenCalledWith('/(tabs)/manageProducts');
 
         fireEvent.press(getByLabelText('manage-savings-button'));
-        expect(pushMock).toHaveBeenCalledWith('/(tabs)/manageSavings');
+        expect(pushMock).toHaveBeenCalledWith('/(tabs)/savings');
     });
 });

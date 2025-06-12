@@ -16,11 +16,6 @@ export const processTicket = async (
     res: Response,
 ): Promise<void> => {
     try {
-        res.status(201).json({
-            message: 'Ticket procesado correctamente',
-            // resultado: parsed,
-        });
-        return;
         if (!req.file) {
             res.status(400).json({
                 message: 'No se proporcionó ninguna imagen',
