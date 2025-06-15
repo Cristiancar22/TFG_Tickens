@@ -6,7 +6,6 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@/store/useAuth';
 import { Alert } from 'react-native';
 
-// Mocks
 jest.mock('@/services', () => ({
     registerUser: jest.fn(),
 }));

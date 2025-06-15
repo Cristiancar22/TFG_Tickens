@@ -1,10 +1,9 @@
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import TransactionDetailScreen from '@/app/(tabs)/transactions/[id]';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { getTransactionById } from '@/services/transaction.service';
 
-// Mocks necesarios
 jest.mock('expo-router', () => ({
     useLocalSearchParams: jest.fn(),
     useNavigation: () => ({ setOptions: jest.fn() }),

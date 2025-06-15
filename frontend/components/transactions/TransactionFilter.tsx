@@ -41,7 +41,6 @@ export const TransactionFilter = ({
             className="p-4 rounded-b-xl"
             accessibilityLabel="transaction-filter"
         >
-            {/* Ordenar por fecha */}
             <View className="justify-between mb-4">
                 <Text
                     className="font-bold mb-2"
@@ -89,7 +88,6 @@ export const TransactionFilter = ({
                 </View>
             </View>
 
-            {/* Rango de fechas */}
             <Text
                 className="font-bold mb-2"
                 accessibilityLabel="label-date-range"
@@ -103,7 +101,6 @@ export const TransactionFilter = ({
                 setMaxDate={setMaxDate}
             />
 
-            {/* Rango de precios */}
             <Text
                 className="font-bold mt-4 mb-2"
                 accessibilityLabel="label-price-range"
@@ -141,7 +138,6 @@ export const TransactionFilter = ({
                 </View>
             </View>
 
-            {/* Botones */}
             <View className="flex-row justify-between mt-4">
                 <TouchableOpacity
                     style={styles.activeButton}

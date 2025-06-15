@@ -13,18 +13,23 @@ export interface ITransaction extends Document {
     paymentMethod?: string;
     transactionCategory?: string;
     notes?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
-const transactionSchema = new Schema<ITransaction>({
-    ticket: { type: Schema.Types.ObjectId, ref: 'Ticket' },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    store: { type: Schema.Types.ObjectId, ref: 'Store', required: false },
-    purchaseDate: { type: Date, required: true },
-    total: { type: Number, default: 0 },
-    paymentMethod: { type: String },
-    transactionCategory: { type: String },
-    notes: { type: String },
-});
+const transactionSchema = new Schema<ITransaction>(
+    {
+        ticket: { type: Schema.Types.ObjectId, ref: 'Ticket' },
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        store: { type: Schema.Types.ObjectId, ref: 'Store', required: false },
+        purchaseDate: { type: Date, required: true },
+        total: { type: Number, default: 0 },
+        paymentMethod: { type: String },
+        transactionCategory: { type: String },
+        notes: { type: String },
+    },
+    { timestamps: true },
+);
 
 export const Transaction = model<ITransaction>(
     'Transaction',

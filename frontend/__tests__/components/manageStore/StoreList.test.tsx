@@ -3,11 +3,9 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { StoreList } from '@/components/manageStore/StoreList';
 import { useStores } from '@/store/useStore';
 
-// ➜ Mock de Zustand de tiendas
 jest.mock('@/store/useStore');
 const mockedUseStores = useStores as jest.Mock;
 
-// ➜ Mock del hook de gestión de tiendas
 jest.mock('@/hooks/manageStore/useStoreManager', () => ({
     useStoreManager: () => ({ handleDelete: jest.fn() }),
 }));
@@ -46,9 +44,9 @@ describe('StoreList', () => {
 
         fireEvent.changeText(getByLabelText('store-search-input'), 'lid');
 
-        expect(queryByLabelText('store-item-1')).toBeNull(); // Mercadona
-        expect(queryByLabelText('store-item-2')).toBeTruthy(); // Lidl
-        expect(queryByLabelText('store-item-3')).toBeNull(); // Carrefour
+        expect(queryByLabelText('store-item-1')).toBeNull();
+        expect(queryByLabelText('store-item-2')).toBeTruthy();
+        expect(queryByLabelText('store-item-3')).toBeNull();
     });
 
     it('invoca onEditStore al pulsar el botón de edición', () => {

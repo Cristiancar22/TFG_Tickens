@@ -108,7 +108,6 @@ export const StatsChart = ({
             }}
             accessibilityLabel={accessibilityLabel}
         >
-            {/* Disclaimer sobre el tipo de datos */}
             <Text
                 style={{
                     alignSelf: 'flex-start',

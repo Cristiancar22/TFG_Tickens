@@ -3,7 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { useProducts } from '@/store/useProduct';
 import { SelectMainProductModal } from '@/components/modals/CustomProductSelect';
 
-// Mocks
 jest.mock('@/store/useProduct', () => ({
     useProducts: jest.fn(),
 }));

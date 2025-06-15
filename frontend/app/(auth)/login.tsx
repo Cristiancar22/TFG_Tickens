@@ -67,17 +67,6 @@ export default function Login() {
                     accessibilityLabel="login-button"
                 />
 
-                {/* <PrimaryButton
-                    title="Login rápido (Juan)"
-                    onPress={() =>
-                        onSubmit({
-                            email: 'juan.perez@example.com',
-                            password: 'MiPassword123',
-                        })
-                    }
-                    accessibilityLabel="login-quick-button"
-                /> */}
-
                 <Text
                     className="text-center my-4 text-primary underline"
                     onPress={() => router.push('/register')}

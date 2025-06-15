@@ -54,7 +54,7 @@ export const AddStoreModal: React.FC<Props> = ({
         >
             <View
                 className="bg-white p-6 rounded-2xl w-full max-w-md"
-                accessibilityLabel="add-store-container" // ← Renombrado
+                accessibilityLabel="add-store-container"
             >
                 <Text
                     className="text-lg font-semibold mb-4"

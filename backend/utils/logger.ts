@@ -8,10 +8,8 @@ const logDir = path.join(__dirname, '../../logs');
 let transports: winston.transport[] = [];
 
 if (process.env.NODE_ENV === 'test') {
-    // Silent stream que cumple con WritableStream
     const silentStream = new Writable({
         write(_chunk, _encoding, callback) {
-            // No hacer nada con el log
             callback();
         },
     });

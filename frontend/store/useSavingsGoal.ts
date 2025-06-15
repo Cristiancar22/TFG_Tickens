@@ -6,7 +6,7 @@ import {
     createSavingsGoal,
     updateSavingsGoal,
     deleteSavingsGoal,
-    getTotalSavings, // nuevo endpoint
+    getTotalSavings,
 } from '@/services/savings.service';
 
 interface SavingsGoalState {
@@ -18,7 +18,7 @@ interface SavingsGoalState {
 
     fetchCurrentGoal: () => Promise<void>;
     fetchAllGoals: () => Promise<void>;
-    fetchTotalSavings: () => Promise<void>; // nuevo
+    fetchTotalSavings: () => Promise<void>;
 
     createGoal: (
         data: Omit<SavingsGoal, 'id' | 'accumulatedAmount'>,

@@ -17,7 +17,6 @@ export default function EditGoalScreen() {
     const { currentGoal, loading, fetchCurrentGoal, updateGoal, createGoal } =
         useSavingsGoalStore();
 
-    // Estado local para el formulario
     const [title, setTitle] = useState('');
     const [target, setTarget] = useState('');
 
@@ -49,10 +48,8 @@ export default function EditGoalScreen() {
 
         try {
             if (currentGoal) {
-                // Edición de meta existente
                 await updateGoal(currentGoal.id, { title, targetAmount });
             } else {
-                // Creación nueva meta (sin meta activa)
                 await createGoal({
                     title,
                     targetAmount,
@@ -69,13 +66,11 @@ export default function EditGoalScreen() {
         if (!title.trim() || !target) return;
 
         try {
-            // 1) Cerrar meta actual (endDate hoy, inactiva)
             await updateGoal(currentGoal!.id, {
                 endDate: new Date().toISOString(),
                 isActive: false,
             });
 
-            // 2) Crear la nueva
             await createGoal({
                 title,
                 targetAmount: Number(target),
@@ -127,7 +122,6 @@ export default function EditGoalScreen() {
                 />
             </View>
 
-            {/* Botón Guardar */}
             <TouchableOpacity
                 className="bg-[#225560] rounded-lg py-3"
                 onPress={onSave}
@@ -137,7 +131,6 @@ export default function EditGoalScreen() {
                 </Text>
             </TouchableOpacity>
 
-            {/* Si existe meta activa => botón Crear nueva meta */}
             {currentGoal && (
                 <TouchableOpacity
                     className="bg-[#4CAF50] rounded-lg py-3 mt-4"

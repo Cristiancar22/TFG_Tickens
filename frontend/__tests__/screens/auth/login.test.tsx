@@ -6,7 +6,6 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@/store/useAuth';
 import { Alert } from 'react-native';
 
-// 🔧 Mocks necesarios
 jest.mock('@/services/auth.service', () => ({
     loginUser: jest.fn(),
 }));
@@ -19,7 +18,6 @@ jest.mock('@/store/useAuth', () => ({
     useAuth: jest.fn(),
 }));
 
-// 🧪 Tests
 describe('Login Screen', () => {
     const mockLogin = jest.fn();
     const mockSetUser = jest.fn();

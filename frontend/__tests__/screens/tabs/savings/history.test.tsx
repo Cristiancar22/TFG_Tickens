@@ -71,7 +71,6 @@ describe('SavingsHistoryScreen', () => {
         expect(getByLabelText('budget-item-1')).toBeTruthy();
         expect(getByLabelText('budget-item-2')).toBeTruthy();
 
-        // Comprueba el texto del ahorro calculado (según lógica de `calculateTotalSavings`)
         expect(getByText('Este mes has ahorrado 200.00 €')).toBeTruthy();
     });
 

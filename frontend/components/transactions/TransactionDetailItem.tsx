@@ -28,7 +28,6 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
             ]}
             accessibilityLabel="transaction-detail-item"
         >
-            {/* Producto */}
             <View style={styles.row}>
                 <Text
                     style={[
@@ -70,9 +69,7 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                 {product?.name ?? 'Producto desconocido'}
             </Text>
 
-            {/* Cantidad, Precio unitario, Subtotal */}
             <View style={styles.row}>
-                {/* Cantidad */}
                 <View style={styles.column}>
                     <Text
                         style={[
@@ -104,7 +101,6 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                     </Text>
                 </View>
 
-                {/* Precio unitario */}
                 <View style={styles.column}>
                     <Text
                         style={[
@@ -136,7 +132,6 @@ export const TransactionDetailItem = ({ detail, product }: Props) => {
                     </Text>
                 </View>
 
-                {/* Subtotal */}
                 <View style={styles.column}>
                     <Text
                         style={[

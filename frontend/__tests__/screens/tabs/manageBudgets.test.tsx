@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { useBudgets } from '@/store/useBudgets';
 import ManageBudgetsScreen from '@/app/(tabs)/index/manageBudgets';
 
-// 🧪 Mocks necesarios
 jest.mock('@/store/useBudgets', () => ({
     useBudgets: jest.fn(),
 }));

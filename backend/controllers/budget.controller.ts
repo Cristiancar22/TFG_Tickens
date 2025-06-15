@@ -17,7 +17,7 @@ export const getBudgets = async (
 ): Promise<void> => {
     try {
         const userId = req.user?._id;
-        const month = parseInt(req.query.month as string, 10); // 1-based
+        const month = parseInt(req.query.month as string, 10);
         const year = parseInt(req.query.year as string, 10);
 
         if (isNaN(month) || isNaN(year)) {
@@ -29,7 +29,7 @@ export const getBudgets = async (
 
         const today = dayjs();
         const isCurrentMonth =
-            month === today.month() + 1 && year === today.year(); // month() es 0-based
+            month === today.month() + 1 && year === today.year();
 
         let budgets = await Budget.find({
             user: userId,
@@ -37,7 +37,6 @@ export const getBudgets = async (
             year,
         }).populate('category');
 
-        // Solo si estamos en el mes actual y no hay presupuestos → clonar
         if (budgets.length === 0 && isCurrentMonth) {
             const prevMonth = month === 1 ? 12 : month - 1;
             const prevYear = month === 1 ? year - 1 : year;
@@ -120,11 +119,10 @@ export const getBudgets = async (
                     isRecurring: prev.isRecurring,
                     isActive: prev.isActive,
                     notificationsEnabled: prev.notificationsEnabled,
-                    spentAmount, // guardamos el valor del mes anterior
+                    spentAmount,
                 });
             }
 
-            // Recargar presupuestos ya clonados
             budgets = await Budget.find({
                 user: userId,
                 month,
@@ -135,13 +133,11 @@ export const getBudgets = async (
         const updatedBudgets: any[] = [];
 
         if (!isCurrentMonth) {
-            // Mes anterior o futuro → no recalculamos
             budgets.forEach((b) => updatedBudgets.push(b));
             res.json(updatedBudgets);
             return;
         }
 
-        // Mes actual → recalcular spentAmount
         const startOfMonth = dayjs(`${year}-${month}-01`)
             .startOf('month')
             .toDate();

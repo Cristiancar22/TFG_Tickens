@@ -16,12 +16,10 @@ export default function SavingsSuggestionsScreen() {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
-    /* --- Cargar inicialmente --- */
     useEffect(() => {
         fetchData();
     }, []);
 
-    /* --- Función de carga / recarga --- */
     const fetchData = async () => {
         try {
             const data = await getSavingsRecommendations();
@@ -42,7 +40,6 @@ export default function SavingsSuggestionsScreen() {
         fetchData();
     }, []);
 
-    /* --- Card de sugerencia --- */
     const SuggestionCard = ({ text }: { text: string }) => (
         <View
             style={{
@@ -72,7 +69,6 @@ export default function SavingsSuggestionsScreen() {
         </View>
     );
 
-    /* --- Render --- */
     return (
         <View className="flex-1 bg-white pt-4">
             {loading ? (

@@ -3,7 +3,6 @@ import { View, Text } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { TransactionFilter } from '@/components/transactions/TransactionFilter';
 
-// Mock de MultiSlider
 jest.mock('@ptomasroos/react-native-multi-slider', () => {
     return ({ onValuesChange }: any) => {
         return <MockSlider onValuesChange={onValuesChange} />;

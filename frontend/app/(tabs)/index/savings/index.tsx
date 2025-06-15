@@ -40,13 +40,6 @@ export default function SavingsHomeScreen() {
             icon: 'time-outline',
             a11y: 'botón historial de ahorro',
         },
-        // {
-        //     route: '/(tabs)/savings/historyGoals',
-        //     label: 'Historial de metas de ahorro',
-        //     color: 'bg-purple-700',
-        //     icon: 'trophy-outline',
-        //     a11y: 'botón historial de metas de ahorro',
-        // },
         {
             route: '/(tabs)/savings/suggestions',
             label: 'Ver sugerencias de ahorro',
@@ -61,7 +54,6 @@ export default function SavingsHomeScreen() {
                 {currentGoal?.title ?? 'Ahorro total'}
             </Text>
 
-            {/* Meta activa */}
             {currentGoal ? (
                 <View className="mb-8">
                     <Text className="text-base font-semibold text-center mb-2 text-neutral-700">

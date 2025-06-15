@@ -36,7 +36,7 @@ describe('PeriodNavigator', () => {
         );
 
         fireEvent.press(getByLabelText('period-prev-button'));
-        expect(setCurrentDate).toHaveBeenCalledWith(new Date(2024, 4, 1)); // mayo
+        expect(setCurrentDate).toHaveBeenCalledWith(new Date(2024, 4, 1));
     });
 
     it('avanza un mes si está dentro del límite (mensual)', () => {
@@ -49,7 +49,7 @@ describe('PeriodNavigator', () => {
         );
 
         fireEvent.press(getByLabelText('period-next-button'));
-        expect(setCurrentDate).toHaveBeenCalledWith(new Date(2024, 6, 1)); // julio
+        expect(setCurrentDate).toHaveBeenCalledWith(new Date(2024, 6, 1));
     });
 
     it('no avanza si se supera el límite de 6 meses en el futuro (mensual)', () => {

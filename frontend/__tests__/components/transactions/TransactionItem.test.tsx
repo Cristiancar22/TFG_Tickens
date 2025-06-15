@@ -5,12 +5,10 @@ import { useStores } from '@/store/useStore';
 import { useRouter } from 'expo-router';
 import { Transaction } from '@/types';
 
-// Mock del router
 jest.mock('expo-router', () => ({
     useRouter: jest.fn(),
 }));
 
-// Mock del store
 jest.mock('@/store/useStore', () => ({
     useStores: jest.fn(),
 }));

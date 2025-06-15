@@ -21,7 +21,6 @@ const withNotifications = (notifications: any[]) =>
         return selector ? selector(fakeState) : fakeState;
     });
 
-/** Dispara onLayout para dar ancho al contenedor */
 const triggerLayout = (container: any, width = 300) => {
     fireEvent(container, 'layout', {
         nativeEvent: { layout: { width, height: 0, x: 0, y: 0 } },

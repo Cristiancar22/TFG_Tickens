@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { useProducts } from '@/store/useProduct';
 import ManageProductScreen from '@/app/(tabs)/index/manageProducts';
 
-// 🧪 Mocks necesarios
 jest.mock('@/store/useProduct', () => ({
     useProducts: jest.fn(),
 }));

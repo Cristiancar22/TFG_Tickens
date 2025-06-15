@@ -3,7 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { TransactionHeader } from '@/components/transactions/TransactionHeader';
 import { Store } from '@/types';
 
-// Mock de DateTimePicker (opcional, para evitar errores nativos)
 jest.mock('@react-native-community/datetimepicker', () => 'DateTimePicker');
 
 const stores: Store[] = [

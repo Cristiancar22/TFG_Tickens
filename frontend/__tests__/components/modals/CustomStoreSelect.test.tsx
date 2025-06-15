@@ -3,7 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { useStores } from '@/store/useStore';
 import { SelectMainStoreModal } from '@/components/modals/CustomStoreSelect';
 
-// Mock de Zustand
 jest.mock('@/store/useStore');
 const mockedUseStores = useStores as jest.Mock;
 

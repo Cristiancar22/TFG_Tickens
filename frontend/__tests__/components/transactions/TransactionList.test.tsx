@@ -3,7 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { TransactionList } from '@/components/transactions/TransactionList';
 import { Transaction } from '@/types';
 
-// Mock del componente TransactionItem para simplificar
 jest.mock('@/components/transactions/TransactionItem', () => {
     const React = require('react');
     const { Text } = require('react-native');

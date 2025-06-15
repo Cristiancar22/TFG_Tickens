@@ -38,7 +38,6 @@ export const StoreItem = ({
 
             {!isGroupingMode && (
                 <View className="flex-row items-center space-x-3">
-                    {/* Botón de editar */}
                     <TouchableOpacity
                         className="bg-primary rounded-full p-2 shadow-lg"
                         onPress={() => onEdit(store)}
@@ -47,7 +46,6 @@ export const StoreItem = ({
                         <Ionicons name="pencil" size={17} color="#fff" />
                     </TouchableOpacity>
 
-                    {/* Botón de eliminar */}
                     <TouchableOpacity
                         className="bg-primary rounded-full p-2 shadow-lg ml-2"
                         onPress={() => {

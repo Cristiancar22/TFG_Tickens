@@ -4,7 +4,6 @@ import { TransactionDetailEditItem } from '@/components/transactions/Transaction
 import { createMockProduct } from '@/__tests__/helpers';
 
 describe('TransactionDetailEditItem', () => {
-    // 2 productos simulados
     const products = [
         createMockProduct({ id: '1', name: 'Producto 1', category: 'cat1' }),
         createMockProduct({ id: '2', name: 'Producto 2', category: 'cat2' }),

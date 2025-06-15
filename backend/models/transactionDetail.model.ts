@@ -9,19 +9,28 @@ export interface ITransactionDetail extends Document {
     quantity: number;
     unitPrice: number;
     subtotal: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
-const transactionDetailSchema = new Schema<ITransactionDetail>({
-    transaction: {
-        type: Schema.Types.ObjectId,
-        ref: 'Transaction',
-        required: true,
+const transactionDetailSchema = new Schema<ITransactionDetail>(
+    {
+        transaction: {
+            type: Schema.Types.ObjectId,
+            ref: 'Transaction',
+            required: true,
+        },
+        product: {
+            type: Schema.Types.ObjectId,
+            ref: 'Product',
+            required: false,
+        },
+        quantity: { type: Number, default: 1 },
+        unitPrice: { type: Number, default: 0 },
+        subtotal: { type: Number, default: 0 },
     },
-    product: { type: Schema.Types.ObjectId, ref: 'Product', required: false },
-    quantity: { type: Number, default: 1 },
-    unitPrice: { type: Number, default: 0 },
-    subtotal: { type: Number, default: 0 },
-});
+    { timestamps: true },
+);
 
 export const TransactionDetail = model<ITransactionDetail>(
     'TransactionDetail',

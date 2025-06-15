@@ -127,7 +127,7 @@ describe('ManageStoreScreen', () => {
         const { getByText, getByLabelText } = render(<ManageStoreScreen />);
         expect(getByText('Tus tiendas')).toBeTruthy();
         expect(getByLabelText('store-list')).toBeTruthy();
-        expect(getByLabelText('add-store-button')).toBeTruthy(); // Usa el mismo `accessibilityLabel` que los otros screens
+        expect(getByLabelText('add-store-button')).toBeTruthy();
     });
 
     it('abre el modal al presionar el botón flotante', () => {

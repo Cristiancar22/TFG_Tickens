@@ -88,7 +88,6 @@ export const BudgetItem: React.FC<Props> = ({ budget, onEdit }) => {
                 </Text>
             </View>
 
-            {/* Progress Bar */}
             <View
                 accessibilityLabel={`budget-progress-${budget.id}`}
                 style={{

@@ -58,9 +58,9 @@ describe('TransactionDetailsScreen', () => {
         const filterButton = getByLabelText('filter-button');
 
         fireEvent.press(filterButton);
-        rerender(<TransactionDetailsScreen />); // fuerza re-render con showFilters=true
+        rerender(<TransactionDetailsScreen />);
         fireEvent.press(filterButton);
-        expect(filterButton).toBeTruthy(); // si no explota, es que el toggle funciona
+        expect(filterButton).toBeTruthy();
     });
 
     it('navega al crear nueva transacción al pulsar el botón flotante', () => {

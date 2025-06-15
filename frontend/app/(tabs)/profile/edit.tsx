@@ -52,7 +52,6 @@ export const EditProfileScreen = () => {
                 Editar perfil
             </Text>
 
-            {/* Nombre */}
             <Controller
                 control={control}
                 name="name"
@@ -68,7 +67,6 @@ export const EditProfileScreen = () => {
                 )}
             />
 
-            {/* Apellidos */}
             <Controller
                 control={control}
                 name="surname"
@@ -84,7 +82,6 @@ export const EditProfileScreen = () => {
                 )}
             />
 
-            {/* Email */}
             <Controller
                 control={control}
                 name="email"
@@ -102,7 +99,6 @@ export const EditProfileScreen = () => {
                 )}
             />
 
-            {/* Botón Guardar */}
             <View className="mt-6">
                 <PrimaryButton
                     title={loading ? 'Guardando...' : 'Guardar cambios'}
