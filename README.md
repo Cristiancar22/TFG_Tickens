@@ -26,8 +26,6 @@ Así obtienes analíticas detalladas, presupuestos inteligentes y predicciones d
 | **Orquestación**  | Docker · Docker Compose                       | Despliegue reproducible y portable en un solo comando.                        |
 | **Testing**       | Jest-Expo · Supertest · mongodb-memory-server | Pruebas completas en frontend y backend con base de datos simulada.           |
 
-La separación en microservicios permite escalar de forma independiente el procesamiento de imágenes (CPU) y el análisis semántico sin impactar el resto de la plataforma.
-
 ## Roadmap breve
 
 - Integración **CI/CD** con GitHub Actions para tests automáticos y despliegue de contenedores.  
