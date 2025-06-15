@@ -26,15 +26,6 @@ Así obtienes analíticas detalladas, presupuestos inteligentes y predicciones d
 | **Orquestación**  | Docker · Docker Compose                       | Despliegue reproducible y portable en un solo comando.                        |
 | **Testing**       | Jest-Expo · Supertest · mongodb-memory-server | Pruebas completas en frontend y backend con base de datos simulada.           |
 
-## Arquitectura en alto nivel
-Mobile App (React Native)
-│
-▼
-API Gateway (Express) ───► MongoDB
-│
-├──► OCR Service (Flask + OpenCV + Tesseract)
-└──► LLM Service (Flask + GPT-4o-mini)
-
 La separación en microservicios permite escalar de forma independiente el procesamiento de imágenes (CPU) y el análisis semántico sin impactar el resto de la plataforma.
 
 ## Roadmap breve
