@@ -30,7 +30,7 @@ export const TransactionDetailsScreen = () => {
     const [showFilters, setShowFilters] = useState(false);
 
     const [filters, setFilters] = useState({
-        sortOrderAsc: true,
+        sortOrderAsc: false,
         minDate: null as Date | null,
         maxDate: null as Date | null,
         minPrice: null as number | null,
@@ -50,7 +50,7 @@ export const TransactionDetailsScreen = () => {
 
     const resetFilters = () => {
         const reset = {
-            sortOrderAsc: true,
+            sortOrderAsc: false,
             minDate: null,
             maxDate: null,
             minPrice: null,
@@ -95,6 +95,7 @@ export const TransactionDetailsScreen = () => {
                     <TouchableOpacity
                         onPress={toggleFilters}
                         style={styles.filterButton}
+                        accessibilityLabel="filter-button"
                     >
                         <Ionicons
                             name={
@@ -148,6 +149,7 @@ export const TransactionDetailsScreen = () => {
             />
             <TouchableOpacity
                 style={styles.floatingButton}
+                accessibilityLabel="floating-add-button"
                 onPress={() =>
                     router.push({
                         pathname: '/transactions/newTransaction',

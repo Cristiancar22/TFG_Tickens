@@ -5,6 +5,11 @@ import { TransactionDetail } from '../models/transactionDetail.model';
 import { Transaction } from '../models/transaction.model';
 import dayjs from 'dayjs';
 import { Types } from 'mongoose';
+import {
+    createBudgetNotification,
+    getNextBudgetNotificationLevel,
+} from '../utils/budget';
+import { logger } from '../utils/logger';
 
 export const getBudgets = async (
     req: AuthRequest,
@@ -22,49 +27,117 @@ export const getBudgets = async (
             return;
         }
 
-        // 1️⃣ Si no existen, replicar recurrentes
-        const existingBudgets = await Budget.find({
+        const today = dayjs();
+        const isCurrentMonth =
+            month === today.month() + 1 && year === today.year();
+
+        let budgets = await Budget.find({
             user: userId,
             month,
             year,
         }).populate('category');
 
-        if (existingBudgets.length === 0) {
-            const previousMonth = month === 1 ? 12 : month - 1;
-            const previousYear = month === 1 ? year - 1 : year;
+        if (budgets.length === 0 && isCurrentMonth) {
+            const prevMonth = month === 1 ? 12 : month - 1;
+            const prevYear = month === 1 ? year - 1 : year;
 
-            const recurringBudgets = await Budget.find({
+            const prevBudgets = await Budget.find({
                 user: userId,
-                month: previousMonth,
-                year: previousYear,
+                month: prevMonth,
+                year: prevYear,
                 isRecurring: true,
             });
 
-            const newBudgets = recurringBudgets.map((budget) => ({
-                user: budget.user,
-                category: budget.category,
-                limitAmount: budget.limitAmount,
-                spentAmount: 0,
+            for (const prev of prevBudgets) {
+                const startOfPrevMonth = dayjs(`${prevYear}-${prevMonth}-01`)
+                    .startOf('month')
+                    .toDate();
+                const endOfPrevMonth = dayjs(`${prevYear}-${prevMonth}-01`)
+                    .endOf('month')
+                    .toDate();
+
+                const prevTransactions = await Transaction.find({
+                    user: userId,
+                    purchaseDate: {
+                        $gte: startOfPrevMonth,
+                        $lte: endOfPrevMonth,
+                    },
+                }).select('_id');
+
+                const prevTransactionIds = prevTransactions.map((t) => t._id);
+
+                let spentAmount = 0;
+
+                if (prevTransactionIds.length > 0) {
+                    const categoryId =
+                        typeof prev.category === 'object' &&
+                        '_id' in prev.category
+                            ? prev.category._id
+                            : prev.category;
+                    const details = await TransactionDetail.aggregate([
+                        {
+                            $match: {
+                                transaction: { $in: prevTransactionIds },
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: 'products',
+                                localField: 'product',
+                                foreignField: '_id',
+                                as: 'productData',
+                            },
+                        },
+                        { $unwind: '$productData' },
+                        ...(prev.category
+                            ? [
+                                  {
+                                      $match: {
+                                          'productData.category':
+                                              new Types.ObjectId(categoryId),
+                                      },
+                                  },
+                              ]
+                            : []),
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: '$subtotal' },
+                            },
+                        },
+                    ]);
+
+                    spentAmount = details.length > 0 ? details[0].total : 0;
+                }
+
+                await Budget.create({
+                    user: prev.user,
+                    category: prev.category,
+                    month,
+                    year,
+                    limitAmount: prev.limitAmount,
+                    isRecurring: prev.isRecurring,
+                    isActive: prev.isActive,
+                    notificationsEnabled: prev.notificationsEnabled,
+                    spentAmount,
+                });
+            }
+
+            budgets = await Budget.find({
+                user: userId,
                 month,
                 year,
-                notificationsEnabled: budget.notificationsEnabled,
-                isActive: budget.isActive,
-                isRecurring: budget.isRecurring,
-            }));
-
-            if (newBudgets.length > 0) {
-                await Budget.insertMany(newBudgets);
-            }
+            }).populate('category');
         }
 
-        // 2️⃣ Obtener los budgets actualizados
-        const budgets = await Budget.find({
-            user: userId,
-            month,
-            year,
-        }).populate('category');
+        const updatedBudgets: any[] = [];
 
-        // 3️⃣ Obtener transacciones del mes
+        if (!isCurrentMonth) {
+            budgets.forEach((b) => updatedBudgets.push(b));
+            res.json(updatedBudgets);
+            return;
+        }
+
         const startOfMonth = dayjs(`${year}-${month}-01`)
             .startOf('month')
             .toDate();
@@ -77,19 +150,12 @@ export const getBudgets = async (
 
         const transactionIds = transactions.map((t) => t._id);
 
-        // 4️⃣ Calcular spentAmount para cada budget
-        const updatedBudgets = [];
-
         for (const budget of budgets) {
             let spentAmount = 0;
 
             if (transactionIds.length > 0) {
                 const details = await TransactionDetail.aggregate([
-                    {
-                        $match: {
-                            transaction: { $in: transactionIds },
-                        },
-                    },
+                    { $match: { transaction: { $in: transactionIds } } },
                     {
                         $lookup: {
                             from: 'products',
@@ -122,11 +188,6 @@ export const getBudgets = async (
                 spentAmount = details.length > 0 ? details[0].total : 0;
             }
 
-            // Opcional: podrías actualizarlo en DB si quisieras:
-            // budget.spentAmount = spentAmount;
-            // await budget.save();
-
-            // Para la respuesta, devolvemos budget con spentAmount actualizado
             updatedBudgets.push({
                 ...budget.toObject(),
                 spentAmount,
@@ -135,7 +196,7 @@ export const getBudgets = async (
 
         res.json(updatedBudgets);
     } catch (error) {
-        console.error('Error en getBudgets:', error);
+        logger.error('Error en getBudgets:', error);
         res.status(500).json({
             message: 'Error al obtener los presupuestos',
             error,
@@ -219,7 +280,9 @@ export const createBudget = async (
                     ? [
                           {
                               $match: {
-                                  'productData.category': new Types.ObjectId(category),
+                                  'productData.category': new Types.ObjectId(
+                                      category,
+                                  ),
                               },
                           },
                       ]
@@ -244,14 +307,13 @@ export const createBudget = async (
             spentAmount,
         });
     } catch (error) {
-        console.error('Error en createBudget:', error);
+        logger.error('Error en createBudget:', error);
         res.status(500).json({
             message: 'Error al crear el presupuesto',
             error,
         });
     }
 };
-
 
 export const updateBudget = async (
     req: AuthRequest,
@@ -271,7 +333,7 @@ export const updateBudget = async (
 
         res.json(updated);
     } catch (error) {
-        console.error('Error en updateBudget:', error);
+        logger.error('Error en updateBudget:', error);
         res.status(500).json({
             message: 'Error al actualizar el presupuesto',
             error,
@@ -295,7 +357,7 @@ export const deleteBudget = async (
 
         res.json({ message: 'Presupuesto eliminado correctamente' });
     } catch (error) {
-        console.error('Error en deleteBudget:', error);
+        logger.error('Error en deleteBudget:', error);
         res.status(500).json({
             message: 'Error al eliminar el presupuesto',
             error,

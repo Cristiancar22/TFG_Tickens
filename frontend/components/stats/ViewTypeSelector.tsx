@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { colors } from '@/constants/colors'; // Ajusta la ruta según tu proyecto
+import { colors } from '@/constants/colors';
 
 interface Props {
     viewType: 'monthly' | 'annual';
@@ -14,6 +14,7 @@ export const ViewTypeSelector = ({ viewType, setViewType }: Props) => {
                 justifyContent: 'center',
                 marginBottom: 16,
             }}
+            accessibilityLabel="view-type-selector"
         >
             {['monthly', 'annual'].map((type) => {
                 const isActive = viewType === type;
@@ -34,12 +35,14 @@ export const ViewTypeSelector = ({ viewType, setViewType }: Props) => {
                             borderRadius: 20,
                             marginHorizontal: 8,
                         }}
+                        accessibilityLabel={`view-type-${type}-button`}
                     >
                         <Text
                             style={{
                                 color: isActive ? '#fff' : colors.text,
                                 fontWeight: isActive ? '600' : '400',
                             }}
+                            accessibilityLabel={`view-type-${type}-label`}
                         >
                             {type === 'monthly' ? 'Mensual' : 'Anual'}
                         </Text>

@@ -8,6 +8,7 @@ import { getUserFromToken } from '@/services';
 import { useProducts } from '@/store/useProduct';
 import { useStores } from '@/store/useStore';
 import { useCategories } from '@/store/useCategories';
+import { ActivityIndicator, View } from 'react-native';
 
 export default function RootLayout() {
     const { isAuthenticated, checking, login, logout, setUser, setChecking } =
@@ -26,7 +27,6 @@ export default function RootLayout() {
 
                 if (storedToken) {
                     login(storedToken);
-
                     const user = await getUserFromToken();
                     setUser(user);
                 } else {
@@ -42,7 +42,6 @@ export default function RootLayout() {
     }, []);
 
     useEffect(() => {
-
         if (checking) return;
 
         const inAuthGroup = segments[0] === '(auth)';
@@ -60,7 +59,21 @@ export default function RootLayout() {
             fetchStores();
             fetchCategories();
         }
-    }, [isAuthenticated, segments]);
+    }, [isAuthenticated, segments, checking]);
+
+    if (checking) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
 
     return <Slot />;
 }

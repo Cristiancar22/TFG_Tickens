@@ -33,8 +33,14 @@ export default function Login() {
     };
 
     return (
-        <View className="flex-1 justify-center px-4 bg-background">
-            <View className="bg-white p-6 rounded-2xl shadow-md">
+        <View
+            className="flex-1 justify-center px-4 bg-background"
+            accessibilityLabel="login-screen"
+        >
+            <View
+                className="bg-white p-6 rounded-2xl shadow-md"
+                accessibilityLabel="login-form"
+            >
                 <InputField
                     label="Email"
                     placeholder="email@ejemplo.com"
@@ -42,6 +48,7 @@ export default function Login() {
                     autoCapitalize="none"
                     onChangeText={(text) => setValue('email', text)}
                     error={errors.email?.message}
+                    accessibilityLabel="input-email"
                 />
 
                 <InputField
@@ -51,24 +58,19 @@ export default function Login() {
                     autoCapitalize="none"
                     onChangeText={(text) => setValue('password', text)}
                     error={errors.password?.message}
+                    accessibilityLabel="input-password"
                 />
 
                 <PrimaryButton
                     title="Iniciar sesión"
                     onPress={handleSubmit(onSubmit)}
+                    accessibilityLabel="login-button"
                 />
-                <PrimaryButton
-                    title="Login rápido (Juan)"
-                    onPress={() =>
-                        onSubmit({
-                            email: 'juan.perez@example.com',
-                            password: 'MiPassword123',
-                        })
-                    }
-                />
+
                 <Text
                     className="text-center my-4 text-primary underline"
                     onPress={() => router.push('/register')}
+                    accessibilityLabel="navigate-register"
                 >
                     ¿No tienes cuenta? Regístrate
                 </Text>

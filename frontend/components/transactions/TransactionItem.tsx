@@ -18,6 +18,7 @@ export const TransactionItem = ({ item }: Props) => {
 
     return (
         <TouchableOpacity
+            accessibilityLabel={`transaction-${item._id}`}
             onPress={() =>
                 router.push({
                     pathname: '/transactions/[id]',
@@ -37,17 +38,29 @@ export const TransactionItem = ({ item }: Props) => {
                 elevation: 4,
             }}
         >
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 8,
+                }}
+            >
                 <View
                     style={{
                         borderRadius: 20,
                         padding: 8,
                         marginRight: 12,
                     }}
+                    accessibilityLabel={`transaction-store-icon-${item._id}`}
                 >
-                    <Ionicons name="storefront-outline" size={24} color={colors.primary} />
+                    <Ionicons
+                        name="storefront-outline"
+                        size={24}
+                        color={colors.primary}
+                    />
                 </View>
                 <Text
+                    accessibilityLabel={`transaction-store-name-${item._id}`}
                     style={{
                         fontSize: 16,
                         fontWeight: 'bold',
@@ -59,11 +72,23 @@ export const TransactionItem = ({ item }: Props) => {
                 </Text>
             </View>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
-                <Text style={{ color: colors.foreground, fontSize: 14 }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 8,
+                }}
+            >
+                <Text
+                    accessibilityLabel={`transaction-total-${item._id}`}
+                    style={{ color: colors.foreground, fontSize: 14 }}
+                >
                     Total: {item.total.toFixed(2)} €
                 </Text>
-                <Text style={{ color: colors.foreground, fontSize: 14 }}>
+                <Text
+                    accessibilityLabel={`transaction-date-${item._id}`}
+                    style={{ color: colors.foreground, fontSize: 14 }}
+                >
                     {formatDate(new Date(item.purchaseDate).toISOString())}
                 </Text>
             </View>

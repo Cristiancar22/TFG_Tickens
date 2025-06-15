@@ -25,11 +25,15 @@ export const StoreList = ({
     );
 
     return (
-        <View style={{ flex: 1 }}>
+        <View
+            style={{ flex: 1 }}
+            accessibilityLabel="store-list-container"
+        >
             <TextInput
                 placeholder="Buscar tienda..."
                 value={searchTerm}
                 onChangeText={setSearchTerm}
+                accessibilityLabel="store-search-input"
                 style={{
                     padding: 10,
                     margin: 10,
@@ -53,6 +57,7 @@ export const StoreList = ({
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 windowSize={5}
+                accessibilityLabel="store-flatlist"
             />
         </View>
     );

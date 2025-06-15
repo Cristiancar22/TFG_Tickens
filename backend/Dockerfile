@@ -15,4 +15,4 @@ RUN npm install
 COPY . .
 
 # Comando por defecto
-CMD ["npx", "nodemon", "index.ts"]
+CMD ["npx", "nodemon", "server.ts"]

@@ -46,7 +46,10 @@ export const TransactionDetailEditItem = ({
     }, [unitPrice]);
 
     return (
-        <View style={styles.container}>
+        <View
+            style={styles.container}
+            accessibilityLabel="transaction-detail-edit-item"
+        >
             <CustomSelect
                 label="Producto"
                 items={products}
@@ -71,6 +74,7 @@ export const TransactionDetailEditItem = ({
                             })
                         }
                         style={styles.inputField}
+                        accessibilityLabel="quantity-input"
                     />
                 </View>
 
@@ -89,11 +93,16 @@ export const TransactionDetailEditItem = ({
                             })
                         }
                         style={styles.inputField}
+                        accessibilityLabel="unit-price-input"
                     />
                 </View>
             </View>
 
-            <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
+            <TouchableOpacity
+                onPress={onRemove}
+                style={styles.deleteButton}
+                accessibilityLabel="remove-transaction-detail-button"
+            >
                 <Ionicons
                     name="trash-outline"
                     size={20}

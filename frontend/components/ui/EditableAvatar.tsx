@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image, Pressable, Alert } from 'react-native';
+import { Image, TouchableOpacity, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 
@@ -66,7 +66,7 @@ export const EditableAvatar = ({ initialUri, onChange }: Props) => {
     };
 
     return (
-        <Pressable onPress={openOptions} className="self-center mb-4">
+        <TouchableOpacity onPress={openOptions} className="self-center mb-4">
             {avatarUri ? (
                 <Image
                     source={{ uri: avatarUri }}
@@ -79,6 +79,6 @@ export const EditableAvatar = ({ initialUri, onChange }: Props) => {
                     color="#999"
                 />
             )}
-        </Pressable>
+        </TouchableOpacity>
     );
 };

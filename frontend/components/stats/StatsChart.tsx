@@ -12,6 +12,7 @@ import { colors as appColors } from '@/constants/colors';
 interface Props {
     viewType: 'monthly' | 'annual';
     currentDate: Date;
+    accessibilityLabel?: string;
 }
 
 interface ChartDatum {
@@ -20,9 +21,14 @@ interface ChartDatum {
     color: string;
 }
 
-export const StatsChart = ({ viewType, currentDate }: Props) => {
+export const StatsChart = ({
+    viewType,
+    currentDate,
+    accessibilityLabel = 'stats-chart',
+}: Props) => {
     const [data, setData] = useState<ChartDatum[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isPrediction, setIsPrediction] = useState(false);
 
     useEffect(() => {
         const fetchChartData = async () => {
@@ -31,9 +37,8 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth() + 1;
 
-                // Determinar si es futuro (solo aplica en monthly)
                 const today = new Date();
-                const isFuture =
+                const futureMonth =
                     viewType === 'monthly' &&
                     (year > today.getFullYear() ||
                         (year === today.getFullYear() &&
@@ -41,26 +46,26 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
 
                 let raw;
 
-                if (isFuture) {
-                    // 👉 Usar predicción
+                if (futureMonth) {
                     raw = await getStatsPrediction({ year, month });
+                    setIsPrediction(true);
                 } else {
-                    // 👉 Usar datos reales
                     raw = await getStatsData({
                         viewType,
                         year,
                         ...(viewType === 'monthly' ? { month } : {}),
                     });
+                    setIsPrediction(false);
                 }
 
-                const parsed: ChartDatum[] = raw.map((item: any) => ({
-                    x: item.label,
-                    y: Number(item.value) || 0,
-                    color:
-                        viewType === 'monthly'
-                            ? item.color || appColors.primary
-                            : appColors.primary,
-                }));
+                const parsed: ChartDatum[] = raw
+                    .map((item: any) => ({
+                        x: item.label,
+                        y: Number(item.value) || 0,
+                        color: item.color || appColors.primary,
+                    }))
+                    .sort((a, b) => b.y - a.y)
+                    .slice(0, 6);
 
                 setData(parsed);
             } catch (error) {
@@ -69,7 +74,6 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
             }
             setLoading(false);
         };
-
         fetchChartData();
     }, [viewType, currentDate]);
 
@@ -84,7 +88,10 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
 
     if (data.length === 0) {
         return (
-            <View className="h-[220px] justify-center items-center">
+            <View
+                className="h-[220px] justify-center items-center"
+                accessibilityLabel={accessibilityLabel}
+            >
                 <Text className="text-gray-500 text-base">
                     ¡No hay registros!
                 </Text>
@@ -99,7 +106,22 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                 display: 'flex',
                 alignItems: 'center',
             }}
+            accessibilityLabel={accessibilityLabel}
         >
+            <Text
+                style={{
+                    alignSelf: 'flex-start',
+                    marginBottom: 1,
+                    color: isPrediction
+                        ? appColors.accent
+                        : appColors.secondary,
+                    fontStyle: 'italic',
+                    fontSize: 15,
+                }}
+            >
+                {isPrediction ? 'Predicción de gasto' : ''}
+            </Text>
+
             <VictoryChart
                 width={Dimensions.get('window').width - 32}
                 height={240}
@@ -110,7 +132,8 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     style={{
                         tickLabels: {
                             fontSize: 10,
-                            angle: data.length < 4 ? 0 : data.length < 6 ? 10 : 15,
+                            angle:
+                                data.length < 4 ? 0 : data.length < 6 ? 10 : 15,
                             padding: 8,
                         },
                     }}
@@ -132,7 +155,7 @@ export const StatsChart = ({ viewType, currentDate }: Props) => {
                     }}
                     barRatio={0.7}
                     labels={({ datum }) => `${datum.y.toFixed(2)}€`}
-                    animate={{ duration: 500, onLoad: { duration: 200 }, }}
+                    animate={{ duration: 500, onLoad: { duration: 200 } }}
                 />
             </VictoryChart>
         </View>

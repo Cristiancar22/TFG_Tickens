@@ -52,7 +52,10 @@ export const PeriodNavigator = ({
     };
 
     return (
-        <View className="flex-row justify-center items-center mb-4">
+        <View
+            className="flex-row justify-center items-center mb-4"
+            accessibilityLabel="period-navigator"
+        >
             <TouchableOpacity
                 onPress={() => updateDate('prev')}
                 style={{
@@ -60,6 +63,7 @@ export const PeriodNavigator = ({
                     borderRadius: 20,
                     padding: 8,
                 }}
+                accessibilityLabel="period-prev-button"
             >
                 <Ionicons name="chevron-back" size={20} color="#fff" />
             </TouchableOpacity>
@@ -71,6 +75,7 @@ export const PeriodNavigator = ({
                     fontSize: 16,
                     color: colors.text,
                 }}
+                accessibilityLabel="period-label"
             >
                 {formatLabel(viewType, currentDate)}
             </Text>
@@ -82,6 +87,7 @@ export const PeriodNavigator = ({
                     borderRadius: 20,
                     padding: 8,
                 }}
+                accessibilityLabel="period-next-button"
             >
                 <Ionicons name="chevron-forward" size={20} color="#fff" />
             </TouchableOpacity>

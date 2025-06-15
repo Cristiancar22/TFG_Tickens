@@ -82,4 +82,21 @@ export default [
             globals: globals.node,
         },
     },
+    {
+        files: ['**/*.test.ts', '**/*.test.tsx'],
+        languageOptions: {
+            globals: {
+                ...globals.jest,
+            },
+        },
+    },
+    {
+        files: ['**/jest.setup.{js,ts}', '**/__mocks__/**/*.{js,ts}'],
+        languageOptions: {
+            globals: globals.jest,
+        },
+        rules: {
+            '@typescript-eslint/no-var-requires': 'off',
+        },
+    },
 ];

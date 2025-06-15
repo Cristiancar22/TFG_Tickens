@@ -80,7 +80,7 @@ export default function TransactionDetailScreen() {
     if (loading || isSaving) {
         return (
             <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" accessibilityLabel="ActivityIndicator" />
             </View>
         );
     }
@@ -176,6 +176,7 @@ export default function TransactionDetailScreen() {
             <TouchableOpacity
                 onPress={editMode ? handleSave : () => setEditMode(true)}
                 style={styles.editButton}
+                accessibilityLabel="edit-button"
             >
                 <Ionicons
                     name={editMode ? 'save-outline' : 'pencil-outline'}

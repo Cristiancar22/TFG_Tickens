@@ -12,9 +12,7 @@ export const getProducts = async (
     try {
         const userId = req.user?._id;
 
-        const products = await Product.find({ createdBy: userId }).populate(
-            'group',
-        );
+        const products = await Product.find({ createdBy: userId });
 
         res.json(products);
     } catch (error) {
@@ -113,7 +111,6 @@ export const groupProducts = async (
             return;
         }
 
-        // Validar que todos los productos pertenecen al usuario
         const allProducts = await Product.find({
             _id: { $in: [mainId, ...targetIds] },
             createdBy: userId,
@@ -126,13 +123,11 @@ export const groupProducts = async (
             return;
         }
 
-        // 1. Reasignar los TransactionDetails a mainId
         await TransactionDetail.updateMany(
             { product: { $in: targetIds } },
             { $set: { product: mainId } },
         );
 
-        // 2. Eliminar productos agrupados (ya no tienen transaction details asociados)
         await Product.deleteMany({ _id: { $in: targetIds } });
 
         res.json({ message: 'Productos agrupados correctamente' });
@@ -218,7 +213,7 @@ export const getProductPriceComparison = async (
 
         res.json(results);
     } catch (error) {
-        console.error('Error en getProductPriceComparison:', error);
+        logger.error('Error en getProductPriceComparison:', error);
         res.status(500).json({
             message: 'Error al obtener el comparador de precios',
             error,

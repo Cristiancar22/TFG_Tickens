@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useProducts } from '@/store/useProduct';
 import { AddProductModal } from '@/components/modals/AddProductModal';
@@ -59,22 +59,22 @@ export const ManageProductScreen = () => {
     return (
         <View className="flex-1 bg-white">
             <Text className="text-xl font-bold p-4">Tus productos</Text>
-            <Pressable onPress={() => setGroupingMode(!isGroupingMode)}>
+            <TouchableOpacity onPress={() => setGroupingMode(!isGroupingMode)}>
                 <Text style={{ padding: 10 }}>
                     {isGroupingMode
                         ? 'Cancelar agrupación'
                         : 'Agrupar productos'}
                 </Text>
-            </Pressable>
+            </TouchableOpacity>
             {isGroupingMode && selectedIds.length >= 2 && (
-                <Pressable
+                <TouchableOpacity
                     onPress={() => setSelectMainModalVisible(true)}
                     style={{ padding: 10 }}
                 >
                     <Text style={{ color: 'black' }}>
                         Agrupar seleccionados
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
             )}
             <ProductList
                 onEditProduct={handleOpenEdit}
@@ -83,9 +83,13 @@ export const ManageProductScreen = () => {
                 onToggleSelect={onToggleSelect}
             />
 
-            <Pressable style={styles.floatingButton} onPress={handleOpenCreate}>
+            <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={handleOpenCreate}
+                accessibilityLabel="add-product-button"
+            >
                 <Ionicons name="add" size={28} color="#fff" />
-            </Pressable>
+            </TouchableOpacity>
 
             <AddProductModal
                 isVisible={isModalVisible}
@@ -96,7 +100,7 @@ export const ManageProductScreen = () => {
             <SelectMainProductModal
                 visible={isSelectMainModalVisible}
                 selectedIds={selectedIds}
-                onSelectMain={async(mainId) => {
+                onSelectMain={async (mainId) => {
                     await groupProducts(mainId, selectedIds);
                     setSelectMainModalVisible(false);
                     setGroupingMode(false);

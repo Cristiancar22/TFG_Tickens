@@ -5,7 +5,6 @@ import {
     Text,
     TextInput,
     FlatList,
-    Pressable,
     TouchableOpacity,
     Modal,
     StyleSheet,
@@ -31,7 +30,6 @@ export const SelectStore = ({ selectedId, onChange }: Props) => {
         <View className="mb-4">
             <Text className="font-semibold mb-1">Tienda</Text>
 
-            {/* Zona de selección */}
             <TouchableOpacity
                 onPress={() => setModalVisible(true)}
                 className="border rounded p-2 bg-gray-100"
@@ -39,7 +37,6 @@ export const SelectStore = ({ selectedId, onChange }: Props) => {
                 <Text>{selectedStore?.name ?? 'Selecciona una tienda'}</Text>
             </TouchableOpacity>
 
-            {/* Modal desplegable */}
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -60,7 +57,7 @@ export const SelectStore = ({ selectedId, onChange }: Props) => {
                             keyboardShouldPersistTaps="handled"
                             style={{ maxHeight: 300 }}
                             renderItem={({ item }) => (
-                                <Pressable
+                                <TouchableOpacity
                                     onPress={() => {
                                         onChange(item.id);
                                         setModalVisible(false);
@@ -81,7 +78,7 @@ export const SelectStore = ({ selectedId, onChange }: Props) => {
                                     >
                                         {item.name}
                                     </Text>
-                                </Pressable>
+                                </TouchableOpacity>
                             )}
                         />
                         <TouchableOpacity

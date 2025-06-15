@@ -25,5 +25,8 @@
     "editor.defaultFormatter": null,
     "[jsonc]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[yaml]": {
+        "editor.codeLens": false
     }
 }

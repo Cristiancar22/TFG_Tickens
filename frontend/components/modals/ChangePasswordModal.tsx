@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { InputField } from '../ui/InputField';
@@ -26,7 +26,7 @@ export const ChangePasswordModal: React.FC<Props> = ({
 
     const handleSave = async () => {
         if (newPassword !== confirmPassword) {
-            alert('Las contraseñas no coinciden');
+            Alert.alert('Las contraseñas no coinciden');
             return;
         }
 
@@ -44,9 +44,16 @@ export const ChangePasswordModal: React.FC<Props> = ({
             onBackButtonPress={onClose}
             useNativeDriver
             style={styles.modal}
+            accessibilityLabel="change-password-modal"
         >
-            <View className="bg-white p-6 rounded-2xl w-full max-w-md">
-                <Text className="text-lg font-semibold mb-4">
+            <View
+                className="bg-white p-6 rounded-2xl w-full max-w-md"
+                accessibilityLabel="change-password-container"
+            >
+                <Text
+                    className="text-lg font-semibold mb-4"
+                    accessibilityLabel="change-password-title"
+                >
                     Cambiar contraseña
                 </Text>
 
@@ -57,7 +64,9 @@ export const ChangePasswordModal: React.FC<Props> = ({
                     value={currentPassword}
                     onChangeText={setCurrentPassword}
                     autoCapitalize="none"
+                    accessibilityLabel="input-current-password"
                 />
+
                 <InputField
                     label="Nueva contraseña"
                     placeholder="Nueva contraseña"
@@ -65,7 +74,9 @@ export const ChangePasswordModal: React.FC<Props> = ({
                     value={newPassword}
                     onChangeText={setNewPassword}
                     autoCapitalize="none"
+                    accessibilityLabel="input-new-password"
                 />
+
                 <InputField
                     label="Confirmar contraseña"
                     placeholder="Confirmar contraseña"
@@ -73,12 +84,14 @@ export const ChangePasswordModal: React.FC<Props> = ({
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     autoCapitalize="none"
+                    accessibilityLabel="input-confirm-password"
                 />
 
                 <PrimaryButton
                     title={loading ? 'Guardando...' : 'Guardar cambios'}
                     disabled={loading}
                     onPress={handleSave}
+                    accessibilityLabel="submit-password-change"
                 />
             </View>
         </Modal>

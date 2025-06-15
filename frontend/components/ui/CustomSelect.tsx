@@ -3,7 +3,6 @@ import {
     Text,
     TextInput,
     FlatList,
-    Pressable,
     TouchableOpacity,
     Modal,
     StyleSheet,
@@ -14,7 +13,7 @@ import {
 } from 'react-native';
 import { useState, useRef, useEffect } from 'react';
 import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons'; // Usamos tus iconos
+import { Ionicons } from '@expo/vector-icons';
 
 type CustomSelectProps<T extends { id: string; name: string }> = {
     label: string;
@@ -40,7 +39,6 @@ export const CustomSelect = <T extends { id: string; name: string }>({
         item.name.toLowerCase().includes(query.toLowerCase()),
     );
 
-    // 👉 Animación
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -90,12 +88,12 @@ export const CustomSelect = <T extends { id: string; name: string }>({
             </TouchableOpacity>
 
             <Modal
-                animationType="none" // usamos animación manual con fade
+                animationType="none"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
-                <Pressable
+                <TouchableOpacity
                     style={styles.modalBackdrop}
                     onPress={() => setModalVisible(false)}
                 >
@@ -130,7 +128,7 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                                     const isSelected = selectedId === item.id;
 
                                     return (
-                                        <Pressable
+                                        <TouchableOpacity
                                             onPress={() => {
                                                 onChange(item.id);
                                                 setModalVisible(false);
@@ -156,7 +154,7 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                                             >
                                                 {item.name}
                                             </Text>
-                                        </Pressable>
+                                        </TouchableOpacity>
                                     );
                                 }}
                             />
@@ -180,7 +178,7 @@ export const CustomSelect = <T extends { id: string; name: string }>({
                             </TouchableOpacity>
                         </Animated.View>
                     </TouchableWithoutFeedback>
-                </Pressable>
+                </TouchableOpacity>
             </Modal>
         </View>
     );

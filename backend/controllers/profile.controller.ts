@@ -51,7 +51,7 @@ export const updateProfile = async (
     const schema = z.object({
         name: z.string().min(1, 'El nombre es obligatorio'),
         surname: z.string().min(1, 'Los apellidos son obligatorios'),
-        email: z.string().email('Correo inválido'),
+        email: z.string().email('Correo no válido'),
     });
 
     const result = schema.safeParse(req.body);

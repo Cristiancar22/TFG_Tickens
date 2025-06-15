@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useStores } from '@/store/useStore';
 import { AddStoreModal } from '@/components/modals/AddStoreModal';
@@ -56,21 +56,21 @@ export const ManageStoreScreen = () => {
         <View className="flex-1 bg-white">
             <Text className="text-xl font-bold p-4">Tus tiendas</Text>
 
-            <Pressable onPress={() => setGroupingMode(!isGroupingMode)}>
+            <TouchableOpacity onPress={() => setGroupingMode(!isGroupingMode)}>
                 <Text style={{ padding: 10 }}>
                     {isGroupingMode ? 'Cancelar agrupación' : 'Agrupar tiendas'}
                 </Text>
-            </Pressable>
+            </TouchableOpacity>
 
             {isGroupingMode && selectedIds.length >= 2 && (
-                <Pressable
+                <TouchableOpacity
                     onPress={() => setSelectMainModalVisible(true)}
                     style={{ padding: 10 }}
                 >
                     <Text style={{ color: 'black' }}>
                         Agrupar seleccionadas
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
             )}
 
             <StoreList
@@ -80,9 +80,13 @@ export const ManageStoreScreen = () => {
                 onToggleSelect={onToggleSelect}
             />
 
-            <Pressable style={styles.floatingButton} onPress={handleOpenCreate}>
+            <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={handleOpenCreate}
+                accessibilityLabel="add-store-button"
+            >
                 <Ionicons name="add" size={28} color="#fff" />
-            </Pressable>
+            </TouchableOpacity>
 
             <AddStoreModal
                 isVisible={isModalVisible}

@@ -108,7 +108,6 @@ export const groupStores = async (
             return;
         }
 
-        // 1. Validar que el usuario es dueño de todas las tiendas
         const allStores = await Store.find({
             _id: { $in: [mainId, ...targetIds] },
             createdBy: userId,
@@ -121,7 +120,6 @@ export const groupStores = async (
             return;
         }
 
-        // 2. Actualizar transacciones con stores agrupadas
         await Transaction.updateMany(
             {
                 user: userId,
@@ -132,7 +130,6 @@ export const groupStores = async (
             }
         );
 
-        // 3. Eliminar las tiendas agrupadas
         await Store.deleteMany({ _id: { $in: targetIds } });
 
         res.json({ message: 'Tiendas agrupadas correctamente' });

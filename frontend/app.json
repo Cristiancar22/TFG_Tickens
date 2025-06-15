@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "frontend",
-        "slug": "frontend",
+        "name": "Tickens",
+        "slug": "Tickens",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
@@ -13,30 +13,46 @@
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/images/adaptive-icon.png",
+                "foregroundImage": "./assets/images/icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "package": "com.cristiancar22.tickens",
+            "usesCleartextTraffic": true
         },
         "web": {
             "bundler": "metro",
             "output": "static",
-            "favicon": "./assets/images/favicon.png"
+            "favicon": "./assets/images/icon.png"
         },
         "plugins": [
             "expo-router",
             [
                 "expo-splash-screen",
                 {
-                    "image": "./assets/images/splash-icon.png",
+                    "image": "./assets/images/icon.png",
                     "imageWidth": 200,
                     "resizeMode": "contain",
                     "backgroundColor": "#ffffff"
                 }
             ],
-            "expo-secure-store"
+            "expo-secure-store",
+            ["expo-build-properties",
+            {
+                "android": {
+                    "usesCleartextTraffic": true
+                }
+            }]
         ],
         "experiments": {
             "typedRoutes": true
+        },
+        "extra": {
+            "router": {
+                "origin": false
+            },
+            "eas": {
+                "projectId": "f0524482-c548-45ba-b03b-f1eafbd7e6cf"
+            }
         }
     }
 }

@@ -33,19 +33,18 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
-
     try {
         const user = await User.findOne({ email }).select('+passwordHash');
 
         if (!user) {
-            res.status(401).json({ message: 'Credenciales inválidas' });
+            res.status(401).json({ message: 'Credenciales incorrectas' });
             return;
         }
 
         const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {
-            res.status(401).json({ message: 'Credenciales inválidas' });
+            res.status(401).json({ message: 'Credenciales incorrectas' });
             return;
         }
 

@@ -7,7 +7,7 @@ import { BudgetItem } from '@/components/manageBudgets/BudgetItem';
 import { getBudgets } from '@/services/budget.service';
 import { Budget } from '@/types';
 
-const ManageSavingsScreen = () => {
+const SavingsHistoryScreen = () => {
     const [currentDate, setCurrentDate] = useState(() => {
         const d = new Date();
         d.setMonth(d.getMonth() - 1);
@@ -38,9 +38,14 @@ const ManageSavingsScreen = () => {
     }, [month, year]);
 
     const calculateTotalSavings = () => {
-        return budgets.reduce((total, budget) => {
-            const diff = budget.limitAmount - budget.spentAmount;
-            return total + diff;
+        const uncategorized = budgets.find((b) => !b.category);
+
+        if (uncategorized) {
+            return uncategorized.limitAmount - uncategorized.spentAmount;
+        }
+
+        return budgets.reduce((total, b) => {
+            return total + (b.limitAmount - b.spentAmount);
         }, 0);
     };
 
@@ -77,14 +82,16 @@ const ManageSavingsScreen = () => {
             </Text>
 
             {loading ? (
-                <ActivityIndicator size="large" color={colors.primary} />
+                <ActivityIndicator
+                    size="large"
+                    color={colors.primary}
+                    testID="ActivityIndicator"
+                />
             ) : (
                 <FlatList
                     data={budgets}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <BudgetItem budget={item} />
-                    )}
+                    renderItem={({ item }) => <BudgetItem budget={item} />}
                     contentContainerStyle={{ paddingBottom: 32 }}
                 />
             )}
@@ -92,4 +99,4 @@ const ManageSavingsScreen = () => {
     );
 };
 
-export default ManageSavingsScreen;
+export default SavingsHistoryScreen;

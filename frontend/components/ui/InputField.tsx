@@ -1,4 +1,10 @@
-import { TextInput, View, Text, TextInputProps, Pressable } from 'react-native';
+import {
+    TextInput,
+    View,
+    Text,
+    TextInputProps,
+    TouchableOpacity,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
@@ -36,7 +42,7 @@ export const InputField = ({
                 />
 
                 {secure && (
-                    <Pressable
+                    <TouchableOpacity
                         className="absolute right-3 top-1/2 -translate-y-1/2"
                         onPress={() => setIsSecure((prev) => !prev)}
                     >
@@ -45,12 +51,17 @@ export const InputField = ({
                             size={20}
                             color="#9CA3AF"
                         />
-                    </Pressable>
+                    </TouchableOpacity>
                 )}
             </View>
 
             {error && (
-                <Text className="mt-1 text-sm text-red-500">{error}</Text>
+                <Text
+                    className="text-danger"
+                    accessibilityLabel={`error-${label?.toLowerCase()}`}
+                >
+                    {error}
+                </Text>
             )}
         </View>
     );

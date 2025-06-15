@@ -25,7 +25,10 @@ export const ProductList = ({
     );
 
     return (
-        <View style={{ flex: 1 }}>
+        <View
+            style={{ flex: 1 }}
+            accessibilityLabel="product-list-container"
+        >
             <TextInput
                 placeholder="Buscar producto..."
                 value={searchTerm}
@@ -37,6 +40,7 @@ export const ProductList = ({
                     borderWidth: 1,
                     borderRadius: 8,
                 }}
+                accessibilityLabel="product-search-input"
             />
 
             <FlatList
@@ -54,6 +58,7 @@ export const ProductList = ({
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 windowSize={5}
+                accessibilityLabel="product-flatlist"
             />
         </View>
     );
